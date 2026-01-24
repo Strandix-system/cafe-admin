@@ -22,6 +22,7 @@ export const getAccessToken = () => {
 const getHeaders = (body = {}) => {
   return {
     ...(getAccessToken() && { Authorization: `Bearer ${getAccessToken()}` }),
+    'ngrok-skip-browser-warning': "Hello",
     ...(!(body instanceof FormData) && { "Content-Type": "application/json" }),
   };
 };

@@ -425,7 +425,6 @@ const TableComponent = (props) => {
             />
         </Card>
     </motion.div>
-
 };
 
 export default TableComponent;

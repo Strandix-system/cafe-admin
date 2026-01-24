@@ -221,7 +221,7 @@
 
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, Typography, Grid, Box, Stack, Button,  Divider } from "@mui/material";
+import { Card, CardContent, Typography, Grid, Box, Stack, Button, Divider } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
@@ -231,25 +231,20 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useNavigate } from "react-router-dom";
 
+const colors = {
+  brown: "#6F4E37",
+  darkBrown: "#4B2E2B",
+  cream: "#F5EFE6",
+  lightCream: "#FAF7F2",
+};
 
-  const colors = {
-    brown: "#6F4E37",
-    darkBrown: "#4B2E2B",
-    cream: "#F5EFE6",
-    lightCream: "#FAF7F2",
-  };
 export default function Dashboard() {
-
-  const navigate = useNavigate();  
-  const {role, logout} = useAuth();
-  const userRole = role?.toLowerCase(); // ✅ ADD
-  const isSuperAdmin = userRole === "superadmin";
-  const isAdmin = userRole === "admin";
+  const navigate = useNavigate();
+  const { role, logout, isSuperAdmin, isAdmin } = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("stats");
   const [statsData, setStatsData] = useState(null);
-
 
   const {
     data: superAdminStats,
@@ -269,7 +264,6 @@ export default function Dashboard() {
     logout();
     navigate("/");
   };
- 
 
   const calculateStats = () => {
     if (isSuperAdmin) {
@@ -297,17 +291,15 @@ export default function Dashboard() {
 
   return (
     <Box
-      display = "flex"
-      bgcolor = "#FAF7F2"
+      display="flex"
+      bgcolor="#FAF7F2"
       sx={{
         minHeight: "100vh",
         background:
-          "linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #e0e7ff 100%)", 
+          "linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #e0e7ff 100%)",
         p: { xs: 2, md: 4 },
       }}
     >
-
-
       {/* ================= SIDEBAR (SUPER ADMIN) ================= */}
       {isSuperAdmin && (
         <Box
@@ -339,7 +331,8 @@ export default function Dashboard() {
                 onClick={() => {
                   console.log("CLICKED ADMIN TAB");
                   console.log(role);
-                  setActiveTab("admins");}}
+                  setActiveTab("admins");
+                }}
               />
             </Stack>
           </Box>
@@ -374,19 +367,18 @@ export default function Dashboard() {
         </Box>
 
         {isAdmin && (
-            <Button
-              variant="contained"
-              startIcon={<LogoutIcon />}
-              onClick={handleLogout}
-              sx={{
-                bgcolor: "#6F4E37",
-                "&:hover": "#4B2E2B" 
-              }}
-            >
-              Logout
-            </Button>
-          )}
-
+          <Button
+            variant="contained"
+            startIcon={<LogoutIcon />}
+            onClick={handleLogout}
+            sx={{
+              bgcolor: "#6F4E37",
+              "&:hover": "#4B2E2B"
+            }}
+          >
+            Logout
+          </Button>
+        )}
 
         {/* STATS */}
         {isSuperAdmin && (
@@ -458,7 +450,7 @@ function StatCard({ label, value, loading }) {
           {label}
         </Typography>
 
-        <Typography variant="h5" fontWeight={700}  color="#6F4E37">
+        <Typography variant="h5" fontWeight={700} color="#6F4E37">
           {loading ? "—" : value}
         </Typography>
       </CardContent>

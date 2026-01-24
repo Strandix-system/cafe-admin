@@ -1,46 +1,12 @@
-// import React, { createContext, useContext, useState } from "react";
-
-// const AuthContext = createContext(null);
-
-// export const AuthProvider = ({ children }) => {
-//   const [user, setUser] = useState(
-//     JSON.parse(localStorage.getItem("user")) || null
-//   );
-
-//   const login = (userData, rememberMe) => {
-//     setUser(userData);
-
-//     if (rememberMe) {
-//       localStorage.setItem("user", JSON.stringify(userData));
-//       localStorage.setItem("token", userData.token);
-//     }
-//   };
-
-//   const logout = () => {
-//     setUser(null);
-//     localStorage.clear();
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ user, login, logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export const useAuth = () => useContext(AuthContext);
-
-
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useLogin } from "../hooks/useLogin";
 import { useFetch } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
 import { api_enums } from "../enums/api";
+import { AUTH_ROLES } from "../utils/constant";
 
 const AuthContext = React.createContext();
 
-// TODO setup login with me API
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(undefined);
@@ -54,7 +20,13 @@ function AuthProvider({ children }) {
       setIsAuthenticated(true);
       setUser(userData?.result);
     }
-  },[userData])
+  },[userData]);
+
+  useEffect(()=>{
+    if(isError){
+      logout();
+    }
+  }, [isError])
 
   const logout = () => {
     setIsAuthenticated(false);
@@ -67,7 +39,8 @@ function AuthProvider({ children }) {
   ) : (
     <AuthContext.Provider value={{
         user,
-        role: user?.role,
+        isAdmin: user?.role === AUTH_ROLES.ADMIN,
+        isSuperAdmin: user?.role === AUTH_ROLES.SUPER_ADMIN,
         isAuthenticated,
         logout,
       }}>
