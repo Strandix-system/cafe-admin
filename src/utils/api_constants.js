@@ -1,5 +1,4 @@
-export const API_ROUTES = {
-    login: "auth/login",
-    getMe: "auth/me",
-    superAdminStats: "/admin/get-users",
-}
+export const api_constants = {
+  CREATE_ADMIN: "/admins/create",
+  GET_ADMINS: "/admins",
+};
