@@ -1,145 +1,7 @@
-// import { useEffect, useState } from "react";
-
-// const AdminForm = ({ initialData, onSubmit, onClose }) => {
-//   const [form, setForm] = useState({
-//     firstName: "",
-//     lastName: "",
-//     cafeName: "",
-//     email: "",
-//     password: "",
-//     phone: "",
-//     address: "",
-//     state: "",
-//     city: "",
-//     pinCode: "",
-//     isActive: true,
-//   });
-
-//   useEffect(() => {
-//     if (initialData) {
-//       setForm({
-//         ...initialData,
-//         password: "", // don’t prefill password on edit
-//       });
-//     }
-//   }, [initialData]);
-
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setForm({
-//       ...form,
-//       [name]: type === "checkbox" ? checked : value,
-//     });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     onSubmit(form);
-//   };
-
-//   return (
-//     <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl">
-//       {/* Header */}
-//       <div className="flex justify-between items-center mb-6">
-//         <h2 className="text-xl font-semibold">
-//           {initialData ? "Update Admin" : "Add Admin"}
-//         </h2>
-//         <button onClick={onClose} className="text-gray-500 text-xl">✕</button>
-//       </div>
-
-//       <form onSubmit={handleSubmit} className="space-y-6">
-//         {/* Grid */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//           <Input label="First Name" name="firstName" value={form.firstName} onChange={handleChange} />
-//           <Input label="Last Name" name="lastName" value={form.lastName} onChange={handleChange} />
-//           <Input label="Cafe Name" name="cafeName" value={form.cafeName} onChange={handleChange} />
-//           <Input label="Email" name="email" type="email" value={form.email} onChange={handleChange} />
-          
-//           {!initialData && (
-//             <Input
-//               label="Password"
-//               name="password"
-//               type="password"
-//               value={form.password}
-//               onChange={handleChange}
-//             />
-//           )}
-
-//           <Input label="Phone Number" name="phone" value={form.phone} onChange={handleChange} />
-//           <Input label="State" name="state" value={form.state} onChange={handleChange} />
-//           <Input label="City" name="city" value={form.city} onChange={handleChange} />
-//           <Input label="Pin Code" name="pinCode" value={form.pinCode} onChange={handleChange} />
-//         </div>
-
-//         {/* Address */}
-//         <div>
-//           <label className="block text-sm font-medium text-gray-600 mb-1">
-//             Address
-//           </label>
-//           <textarea
-//             name="address"
-//             value={form.address}
-//             onChange={handleChange}
-//             rows="3"
-//             className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-//           />
-//         </div>
-
-//         {/* Status */}
-//         <div className="flex items-center gap-2">
-//           <input
-//             type="checkbox"
-//             name="isActive"
-//             checked={form.isActive}
-//             onChange={handleChange}
-//             className="accent-indigo-600"
-//           />
-//           <span className="text-sm">Active Admin</span>
-//         </div>
-
-//         {/* Actions */}
-//         <div className="flex justify-end gap-3 pt-4 border-t">
-//           <button
-//             type="button"
-//             onClick={onClose}
-//             className="px-4 py-2 border rounded-md"
-//           >
-//             Cancel
-//           </button>
-//           <button
-//             type="submit"
-//             className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-//           >
-//             {initialData ? "Update Admin" : "Save Admin"}
-//           </button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
-
-// /* Reusable Input Component */
-// const Input = ({ label, name, type = "text", value, onChange }) => (
-//   <div>
-//     <label className="block text-sm font-medium text-gray-600 mb-1">
-//       {label}
-//     </label>
-//     <input
-//       type={type}
-//       name={name}
-//       value={value}
-//       onChange={onChange}
-//       className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-//       required
-//     />
-//   </div>
-// );
-
-// export default AdminForm;
-
 import { useCreateAdmin } from "../../utils/hooks/useCreateAdmin";
-
+// import { API_ROUTES } from "../../constants/api_constants";
 import { useEffect, useState } from "react";
+import {usePost } from "../../utils/hooks/api_hooks"
 import {
   Box,
   Button,
@@ -153,6 +15,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { APIRequest } from "../../utils/api_request";
+import { API_ROUTES } from "../../utils/api_constants";
 
 const STATES = [
   "Madhya Pradesh",
@@ -166,7 +30,7 @@ const STATES = [
   "West Bengal",
 ];
 
-const AdminForm = ({ initialData, onSubmit, onClose }) => {
+const AdminForm = ({ initialData, onClose }) => {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -182,6 +46,7 @@ const AdminForm = ({ initialData, onSubmit, onClose }) => {
   });
 
   const [errors, setErrors] = useState({});
+//   const { mutate, isLoading } = useCreateAdmin();
 
   useEffect(() => {
     if (initialData) {
@@ -193,6 +58,18 @@ const AdminForm = ({ initialData, onSubmit, onClose }) => {
     const { name, value, checked, type } = e.target;
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
+  const { mutate, isPending, isError } = usePost(
+  API_ROUTES.CREATE_ADMIN,
+  {
+    onSuccess: (res) => {
+      console.log("Admin created ✅", res);
+    },
+    onError: (err) => {
+      console.error("Create admin failed ❌", err);
+    },
+  }, {}
+);
+
 
   const validate = () => {
     const newErrors = {};
@@ -216,7 +93,15 @@ const AdminForm = ({ initialData, onSubmit, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    onSubmit(form);
+   
+     mutate(form, {
+    onSuccess: () => {
+      onClose(); // close dialog after success
+    },
+    onError: (error) => {
+      console.error("Create admin failed:", error);
+    },
+})
   };
 
   return (
