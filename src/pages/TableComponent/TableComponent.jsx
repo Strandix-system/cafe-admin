@@ -4,15 +4,17 @@ import {
     useMaterialReactTable,
 } from 'material-react-table';
 import { Box, Card, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
-// import ConfirmationDialog from '../ConfirmationDialog';
 import { get } from 'lodash';
 import { keepPreviousData } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ExporterTable from './ExporterTable';
-import { Columns, Filter, FilterX, GripVertical, List, MoreVertical, Search, X } from 'lucide-react';
-import { useFetch } from '@/utils/hooks/useApi';
-import { API_ROUTES } from '@/utils/constants';
+import { Columns, DeleteIcon, Filter, FilterX, GripVertical, List, MoreVertical, Search, Trash, X } from 'lucide-react';
+import { useDelete, useFetch } from "../../utils/hooks/api_hooks";
+import { API_ROUTES } from "../../utils/api_constants";
+import DeleteConfirmationDialog from "../../components/common/DeleteConfirmDialog";
+import toast from 'react-hot-toast';
+import { queryClient } from '../../lib/queryClient';
 
 const tableIcons = {
     FilterListIcon: () => <Filter size={18} />,
@@ -79,6 +81,11 @@ const TableComponent = (props) => {
         pageSize: params?.limit || 10,
     });
     const [globalFilter, setGlobalFilter] = useState("");
+    const [deleteState, setDeleteState] = useState({
+        open: false,
+        id: null,
+        name: "",
+    });
 
     // Handle API calls
     const { data, isLoading, isError, error, refetch, isRefetching } = useFetch(
@@ -98,60 +105,44 @@ const TableComponent = (props) => {
         }
     );
 
-    //   const { mutate: deleteMutation } = useDelete(API_ROUTES.deleteApiEndPoint, {
-    //     onSuccess: () => {
-    //       queryClient.invalidateQueries({
-    //         queryKey: [
-    //           querykey,
-    //           {
-    //             ...(globalFilter && { search: globalFilter }),
-    //           }
-    //         ]
-    //       });
-    //       afterSuccessfullDeletion && afterSuccessfullDeletion();
-    //       // TODO : make our own custom
-    //     //   dispatch(closeDialog()); 
-    //       dispatch(
-    //         showMessage({
-    //           messagetitle: `Delete ${slug}`,
-    //           message: ` ${slug} has been successfully deleted.`,
-    //           autoHideDuration: 5000,
-    //           anchorOrigin: {
-    //             vertical: 'top',
-    //             horizontal: 'right'
-    //           },
-    //           variant: 'success'
-    //         })
-    //       )
-    //     },
-    //     onError: (error) => {
-    //       dispatch(
-    //         showMessage({
-    //           message: error ?? 'Something went wrong',
-    //           autoHideDuration: 5000,
-    //           anchorOrigin: {
-    //             vertical: 'top',
-    //             horizontal: 'right'
-    //           },
-    //           variant: 'error'
-    //         })
-    //       )
-    //     },
-    //   });
+    const { mutate: deleteMutation, isPending: isDeletePending} = useDelete(API_ROUTES[deleteApiEndPoint], {
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [
+                    querykey,
+                    {
+                        ...(globalFilter && { search: globalFilter }),
+                    }
+                ]
+            });
+            setDeleteState({ open: false, id: null, name: "" });
+            afterSuccessfullDeletion && afterSuccessfullDeletion();
+            toast.error(`${slug} has been successfully deleted.`)
+        },
+        onError: (error) => {
+            toast.error(error ?? 'Something went wrong')
+        },
+    });
 
-    // Make confirmation modal with mui
-    //   const handleClickDelete = (data) => {
-    //     dispatch(openDialog({
-    //       children: <ConfirmationDialog slug={slug} callBack={(id) => deleteMutation(id)} />,
-    //       data: get(data, 'original._id')
-    //     }))
-    //   }
+    const handleClickDelete = (row) => {
+        console.log(row)
+        setDeleteState({
+            open: true,
+            id: get(row, "original._id"),
+            name: get(row, "original.name", ""),
+        });
+    };
 
-    console.log(data)
+    const handleConfirmDelete = () => {
+        console.log(deleteState)
+        deleteMutation(deleteState.id);
+    };
 
     const table = useMaterialReactTable({
         columns,
         data: rows ?? get(data, "result.results", []),
+
+
         enableSortingRemoval: false,
         sortingFns: {
             caseInsensitive: caseInsensitiveSortingFn,
@@ -166,12 +157,6 @@ const TableComponent = (props) => {
                 right: ['mrt-row-actions'],
             },
             ...(manualPagination && { pagination }),
-        },
-        displayColumnDefOptions: {
-            'mrt-row-actions': {
-                header: 'Actions', //change header text
-                size: 150, //make actions column wider
-            },
         },
 
         // handle table current State
@@ -218,21 +203,29 @@ const TableComponent = (props) => {
         // handle serial number
         enableRowNumbers: serialNo,
         displayColumnDefOptions: {
+            'mrt-row-actions': {
+                header: 'Actions',
+                size: 150,
+            },
             'mrt-row-numbers': {
                 muiTableHeadCellProps: {
-                    children: 'S. No.', // Change the column header
+                    children: 'S. No.',
                 },
                 size: 50,
-                minSize: 80
+                minSize: 80,
             },
         },
 
+
         // handle row selection
+        // enableRowSelection: enableRowSelection,
+        // onRowSelectionChange: (newRowSelection) => {
+        //     setRowSelection(newRowSelection)
+        // },
         enableRowSelection: enableRowSelection,
-        onRowSelectionChange: (newRowSelection) => {
-            setRowSelection(newRowSelection)
-        },
-        getRowId: (row) => row?._id,
+        onRowSelectionChange: setRowSelection,
+
+        // getRowId: (row) => row?._id,
         positionToolbarAlertBanner: 'none',
 
         // handle row actions like edit/delete
@@ -243,9 +236,9 @@ const TableComponent = (props) => {
                 {
                     label: deleteAction?.label ? deleteAction?.label : "Delete",
                     // complete delete flow
-                    onClick: deleteAction?.onClick ? deleteAction?.onClick : () => console.log("Hello deleted"),
+                    onClick: deleteAction?.onClick ? deleteAction?.onClick : () => handleClickDelete(row),
                     isDisabled: deleteAction?.isDisabled ? deleteAction?.isDisabled : false,
-                    icon: 'material-solid:delete',
+                    icon: Trash,
                     color: '#f00'
                 }
             ] : actions;
@@ -299,7 +292,7 @@ const TableComponent = (props) => {
         renderTopToolbarCustomActions: (props) => (
             <Box className="w-full flex justify-end">
                 {enableRefetch && <Tooltip title="Refresh"><IconButton onClick={refetch}><RestoreIcon size={24} /></IconButton></Tooltip>}
-                {enableExportTable && <ExporterTable {...{ ...props, ...exporterTableProps }}/>}
+                {enableExportTable && <ExporterTable {...{ ...props, ...exporterTableProps }} />}
             </Box>
         ),
 
@@ -329,7 +322,9 @@ const TableComponent = (props) => {
         paginationDisplayMode: 'pages',
         ...(manualPagination && { onPaginationChange: setPagination }),
         manualPagination,
-        rowCount: manualPagination ? get(data, "result.totalResults", 0) : (rows?.length ?? get(data, "result.totalResults", 0)),
+        rowCount: manualPagination
+            ? get(data, "result.totalResults", 0)
+            : (rows?.length ?? get(data, "result.totalResults", 0)),
 
         // Update the table UI
         muiSearchTextFieldProps: {
@@ -404,13 +399,26 @@ const TableComponent = (props) => {
         } : undefined,
     });
 
+    // useEffect(() => {
+    //     if (handleRowSelection) {
+    //         const selectedRowIds = Object.keys(rowSelection);
+    //         const selectedRows = rows ? rows.filter(row => selectedRowIds.includes(row._id)) : get(data, "result.results", []) ? get(data, "result.results", []).filter(row => selectedRowIds.includes(row._id)) : [];
+    //         handleRowSelection(selectedRows);
+    //     }
+    // }, [rowSelection])
+
     useEffect(() => {
-        if (handleRowSelection) {
-            const selectedRowIds = Object.keys(rowSelection);
-            const selectedRows = rows ? rows.filter(row => selectedRowIds.includes(row._id)) : get(data, "result.results", []) ? get(data, "result.results", []).filter(row => selectedRowIds.includes(row._id)) : [];
-            handleRowSelection(selectedRows);
-        }
-    }, [rowSelection])
+        if (!handleRowSelection) return;
+
+        const selectedRows = table
+            .getSelectedRowModel()
+            .rows
+            .map(row => row.original);
+
+        console.log("SELECTED ROWS FROM TABLE:", selectedRows);
+
+        handleRowSelection(selectedRows);
+    }, [rowSelection]);
 
     if (isError) return <div>{error}</div>;
 
@@ -424,7 +432,16 @@ const TableComponent = (props) => {
                 table={table}
             />
         </Card>
+        <DeleteConfirmationDialog
+            open={deleteState.open}
+            onClose={() => setDeleteState({ open: false, id: null, name: "" })}
+            onConfirm={handleConfirmDelete}
+            slug={slug}
+            name={deleteState.name}
+            loading={isDeletePending}
+        />
     </motion.div>
+
 };
 
 export default TableComponent;

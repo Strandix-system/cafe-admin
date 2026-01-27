@@ -4,7 +4,6 @@ import ForgotPassword from "../pages/ForgotPassword";
 import Login  from "../pages/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 
-
 const AppRoutes = () => {
   return (
     <Routes>
@@ -13,7 +12,6 @@ const AppRoutes = () => {
         path="/dashboard"
         element={<Dashboard />}
       />
-
       <Route path="/forgot-password" element={<ForgotPassword/>}/>
     </Routes>
   );

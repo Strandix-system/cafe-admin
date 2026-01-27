@@ -57,42 +57,6 @@ const Login = () => {
     }
   })
 
-  /*const loginMutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: (res) => {
-      login({ token: res.token, role: res.user.role}, rememberMe);
-      navigate(res.user.role === "superadmin" ? "/superadmin/dashboard" : "/admin/dashboard");
-    },
-    onError: () => {
-      setSnackbar({ open: true, message: "Invalid email or password", severity: "error" });
-    },
-  });
-*/
-/*   const handleLogin = (data) => {
-    mutate(data, {
-      onSuccess: (res) => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("role", res.user.role);
-
-        navigate(res.user.role === "SUPER_ADMIN" ? "/superadmin/dashboard" : "/admin/dashboard");
-
-
-        if (res.user.role === "SUPER_ADMIN") {
-          navigate("/superadmin/dashboard");
-        } else {
-          navigate("/admin/dashboard");
-        }
-
-        },
-      onError: () => {
-        alert("Invalid credentials");
-      },
-    });
-  };
-*/
-
-// const onSubmit = (data) => mutate(data); 
-
   const onSubmit = async (data) => loginMutate(data);
 
   return (
