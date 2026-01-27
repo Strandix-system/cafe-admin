@@ -5,8 +5,10 @@ import { API_ROUTES } from "../utils/api_constants";
 
 import { api_enums } from "../enums/api";
 import { AUTH_ROLES } from "../utils/constant";
+import { createContext } from "react";
+import { useContext } from "react";
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -51,7 +53,7 @@ function AuthProvider({ children }) {
 }
 
 function useAuth() {
-  const context = React.useContext(AuthContext);
+  const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within a AuthProvider");
   }

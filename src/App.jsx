@@ -37,12 +37,10 @@ function App() {
       <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <BrowserRouter>
               <AppRoutes>
                 <Login />
               </AppRoutes>
-            </BrowserRouter>
-          </AuthProvider>
+            </AuthProvider>
         </QueryClientProvider>
       </CacheProvider>
     </>

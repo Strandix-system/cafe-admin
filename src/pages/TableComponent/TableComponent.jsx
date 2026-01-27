@@ -4,18 +4,14 @@ import {
     useMaterialReactTable,
 } from 'material-react-table';
 import { Box, Card, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
-// import ConfirmationDialog from '../ConfirmationDialog';
 import { get } from 'lodash';
 import { keepPreviousData } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ExporterTable from './ExporterTable';
-import { Columns, DeleteIcon, Filter, FilterX, GripVertical, List, MoreVertical, Search, Trash, X } from 'lucide-react';
-import { useDelete, useFetch } from '@/utils/hooks/useApi';
+import { Columns, Filter, FilterX, GripVertical, List, MoreVertical, Search, X } from 'lucide-react';
+import { useFetch } from '@/utils/hooks/useApi';
 import { API_ROUTES } from '@/utils/constants';
-import DeleteConfirmationDialog from '../common/DeleteConfirmDialog';
-import toast from 'react-hot-toast';
-import { queryClient } from '@/lib/queryClient';
 
 const tableIcons = {
     FilterListIcon: () => <Filter size={18} />,
