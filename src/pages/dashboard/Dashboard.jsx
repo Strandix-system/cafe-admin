@@ -12,6 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useNavigate } from "react-router-dom";
+import CreateLayout from "./CreateLayout";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -50,23 +51,25 @@ const stats = isSuperAdmin
     <Box
       display="flex"
       bgcolor="#FAF7F2"
+      overflow="hidden"
       sx={{
-        minHeight: "100vh",
+        height: "100vh",
         background:
           "linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #e0e7ff 100%)",
-        p: { xs: 2, md: 4 },
       }}
     >
       {/* ================= SIDEBAR (SUPER ADMIN) ================= */}
       {isSuperAdmin && (
         <Box
           width={260}
+          height="100vh"     
           bgcolor="#6F4E37"
           color="white"
           p={3}
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
+          flexShrink={0}
         >
           <Box>
             <Typography variant="h6" fontWeight={700} mb={4}>
@@ -89,7 +92,7 @@ const stats = isSuperAdmin
               })}
             </Stack>
           </Box>
-          <Stack spacing={1}>
+          <Box p={2} flexShrink={0}>
             {sideBarItems.common.map((item) => {
               const Icon = item.icon;
 
@@ -103,14 +106,14 @@ const stats = isSuperAdmin
                 />
               );
             })}
-          </Stack>
+          </Box>
 
         </Box>
       )}
 
-      <Box maxWidth="1600px" mx="auto" display="flex" flexDirection="column" gap={4}>
+      <Box flex={1} display="flex" flexDirection="column" overflow="hidden">
         {/* HEADER */}
-        <Box>
+        <Box  px={4} py={3} flexShrink={0}>
           <Typography variant="h4" fontWeight={700} gutterBottom color="#4B2E2B">
             {isSuperAdmin ? "Super Admin Dashboard" : "Admin Dashboard"}
           </Typography>
@@ -123,8 +126,14 @@ const stats = isSuperAdmin
         </Box>
 
         {/* STATS */}
-        {isSuperAdmin && (
-          <Box width="100%">
+        {isSuperAdmin && activeTab === "stats" && (
+          <Box flex={1}
+            px={4}
+            pb={4}
+            sx={{
+              overflowY: "auto",
+              scrollBehavior: "smooth",
+            }} >
           <Grid container spacing={3}>
             {stats.map((stat) => (
               <Grid item xs={12} sm={6} md={4} key={stat.label}>
@@ -140,8 +149,18 @@ const stats = isSuperAdmin
 
         )}
 
-        {isSuperAdmin && activeTab === "admins" && <AdminList />}
+        {isSuperAdmin && activeTab === "admins" && (
+          <Box height="100%" overflow="auto">
+            <AdminList />
+          </Box>
+        )}
 
+        {isSuperAdmin && activeTab === "layouts" && (
+          <Box height="100%" overflow="auto">
+            <CreateLayout />
+          </Box>
+        )}
+          
         {/* ADMIN PLACEHOLDER */}
         {isAdmin && (
           <Card sx={{ borderRadius: 3 }}>

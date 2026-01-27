@@ -25,6 +25,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
 import { api_enums } from "../enums/api";
+import toast from "react-hot-toast";
 
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -50,9 +51,11 @@ const Login = () => {
     onSuccess: (res) => {
       localStorage.setItem(api_enums.JWT_ACCESS_TOKEN, res.result.token);
       reset();
+      toast.success("Logged in successfully!!");
       navigate("/dashboard");
     },
     onError: (error) => {
+      toast.error(error);
       console.log(error)
     }
   })
