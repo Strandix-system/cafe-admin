@@ -1,14 +1,31 @@
 import { api_enums } from "../enums/api";
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log(BASE_URL)
+
+// const handleResponse = async (response) => {
+//   if (!response.ok) {
+//     const error = await response.json();
+//     throw error.message || "Something went wrong";
+//   }
+//   return response.json();
+// };
 const handleResponse = async (response) => {
-  if (!response.ok) {
-    const error = await response.json();
-    throw error.message || "Something went wrong";
+  const contentType = response.headers.get("content-type");
+
+  let data = null;
+  if (contentType && contentType.includes("application/json")) {
+    data = await response.json();
   }
-  return response.json();
+
+  if (!response.ok) {
+    throw data?.message || data?.error || "Request failed";
+  }
+
+  return data;
 };
+
 
 const getBody = (data) =>
   data instanceof FormData ? data : JSON.stringify(data);
@@ -27,6 +44,7 @@ const getHeaders = (body = {}) => {
   };
 };
 
+
 const buildQueryString = (params) => {
   return Object.keys(params)
     .map((key) => {
@@ -41,7 +59,7 @@ export const APIRequest = {
     const queryString = buildQueryString(params);
     console.log("ENDPOINT:", endpoint);
 
-    const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {
+    const response = await fetch(`${BASE_URL}${endpoint}?${queryString}`, {
       method: "GET",
       headers: getHeaders(),
     });

@@ -21,7 +21,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import cafe1 from "../assets/cafe1.jpg";
 import * as yup from "yup";
 
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
+// import API_ROUTES from "../utils/api_constants";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
 import { api_enums } from "../enums/api";
