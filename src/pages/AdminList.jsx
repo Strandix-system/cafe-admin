@@ -77,9 +77,9 @@ const AdminList = () => {
           justifyContent: "space-between",
         }}
       >
-        <Typography variant="h6" fontWeight={600}>
+        {/* <Typography variant="h6" fontWeight={600}>
           Admin Management
-        </Typography>
+        </Typography> */}
 
         {isSuperAdmin && (
           <Button
@@ -91,7 +91,6 @@ const AdminList = () => {
           </Button>
         )}
       </Box>
-
 
       <TableComponent
         slug="admin"

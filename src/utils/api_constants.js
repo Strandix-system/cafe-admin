@@ -4,5 +4,6 @@ export const API_ROUTES = {
     getUsers: "/admin/get-users",
     delete: "/admin/delete",
     superAdminStats: "/admin/get-users",
-    createLayout: "/layout/create",
+    getLayouts: "",
+    createLayout: "layout/template",
 }

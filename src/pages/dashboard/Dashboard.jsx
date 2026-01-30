@@ -13,6 +13,22 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useNavigate } from "react-router-dom";
 import CreateLayout from "./CreateLayout";
+import LayoutsPage from "../LayoutsPage";
+
+const HEADER_CONFIG = {
+  stats: {
+    title: "Super Admin Dashboard",
+    subtitle: "Platform-wide insights across all cafes",
+  },
+  admins: {
+    title: "Admin Management",
+    subtitle: "Create, update and manage cafe admins",
+  },
+  layouts: {
+    title: "Layout Builder",
+    subtitle: "Design and manage cafe website layouts",
+  },
+};
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -21,6 +37,13 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("stats");
   const [statsData, setStatsData] = useState(null);
+
+  const header = isSuperAdmin
+    ? HEADER_CONFIG[activeTab]
+    : {
+        title: "Admin Dashboard",
+        subtitle: "Your cafe performance overview",
+  };
 
   const {
     data: superAdminStats,
@@ -113,15 +136,13 @@ const stats = isSuperAdmin
 
       <Box flex={1} display="flex" flexDirection="column" overflow="hidden">
         {/* HEADER */}
-        <Box  px={4} py={3} flexShrink={0}>
-          <Typography variant="h4" fontWeight={700} gutterBottom color="#4B2E2B">
-            {isSuperAdmin ? "Super Admin Dashboard" : "Admin Dashboard"}
+        <Box px={4} py={3} flexShrink={0}>
+          <Typography variant="h4" fontWeight={700}>
+            {header.title}
           </Typography>
 
           <Typography color="text.secondary">
-            {isSuperAdmin
-              ? "Platform-wide insights across all cafes"
-              : "Your cafe performance overview"}
+            {header.subtitle}
           </Typography>
         </Box>
 
@@ -157,7 +178,7 @@ const stats = isSuperAdmin
 
         {isSuperAdmin && activeTab === "layouts" && (
           <Box height="100%" overflow="auto">
-            <CreateLayout />
+            <LayoutsPage />
           </Box>
         )}
           
