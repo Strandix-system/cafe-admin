@@ -12,8 +12,9 @@ import { useAuth } from "../../context/AuthContext";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useNavigate } from "react-router-dom";
-import CreateLayout from "./CreateLayout";
 import LayoutsPage from "../LayoutsPage";
+import MenuIcon from "@mui/icons-material/Menu";
+import IconButton from "@mui/material/IconButton";
 
 const HEADER_CONFIG = {
   stats: {
@@ -34,6 +35,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { role, logout, isSuperAdmin, isAdmin } = useAuth();
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("stats");
   const [statsData, setStatsData] = useState(null);
@@ -49,9 +51,10 @@ export default function Dashboard() {
     data: superAdminStats,
     isLoading: isStatsLoading,
     isError,
-  } = useFetch("getMe", API_ROUTES.superAdminStats, {}, {
+  } = useFetch("get-me", API_ROUTES.superAdminStats, {}, {
     enabled: isSuperAdmin,
     onSuccess: (res) => {
+      queryClient.invalidateQueries({queryKey:["get-me"]});
       setStatsData(res.result);
     },
     onError: (error) => {
@@ -84,23 +87,51 @@ const stats = isSuperAdmin
       {/* ================= SIDEBAR (SUPER ADMIN) ================= */}
       {isSuperAdmin && (
         <Box
-          width={260}
-          height="100vh"     
+          height="100vh"
           bgcolor="#6F4E37"
           color="white"
-          p={3}
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
           flexShrink={0}
+          sx={{
+            width: sidebarOpen ? 260 : 80,
+            transition: "width 0.3s ease",
+          }}
         >
+          {/* ===== TOP SECTION ===== */}
           <Box>
-            <Typography variant="h6" fontWeight={700} mb={4}>
-              ☕ Super Admin
-            </Typography>
+            {/* Header */}
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={1}
+              px={2}
+              py={2}
+            >
+              <IconButton
+                onClick={() => setSidebarOpen(prev => !prev)}
+                sx={{ color: "white" }}
+              >
+                <MenuIcon />
+              </IconButton>
 
-            <Stack spacing={1}>
-              {(isSuperAdmin ? sideBarItems.superAdmin : sideBarItems.admin).map((item) => {
+              {sidebarOpen && (
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
+                  noWrap
+                >
+                  Super Admin
+                </Typography>
+              )}
+            </Box>
+
+            <Divider sx={{ borderColor: "rgba(255,255,255,0.2)", mb: 1 }} />
+
+            {/* Menu Items */}
+            <Stack spacing={0.5} px={1}>
+              {sideBarItems.superAdmin.map((item) => {
                 const Icon = item.icon;
 
                 return (
@@ -109,30 +140,26 @@ const stats = isSuperAdmin
                     icon={<Icon />}
                     label={item.label}
                     active={activeTab === item.tab}
+                    collapsed={!sidebarOpen}
                     onClick={() => setActiveTab(item.tab)}
                   />
                 );
               })}
             </Stack>
           </Box>
-          <Box p={2} flexShrink={0}>
-            {sideBarItems.common.map((item) => {
-              const Icon = item.icon;
 
-              return (
-                <Sidebar
-                  key={item.key}
-                  icon={<Icon />}
-                  label={item.label}
-                  active={false}
-                  onClick={handleLogout} // 🔥 logout handler
-                />
-              );
-            })}
+          {/* ===== FOOTER ===== */}
+          <Box px={1} pb={2}>
+            <Sidebar
+              icon={<LogoutIcon />}
+              label="Logout"
+              collapsed={!sidebarOpen}
+              onClick={handleLogout}
+            />
           </Box>
-
         </Box>
       )}
+
 
       <Box flex={1} display="flex" flexDirection="column" overflow="hidden">
         {/* HEADER */}
@@ -144,6 +171,7 @@ const stats = isSuperAdmin
           <Typography color="text.secondary">
             {header.subtitle}
           </Typography>
+          
         </Box>
 
         {/* STATS */}
