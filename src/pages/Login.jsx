@@ -26,6 +26,7 @@ import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
 import { api_enums } from "../enums/api";
 import toast from "react-hot-toast";
+import { queryClient } from "../lib/queryClient";
 
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -34,6 +35,8 @@ const schema = yup.object({
 
 const Login = () => {
   
+  const { login } = useAuth();
+
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "error" });
@@ -48,8 +51,9 @@ const Login = () => {
   });
 
   const {mutate: loginMutate, isPending} = usePost(API_ROUTES.login, {
-    onSuccess: (res) => {
-      localStorage.setItem(api_enums.JWT_ACCESS_TOKEN, res.result.token);
+    onSuccess: async (res) => {
+      //localStorage.setItem(api_enums.JWT_ACCESS_TOKEN, res.result.token);
+      await login(res.result.token);
       reset();
       toast.success("Logged in successfully!!");
       navigate("/dashboard");

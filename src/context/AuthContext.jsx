@@ -1,27 +1,46 @@
-import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useCallback, useContext } from "react";
 import { useFetch } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
 import { api_enums } from "../enums/api";
 import { AUTH_ROLES } from "../utils/constant";
-import { createContext } from "react";
-import { useContext } from "react";
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(undefined);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  const {data: userData , isLoading, isError } = useFetch('get-me', API_ROUTES.getMe, {}, {
-    enabled: !!localStorage.getItem(api_enums.JWT_ACCESS_TOKEN)
-  });
+  // const {data: userData , isLoading, isError } = useFetch('get-me', API_ROUTES.getMe, {}, {
+  //   enabled: !!localStorage.getItem(api_enums.JWT_ACCESS_TOKEN)
+  // });
+
+  const { data: userData, isLoading, isError, refetch } = useFetch(
+    "get-me",
+    API_ROUTES.getMe,
+    {},
+    { enabled: false }
+  );
+
+  const login = useCallback(async (token) => {
+    localStorage.setItem(api_enums.JWT_ACCESS_TOKEN, token);
+
+    const res = await refetch(); //  get user immediately
+
+    if (res?.data?.result) {
+      setUser(res.data.result);
+      setIsAuthenticated(true);
+    }
+
+    setAuthLoading(false);
+  }, [refetch]);
   
   useEffect(()=>{
     if(userData?.result){
       setIsAuthenticated(true);
       setUser(userData?.result);
     }
+    setAuthLoading(false);
   },[userData]);
 
   useEffect(()=>{
@@ -44,6 +63,7 @@ function AuthProvider({ children }) {
         isAdmin: user?.role === AUTH_ROLES.ADMIN,
         isSuperAdmin: user?.role === AUTH_ROLES.SUPER_ADMIN,
         isAuthenticated,
+        login,
         logout,
       }}>
       {children}
