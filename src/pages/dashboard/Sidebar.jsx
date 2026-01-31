@@ -1,14 +1,15 @@
 import { Box, Typography } from "@mui/material";
 
-export default function Sidebar({ icon, label, active, onClick }) {
+export default function Sidebar({ icon, label, active, onClick, collapsed }) {
   return (
     <Box
       onClick={onClick}
       display="flex"
       alignItems="center"
-      gap={2}
-      px={2}
-      py={1.5}
+      gap={collapsed ? 0 : 2}
+      justifyContent={collapsed ? "center" : "flex-start"}
+      px={collapsed ? 1 : 2}
+      py={1.25}
       borderRadius={2}
       sx={{
         cursor: "pointer",
@@ -17,7 +18,9 @@ export default function Sidebar({ icon, label, active, onClick }) {
       }}
     >
       {icon}
-      <Typography fontWeight={500}>{label}</Typography>
+      {!collapsed && (
+        <Typography fontWeight={500}>{label}</Typography>
+      )}
     </Box>
   );
 }

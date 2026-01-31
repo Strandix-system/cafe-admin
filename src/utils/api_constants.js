@@ -2,7 +2,13 @@ export const API_ROUTES = {
     login: "auth/login",
     getMe: "auth/me",
     getUsers: "/admin/get-users",
+
+    getUserById: (_id) => `admin/get-user/${_id}`,
+    updateUsers: (_id) => `admin/get-user/${_id}`,
+    
     delete: "/admin/delete",
     superAdminStats: "/admin/get-users",
-    createLayout: "/layout/create",
+    getLayouts: "layout/",
+    createLayout: "layout/template",
+
 }
