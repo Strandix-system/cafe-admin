@@ -7,7 +7,7 @@ import LayoutPreviewDialog from "../components/layouts/LayoutPreviewDialog";
 import { API_ROUTES } from "../utils/api_constants";
 
 export default function LayoutsPage() {
-  const { data, isLoading } = useFetch("layouts", API_ROUTES.getLayouts);
+  const { data, isLoading } = useFetch("layout", API_ROUTES.getLayouts);
   const [openCreate, setOpenCreate] = useState(false);
   const [previewLayout, setPreviewLayout] = useState(null);
 

@@ -38,7 +38,7 @@ export default function CreateLayoutDialog({ open, onClose }) {
       title: "",
       description: "",
       imageCount: 0,
-      // images: [],
+      images: [],
     },
   });
 
