@@ -1,15 +1,42 @@
 import TableComponent from "./TableComponent/TableComponent"
-import { Box, Button } from "@mui/material"
+import { Box, Button, Switch, Chip } from "@mui/material"
 import { useAuth } from "../context/AuthContext"
-import { Chip, Typography, Card } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Edit, Eye, Power, Trash2, Plus } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { API_ROUTES } from "../utils/api_constants"
+import { usePatch } from "../utils/hooks/api_hooks"
+import { queryClient } from "../lib/queryClient"
 
 const AdminList = () => {
     const navigate = useNavigate();
     const { user, isSuperAdmin, isAdmin } = useAuth();
     const { adminId } = useParams();
+
+    const [activeTab, setActiveTab] = useState("active");
+
+  const { mutate: updateUserStatus } = usePatch(
+    API_ROUTES.updateUsers,
+    {
+      onSuccess: () => {
+        // 🔁 refresh admin table after update
+        toast.success("Status updated");
+        queryClient.invalidateQueries(["get-users"]);
+      },
+      onError: (error) => {
+        console.error("Status update failed:", error);
+      },
+    }
+  );
+
+  const handleToggleStatus = (row) => {
+    const newStatus = !row.original.isActive;
+
+    updateUserStatus({
+      id: row.original._id,
+      isActive: newStatus,
+    });
+  };
 
     const columns = useMemo(
     () => [
@@ -30,22 +57,30 @@ const AdminList = () => {
       {
         id: "status",
         header: "Status",
-        Cell: ({ row }) => (
-          <Chip
-            label={row.original.isActive ? "Active" : "Inactive"}
-            size="small"
-            sx={{
-              backgroundColor: row.original.isActive
-                ? "#d1ffbe"
-                : "#ffdada",
-              color: row.original.isActive
-                ? "#3db309"
-                : "#FF0000",
-            }}
-          />
-        ),
-      },
-    ],
+        Cell: ({ row }) => {
+          const isActive = row.original.isActive;
+
+          return (
+            <Box display="flex" alignItems="center" gap={1}>
+              <Switch
+                checked={isActive}
+                color="success"
+                onChange={() => handleToggleStatus(row)}
+              />
+
+              <Chip
+                label={isActive ? "Active" : "Inactive"}
+                size="small"
+                sx={{
+                  backgroundColor: isActive ? "#D1FFBE" : "#FFDADA",
+                  color: isActive ? "#3DB309" : "#FF0000",
+                }}
+              />
+            </Box>
+          );
+        },
+        },
+      ],
     []
   );
 
