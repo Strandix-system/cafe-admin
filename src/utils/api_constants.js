@@ -4,11 +4,13 @@ export const API_ROUTES = {
     getUsers: "/admin/get-users",
 
     getUserById: (_id) => `admin/get-user/${_id}`,
-    updateUsers: (_id) => `admin/get-user/${_id}`,
+    updateUsers: (_id) => `admin/update/${_id}`,
     
     delete: "/admin/delete",
     superAdminStats: "/admin/get-users",
-    getLayouts: "layout/",
+    getLayouts: "layout/cafe-layout",
     createLayout: "layout/template",
+
+    getCategories: "",
 
 }
