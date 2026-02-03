@@ -62,16 +62,32 @@ export default function Dashboard() {
     },
   });
 
+  // ===== ADMIN STATS =====
+  const { data: adminStats } = useFetch(
+    "admin-stats",
+    API_ROUTES.adminStats,
+    {},
+    {
+      enabled: isAdmin,
+      onSuccess: (res) => setStatsData(res.result),
+    }
+  );
+
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
 const stats = isSuperAdmin
-  ? getSuperAdminStats(statsData)
+  ? getSuperAdminStats(superAdminStats)
   : isAdmin
-  ? getAdminStats(statsData)
+  ? getAdminStats(adminStats)
   : [];
+
+   // --------- ROLE BASED SIDEBAR ITEMS ----------
+  const sidebarMenu = isSuperAdmin
+    ? sideBarItems.superAdmin
+    : sideBarItems.admin;
 
   return (
     <Box
@@ -85,7 +101,7 @@ const stats = isSuperAdmin
       }}
     >
       {/* ================= SIDEBAR (SUPER ADMIN) ================= */}
-      {isSuperAdmin && (
+
         <Box
           height="100vh"
           bgcolor="#6F4E37"
@@ -122,7 +138,7 @@ const stats = isSuperAdmin
                   fontWeight={700}
                   noWrap
                 >
-                  Super Admin
+                  {isSuperAdmin ? "Super Admin" : "Admin"}
                 </Typography>
               )}
             </Box>
@@ -131,7 +147,7 @@ const stats = isSuperAdmin
 
             {/* Menu Items */}
             <Stack spacing={0.5} px={1}>
-              {sideBarItems.superAdmin.map((item) => {
+              {sidebarMenu.map((item) => {
                 const Icon = item.icon;
 
                 return (
@@ -158,7 +174,7 @@ const stats = isSuperAdmin
             />
           </Box>
         </Box>
-      )}
+      
 
 
       <Box flex={1} display="flex" flexDirection="column" overflow="hidden">
@@ -175,7 +191,7 @@ const stats = isSuperAdmin
         </Box>
 
         {/* STATS */}
-        {isSuperAdmin && activeTab === "stats" && (
+        {activeTab === "stats" && (
           <Box flex={1}
             px={4}
             pb={4}
