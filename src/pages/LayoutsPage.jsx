@@ -10,9 +10,7 @@ export default function LayoutsPage() {
   const navigate = useNavigate();
 
   const { data, isLoading } = useFetch("getLayouts", API_ROUTES.getLayouts);
-  const [previewLayout, setPreviewLayout] = useState(null);
-
-  const layouts = data?.data || [];
+  const layouts = data?.result || null ;
 
   return (
     <>
@@ -35,18 +33,17 @@ export default function LayoutsPage() {
       </Box>
 
       <Grid container spacing={3}>
-        {layouts.map((layout) => (
-          <Grid item xs={12} md={4} key={layout.id}>
+        {layouts && (
+          <Grid item xs={12} md={4} key={layouts._id}>
             <LayoutCard
-              layout={layout}
-              onPreview={setPreviewLayout}
+              layout={layouts}
+              onPreview={navigate("/")}
               onDelete={() => {
-                // After delete, refresh list
                 queryClient.invalidateQueries({queryKey:["getLayouts"]});
               }}
             />
           </Grid>
-        ))}
+        )}
       </Grid>
     </>
   );

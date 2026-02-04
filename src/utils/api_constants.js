@@ -8,8 +8,8 @@ export const API_ROUTES = {
     
     delete: "/admin/delete",
     superAdminStats: "/admin/get-users",
-    getLayouts: "layout/cafe-layout",
-    createLayout: "layout/template",
+    getLayouts: "layout/",
+    createLayout: "layout/create",
 
     getCategories: "",
 

@@ -8,6 +8,7 @@ import createCache from "@emotion/cache";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter } from 'react-router-dom';
+import "./index.css"
 
 
 export const queryClient = new QueryClient({

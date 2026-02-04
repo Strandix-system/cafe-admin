@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import LayoutsPage from "../LayoutsPage";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
+import CategoriesList from "../CategoriesList";
 
 const HEADER_CONFIG = {
   stats: {
@@ -29,6 +30,10 @@ const HEADER_CONFIG = {
     title: "Layout Builder",
     subtitle: "Design and manage cafe website layouts",
   },
+  categories: {
+    title: "Menu Categories",
+    subtitle: "Add and manage categories of cusines",
+  }
 };
 
 export default function Dashboard() {
@@ -223,6 +228,12 @@ const stats = isSuperAdmin
         {isSuperAdmin && activeTab === "layouts" && (
           <Box height="100%" overflow="auto">
             <LayoutsPage />
+          </Box>
+        )}
+
+        {isSuperAdmin && activeTab === "categories" && (
+          <Box height="100%" overflow="auto">
+            <CategoriesList />
           </Box>
         )}
           
