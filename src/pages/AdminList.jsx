@@ -115,12 +115,11 @@ const AdminList = () => {
         {/* <Typography variant="h6" fontWeight={600}>
           Admin Management
         </Typography> */}
-
         {isSuperAdmin && (
           <Button
             variant="contained"
             startIcon={<Plus size={18} />}
-            onClick={() => navigate("admins")}
+            onClick={() => navigate("/admin/create")}
           >
             Create Admin
           </Button>

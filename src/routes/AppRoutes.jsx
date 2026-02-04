@@ -5,6 +5,7 @@ import Login  from "../pages/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import LayoutsPage from "../pages/LayoutsPage";
 import CreateLayoutPage from "../pages/CreateLayoutPage";
+import CreateAdmin from "../pages/createAdmin/CreateAdmin";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
       <Route path="/forgot-password" element={<ForgotPassword/>}/>
       <Route path="/layouts" element={<LayoutsPage />} />
       <Route path="/layouts/create" element={<CreateLayoutPage />} />
+      <Route path="/admin/create" element={<CreateAdmin />} />
     </Routes>
   );
 };

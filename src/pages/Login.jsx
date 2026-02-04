@@ -24,9 +24,7 @@ import * as yup from "yup";
 import { useAuth } from "../context/AuthContext";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
-import { api_enums } from "../enums/api";
 import toast from "react-hot-toast";
-import { queryClient } from "../lib/queryClient";
 
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -59,7 +57,7 @@ const Login = () => {
       navigate("/dashboard", { replace: true });
     },
     onError: (error) => {
-      toast.error(error);
+      toast.error(err?.response?.data?.message || "Failed to create admin");
       console.log(error)
     }
   })

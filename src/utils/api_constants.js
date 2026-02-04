@@ -13,4 +13,6 @@ export const API_ROUTES = {
 
     getCategories: "",
 
+    createAdmins:"admin/create"
+
 }
