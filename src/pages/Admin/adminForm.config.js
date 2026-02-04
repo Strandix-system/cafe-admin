@@ -1,0 +1,15 @@
+export const adminFormDefaults = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  cafeName: "",
+  phoneNumber: "",
+  address: "",
+  state: "",
+  city: "",
+  pincode: "",
+  logo: null,
+  profileImage: null,
+  selectedLayout: "layout1",
+};

@@ -8,8 +8,8 @@ export default function Sidebar({ icon, label, active, onClick }) {
       alignItems="center"
       gap={2}
       px={2}
-      py={1.5}
-      borderRadius={2}
+      py={1}
+      borderRadius={9}
       sx={{
         cursor: "pointer",
         bgcolor: active ? "rgba(255,255,255,0.15)" : "transparent",

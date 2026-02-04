@@ -3,11 +3,12 @@ import { api_enums } from "../enums/api";
 export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const handleResponse = async (response) => {
+    const data=await response.json().catch(()=>({}))
   if (!response.ok) {
-    const error = await response.json();
-    throw error.message || "Something went wrong";
+    // const error = await response.json();
+    throw data
   }
-  return response.json();
+  return data;
 };
 
 const getBody = (data) =>
@@ -40,13 +41,13 @@ export const APIRequest = {
   get: async (endpoint, params = {}) => {
     const queryString = buildQueryString(params);
     console.log("ENDPOINT:", endpoint);
-
     const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {
       method: "GET",
       headers: getHeaders(),
     });
     return handleResponse(response);
   },
+  
   post: async (endpoint, data, params = {}) => {
     const queryString = buildQueryString(params);
     const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {

@@ -5,4 +5,5 @@ export const API_ROUTES = {
     delete: "/admin/delete",
     superAdminStats: "/admin/get-users",
     createLayout: "/layout/create",
+    adminCreate:"/admin/create",  // New route for creating admin
 }

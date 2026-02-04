@@ -86,6 +86,7 @@ const AdminList = () => {
             variant="contained"
             startIcon={<Plus size={18} />}
             onClick={() => navigate("admins")}
+            // to give the path
           >
             Create Admin
           </Button>

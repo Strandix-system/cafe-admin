@@ -13,10 +13,13 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useNavigate } from "react-router-dom";
 import CreateLayout from "./CreateLayout";
+import TopNavbar from "../../components/layout/TopNavbar";
+import FullForm from "../../components/dialogs/ProfileDialog";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { role, logout, isSuperAdmin, isAdmin } = useAuth();
+  const [openProfile, setOpenProfile] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("stats");
@@ -36,6 +39,14 @@ export default function Dashboard() {
     },
   });
 
+  const handleOpenProfile = () => {
+  setOpenProfile(true);
+};
+
+const handleCloseProfile = () => {
+  setOpenProfile(false);
+};
+  
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -46,8 +57,8 @@ const stats = isSuperAdmin
   : isAdmin
   ? getAdminStats(statsData)
   : [];
-
   return (
+    
     <Box
       display="flex"
       bgcolor="#FAF7F2"
@@ -58,19 +69,22 @@ const stats = isSuperAdmin
           "linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #e0e7ff 100%)",
       }}
     >
+     
       {/* ================= SIDEBAR (SUPER ADMIN) ================= */}
       {isSuperAdmin && (
         <Box
           width={260}
           height="100vh"     
           bgcolor="#6F4E37"
-          color="white"
-          p={3}
+        //   color="white"
+          px={3}
+          py={2}
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
           flexShrink={0}
         >
+            
           <Box>
             <Typography variant="h6" fontWeight={700} mb={4}>
               ☕ Super Admin
@@ -114,15 +128,17 @@ const stats = isSuperAdmin
       <Box flex={1} display="flex" flexDirection="column" overflow="hidden">
         {/* HEADER */}
         <Box  px={4} py={3} flexShrink={0}>
+             <TopNavbar onProfileClick={handleOpenProfile} />
           <Typography variant="h4" fontWeight={700} gutterBottom color="#4B2E2B">
             {isSuperAdmin ? "Super Admin Dashboard" : "Admin Dashboard"}
           </Typography>
-
+ 
           <Typography color="text.secondary">
             {isSuperAdmin
               ? "Platform-wide insights across all cafes"
               : "Your cafe performance overview"}
           </Typography>
+        
         </Box>
 
         {/* STATS */}
@@ -174,6 +190,11 @@ const stats = isSuperAdmin
             </CardContent>
           </Card>
         )}
+
+      <FullForm
+  open={openProfile}
+  onClose={handleCloseProfile}
+/>  
       </Box>
     </Box>
   );
