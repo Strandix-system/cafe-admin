@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext"
 import { useNavigate, useParams } from 'react-router-dom'
 import { Edit, Eye, Power, Trash2, Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants"
 import { usePatch } from "../utils/hooks/api_hooks"
 import { queryClient } from "../lib/queryClient"
@@ -14,14 +15,16 @@ const AdminList = () => {
     const { adminId } = useParams();
 
     const [activeTab, setActiveTab] = useState("active");
-
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    
   const { mutate: updateUserStatus } = usePatch(
-    API_ROUTES.updateUsers,
+    selectedUserId ? API_ROUTES.updateUsers(selectedUserId) : null,
     {
       onSuccess: () => {
         // 🔁 refresh admin table after update
         toast.success("Status updated");
-        queryClient.invalidateQueries(["get-users"]);
+        queryClient.invalidateQueries({ queryKey: [`get-users-${adminId}`] });
+        queryClient.invalidateQueries({ queryKey: ["get-users"] });
       },
       onError: (error) => {
         console.error("Status update failed:", error);
@@ -31,9 +34,8 @@ const AdminList = () => {
 
   const handleToggleStatus = (row) => {
     const newStatus = !row.original.isActive;
-
+    setSelectedUserId(row.original._id);
     updateUserStatus({
-      id: row.original._id,
       isActive: newStatus,
     });
   };
@@ -59,15 +61,8 @@ const AdminList = () => {
         header: "Status",
         Cell: ({ row }) => {
           const isActive = row.original.isActive;
-
           return (
             <Box display="flex" alignItems="center" gap={1}>
-              <Switch
-                checked={isActive}
-                color="success"
-                onChange={() => handleToggleStatus(row)}
-              />
-
               <Chip
                 label={isActive ? "Active" : "Inactive"}
                 size="small"
@@ -100,6 +95,11 @@ const AdminList = () => {
         navigate(`/dashboard/admins/edit/${row.original._id}`);
       },
     },
+    {
+      label: activeTab === "active" ? "Deactivate" : "Activate",
+      icon: Power,
+      onClick: handleToggleStatus,
+    }
   ];
 
   return (

@@ -56,7 +56,7 @@ const Login = () => {
       await login(res.result.token);
       reset();
       toast.success("Logged in successfully!!");
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     },
     onError: (error) => {
       toast.error(error);
@@ -102,7 +102,7 @@ const Login = () => {
             fontWeight="700"
             sx={{ color: "#3E2723", fontFamily: "'Playfair Display', serif" }}
           >
-            Café Admin Login
+            Login
           </Typography>
 
           <Typography variant="body2" sx={{ color: "#5D4037", mb: 2 }}>
