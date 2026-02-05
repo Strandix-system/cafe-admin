@@ -39,8 +39,8 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
               <AppRoutes>
-                <Login />
               </AppRoutes>
+            <Toaster position="top-right" reverseOrder={false} />
             </AuthProvider>
         </QueryClientProvider>
       </CacheProvider>

@@ -1,32 +1,46 @@
-import BarChartIcon from "@mui/icons-material/BarChart";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import MenuIcon from "@mui/icons-material/Menu";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import LogoutIcon from "@mui/icons-material/Logout";
+import PeopleIcon from "@mui/icons-material/People";
+import ViewQuiltIcon from "@mui/icons-material/ViewQuilt";
 import CategoryIcon from "@mui/icons-material/Category";
-import { LayoutGrid } from "lucide-react";
 
 export const sideBarItems = {
   superAdmin: [
-    { key: "stats", label: "Statistics", icon: BarChartIcon, tab: "stats" },
-    { key: "admins", label: "Admin Management", icon: AdminPanelSettingsIcon, tab: "admins" },
-    { key: "layouts", label: "Layouts", icon: LayoutGrid, tab: "layouts"},
-    { key: "categories", label: "Categories", icon: CategoryIcon, tab: "categories"},
+    {
+      key: "stats",
+      label: "Statistics",
+      icon: DashboardIcon,
+      path: "/dashboard",
+      tab: "stats",
+    },
+    {
+      key: "cafes",
+      label: "Cafes",
+      icon: PeopleIcon,
+      path: "/cafes",
+      tab: "cafes",
+    },
+    {
+      key: "layouts",
+      label: "Layouts",
+      icon: ViewQuiltIcon,
+      path: "/layouts",
+      tab: "layouts",
+    },
+    {
+      key: "categories",
+      label: "Categories",
+      icon: CategoryIcon,
+      path: "/categories",
+      tab: "categories",
+    },
   ],
   admin: [
-    { key: "dashboard", label: "Dashboard", icon: DashboardIcon , tab: "dashboard" },
-    { key: "orders", label: "Orders", icon: ShoppingCartIcon, tab: "orders" },
-    { key: "menu", label: "Menu", icon: MenuIcon, tab: "menu" },
-    { key: "layouts", label: "Layouts", icon: LayoutGrid, tab: "layouts" },
-    // add more admin tabs here
-  ],
-  common: [
     {
-      key: "logout",
-      label: "Logout",
-      icon: LogoutIcon,
-      type: "action", 
+      key: "stats",
+      label: "Statistics",
+      icon: DashboardIcon,
+      path: "/dashboard",
+      tab: "stats",
     },
   ],
 };

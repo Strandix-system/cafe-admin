@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -15,7 +15,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material"; // Requires @mui/icons-material
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import cafe1 from "../assets/cafe1.jpg";
@@ -24,9 +24,8 @@ import * as yup from "yup";
 import { useAuth } from "../context/AuthContext";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
-import { api_enums } from "../enums/api";
 import toast from "react-hot-toast";
-import { queryClient } from "../lib/queryClient";
+import { api_enums } from "../enums/api";
 
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -34,37 +33,53 @@ const schema = yup.object({
 });
 
 const Login = () => {
-  
   const { login } = useAuth();
 
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "error" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   const navigate = useNavigate();
-  const { register, handleSubmit, reset, formState: { errors,isValid } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      email : "",
-      password : "",
+      email: "",
+      password: "",
     },
   });
 
-  const {mutate: loginMutate, isPending} = usePost(API_ROUTES.login, {
+  useEffect(() => {
+    const token = localStorage.getItem(api_enums.JWT_ACCESS_TOKEN);
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
+  const { mutate: loginMutate, isPending } = usePost(API_ROUTES.login, {
     onSuccess: async (res) => {
-      //localStorage.setItem(api_enums.JWT_ACCESS_TOKEN, res.result.token);
       await login(res.result.token);
       reset();
       toast.success("Logged in successfully!!");
-      navigate("/dashboard", { replace: true });
+
+      navigate("/dashboard");
     },
     onError: (error) => {
-      toast.error(error);
-      console.log(error)
-    }
-  })
+      toast.error(
+        error?.response?.data?.message || "Login Failed! Please try again.",
+      );
+      console.log(error);
+    },
+  });
 
-  const onSubmit = async (data) => loginMutate(data);
+  const onSubmit = (data) => loginMutate(data);
 
   return (
     <Box
@@ -82,7 +97,6 @@ const Login = () => {
         backgroundPosition: "center",
       }}
     >
-
       <Paper
         elevation={10}
         sx={{
@@ -155,7 +169,10 @@ const Login = () => {
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -163,7 +180,12 @@ const Login = () => {
             }}
           />
 
-          <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mt={1}
+          >
             <FormControlLabel
               control={
                 <Checkbox
@@ -194,7 +216,7 @@ const Login = () => {
             fullWidth
             type="submit"
             variant="contained"
-            disabled={isPending}
+            disabled={isPending || isValid}
             sx={{
               mt: 3,
               mb: 2,
@@ -209,7 +231,11 @@ const Login = () => {
               },
             }}
           >
-            {isPending ? <CircularProgress size={26} color="inherit" /> : "Log In ☕"}
+            {isPending ? (
+              <CircularProgress size={26} color="inherit" />
+            ) : (
+              "Log In ☕"
+            )}
           </Button>
         </form>
       </Paper>
@@ -220,7 +246,11 @@ const Login = () => {
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert severity={snackbar.severity} variant="filled" sx={{ width: "100%" }}>
+        <Alert
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

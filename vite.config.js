@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
-  base: '/',        // 👈 IMPORTANT for Amplify
-  plugins: [react()],
+  base: "/", // 👈 IMPORTANT for Amplify
+  plugins: [react(), tailwindcss()],
   build: {
-    outDir: 'dist'  // 👈 Ensure output folder
-  }
-})
+    outDir: "dist", // 👈 Ensure output folder
+  },
+});

@@ -1,82 +1,104 @@
-import { useEffect, useState, createContext, useCallback, useContext } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { api_enums } from "../enums/api";
 import { useFetch } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
-import { api_enums } from "../enums/api";
 import { AUTH_ROLES } from "../utils/constant";
 
 const AuthContext = createContext();
 
-function AuthProvider({ children }) {
+export function AuthProvider({ children }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(undefined);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // const {data: userData , isLoading, isError } = useFetch('get-me', API_ROUTES.getMe, {}, {
-  //   enabled: !!localStorage.getItem(api_enums.JWT_ACCESS_TOKEN)
-  // });
+  const token = localStorage.getItem(api_enums.JWT_ACCESS_TOKEN);
 
-  const { data: userData, isLoading, isError, refetch } = useFetch(
-    "get-me",
-    API_ROUTES.getMe,
-    {},
-    { enabled: false }
-  );
+  const { refetch } = useFetch(
+    "get-me",
+    API_ROUTES.getMe,
+    {},
+    { enabled: !!token },
+  );
 
-  const login = useCallback(async (token) => {
-    localStorage.setItem(api_enums.JWT_ACCESS_TOKEN, token);
+  useEffect(() => {
+    const init = async () => {
+      if (token) {
+        try {
+          const res = await refetch();
+          if (res?.data?.result) {
+            setUser(res.data.result);
+            setIsAuthenticated(true);
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.error(error);
+          logout();
+        }
+      }
+      setAuthLoading(false);
+    };
+    init();
+  }, [token, refetch, navigate]);
 
-    const res = await refetch(); //  get user immediately
-
-    if (res?.data?.result) {
-      setUser(res.data.result);
-      setIsAuthenticated(true);
-    }
-
-    setAuthLoading(false);
-  }, [refetch]);
-  
-  useEffect(()=>{
-    if(userData?.result){
-      setIsAuthenticated(true);
-      setUser(userData?.result);
-    }
-    setAuthLoading(false);
-  },[userData]);
-
-  useEffect(()=>{
-    if(isError){
-      logout();
-    }
-  }, [isError])
-
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
+  const logout = useCallback(() => {
     localStorage.removeItem(api_enums.JWT_ACCESS_TOKEN);
-  };
-  
-  return isLoading ? (
-    <>Loading...</>
-  ) : (
-    <AuthContext.Provider value={{
+    setUser(null);
+    setIsAuthenticated(false);
+  }, [navigate]);
+
+  const login = useCallback(
+    async (token) => {
+      localStorage.setItem(api_enums.JWT_ACCESS_TOKEN, token);
+      setAuthLoading(true);
+
+      try {
+        const res = await refetch();
+        if (res?.data?.result) {
+          setUser(res.data.result);
+          setIsAuthenticated(true);
+        } else {
+          logout();
+        }
+      } catch (error) {
+        console.error(error);
+        logout();
+      } finally {
+        setAuthLoading(false);
+      }
+    },
+    [logout],
+  );
+
+  if (authLoading) return <>Loading...</>;
+
+  return (
+    <AuthContext.Provider
+      value={{
         user,
+        isAuthenticated,
         isAdmin: user?.role === AUTH_ROLES.ADMIN,
         isSuperAdmin: user?.role === AUTH_ROLES.SUPER_ADMIN,
-        isAuthenticated,
         login,
         logout,
-      }}>
+        authLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
-function useAuth() {
+export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within a AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 }
-
-export { AuthProvider, useAuth };

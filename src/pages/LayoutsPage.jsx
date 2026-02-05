@@ -37,7 +37,7 @@ export default function LayoutsPage() {
           <Grid item xs={12} md={4} key={layouts._id}>
             <LayoutCard
               layout={layouts}
-              onPreview={navigate("/")}
+              // onPreview={navigate("/")}
               onDelete={() => {
                 queryClient.invalidateQueries({queryKey:["getLayouts"]});
               }}
