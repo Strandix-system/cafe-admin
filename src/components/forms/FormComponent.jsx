@@ -35,7 +35,7 @@ import { Controller, useForm } from "react-hook-form";
 import Loader from "../common/Loader";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import { adminSchema } from "../../utils/adminSchema/AdminSchema";
+import { adminSchema } from "../../utils/adminSchema/adminSchema";
 
 export default function FormComponent({
   defaultValues = {},
