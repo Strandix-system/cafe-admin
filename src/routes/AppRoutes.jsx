@@ -1,24 +1,97 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
+import Login from "../pages/Login";
 import ForgotPassword from "../pages/ForgotPassword";
-import Login  from "../pages/Login";
+
+import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import LayoutsPage from "../pages/LayoutsPage";
 import CreateLayoutPage from "../pages/CreateLayoutPage";
-import CreateAdmin from "../pages/createAdmin/CreateAdmin";
+import AdminList from "../pages/AdminList";
+import CategoriesList from "../pages/CategoriesList";
+
+import ProtectedRoutes from "./ProtectedRoutes";
+import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path = "/" element = {<Login/>} />
+      {/* PUBLIC ROUTES */}
+      <Route path="/" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      {/* PROTECTED ROUTES - Dashboard Stats/Overview */}
       <Route
         path="/dashboard"
-        element={<Dashboard />}
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <Dashboard />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
       />
-      <Route path="/forgot-password" element={<ForgotPassword/>}/>
-      <Route path="/layouts" element={<LayoutsPage />} />
-      <Route path="/layouts/create" element={<CreateLayoutPage />} />
-      <Route path="/admin/create" element={<CreateAdmin />} />
+
+      {/* PROTECTED ROUTES - Admin Management (Super Admin Only) */}
+      <Route
+        path="/cafes"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <AdminList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/cafe/create-edit/:userId?"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <AddEditAdmin />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      {/* PROTECTED ROUTES - Layouts Management */}
+      <Route
+        path="/layouts"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <LayoutsPage />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/layouts/create"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CreateLayoutPage />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      {/* PROTECTED ROUTES - Categories Management */}
+      <Route
+        path="/categories"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CategoriesList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      {/* CATCH ALL - Redirect to home */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

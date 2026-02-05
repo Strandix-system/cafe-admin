@@ -1,22 +1,22 @@
-import TableComponent from "./TableComponent/TableComponent"
-import { Box, Button, Switch, Chip } from "@mui/material"
-import { useAuth } from "../context/AuthContext"
-import { useNavigate, useParams } from 'react-router-dom'
-import { Edit, Eye, Power, Trash2, Plus } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import TableComponent from "./TableComponent/TableComponent";
+import { Box, Button, Switch, Chip, Typography } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { Edit, Eye, Power, Trash2, Plus } from "lucide-react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { API_ROUTES } from "../utils/api_constants"
-import { usePatch } from "../utils/hooks/api_hooks"
-import { queryClient } from "../lib/queryClient"
+import { API_ROUTES } from "../utils/api_constants";
+import { usePatch } from "../utils/hooks/api_hooks";
+import { queryClient } from "../lib/queryClient";
 
 const AdminList = () => {
-    const navigate = useNavigate();
-    const { user, isSuperAdmin, isAdmin } = useAuth();
-    const { adminId } = useParams();
+  const navigate = useNavigate();
+  const { user, isSuperAdmin, isAdmin } = useAuth();
+  const { adminId } = useParams();
 
-    const [activeTab, setActiveTab] = useState("active");
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    
+  const [activeTab, setActiveTab] = useState("active");
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
   const { mutate: updateUserStatus } = usePatch(
     selectedUserId ? API_ROUTES.updateUsers(selectedUserId) : null,
     {
@@ -29,7 +29,7 @@ const AdminList = () => {
       onError: (error) => {
         console.error("Status update failed:", error);
       },
-    }
+    },
   );
 
   const handleToggleStatus = (row) => {
@@ -40,13 +40,17 @@ const AdminList = () => {
     });
   };
 
-    const columns = useMemo(
+  const columns = useMemo(
     () => [
       {
-        id: "name",
-        header: "Admin Name",
-        accessorFn: (row) =>
-          `${row.firstName || ""} ${row.lastName || ""}`,
+        id: "cafeName",
+        header: "Cafe Name",
+        Cell: ({ row }) => row.original.cafeName,
+      },
+      {
+        id: "ownerName",
+        header: "Owner Name",
+        accessorFn: (row) => `${row.firstName || ""} ${row.lastName || ""}`,
       },
       {
         accessorKey: "email",
@@ -74,9 +78,9 @@ const AdminList = () => {
             </Box>
           );
         },
-        },
-      ],
-    []
+      },
+    ],
+    [],
   );
 
   // 🔹 Row actions (icons)
@@ -85,25 +89,25 @@ const AdminList = () => {
       label: "View",
       icon: Eye,
       onClick: (row) => {
-        navigate(`/dashboard/admins/${row.original._id}`);
+        navigate(`/cafe/create-edit/${row.original._id}`);
       },
     },
     {
       label: "Edit",
       icon: Edit,
       onClick: (row) => {
-        navigate(`/dashboard/admins/edit/${row.original._id}`);
+        navigate(`/cafe/create-edit/${row.original._id}`);
       },
     },
     {
       label: activeTab === "active" ? "Deactivate" : "Activate",
       icon: Power,
-      onClick: handleToggleStatus,
-    }
+      onClick: handleToggleStatus,
+    },
   ];
 
   return (
-    <div>
+    <div className="overflow-hidden">
       <Box
         sx={{
           p: 3,
@@ -112,16 +116,17 @@ const AdminList = () => {
           justifyContent: "space-between",
         }}
       >
-        {/* <Typography variant="h6" fontWeight={600}>
-          Admin Management
-        </Typography> */}
+        <Typography variant="h6" fontWeight={600}>
+          Cafe Management
+        </Typography>
         {isSuperAdmin && (
           <Button
             variant="contained"
+            sx={{ backgroundColor: "#6F4E37" }}
             startIcon={<Plus size={18} />}
-            onClick={() => navigate("/admin/create")}
+            onClick={() => navigate("/cafe/create-edit")}
           >
-            Create Admin
+            Create Cafe
           </Button>
         )}
       </Box>
@@ -134,7 +139,7 @@ const AdminList = () => {
         querykey="get-users"
         getApiEndPoint="getUsers"
         deleteApiEndPoint="delete"
-        deleteAction={isSuperAdmin}   // ✅ only super admin can delete
+        deleteAction={isSuperAdmin}
         enableExportTable={true}
       />
     </div>
