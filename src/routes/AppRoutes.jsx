@@ -6,12 +6,13 @@ import ForgotPassword from "../pages/ForgotPassword";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import LayoutsPage from "../pages/LayoutsPage";
-import CreateLayoutPage from "../pages/CreateLayoutPage";
+// import CreateLayoutPage from "../pages/CreateLayoutPage";
 import AdminList from "../pages/AdminList";
 import CategoriesList from "../pages/CategoriesList";
 
 import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
+import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 
 const AppRoutes = () => {
   return (
@@ -68,11 +69,11 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/layouts/create"
+        path="/layouts/create-edit/:layoutId?"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <CreateLayoutPage />
+              <AddEditLayout />
             </DashboardLayout>
           </ProtectedRoutes>
         }

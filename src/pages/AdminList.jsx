@@ -1,9 +1,9 @@
-import TableComponent from "./TableComponent/TableComponent";
-import { Box, Button, Switch, Chip, Typography } from "@mui/material";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
-import { Edit, Eye, Power, Trash2, Plus } from "lucide-react";
-import { useMemo, useState } from "react";
+import TableComponent from "../components/TableComponent/TableComponent"
+import { Box, Button, Switch, Chip, Typography } from "@mui/material"
+import { useAuth } from "../context/AuthContext"
+import { useNavigate, useParams } from 'react-router-dom'
+import { Edit, Eye, Power, Trash2, Plus } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import FormComponent from "../../components/forms/FormComponent";
 import { useFetch, usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
+import Loader from "../../components/common/Loader";
 
 export default function AddEditAdmin() {
   const { userId } = useParams();
@@ -60,7 +61,7 @@ export default function AddEditAdmin() {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div><Loader variant="spinner"/></div>;
 
   return (
     <FormComponent

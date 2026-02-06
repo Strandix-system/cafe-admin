@@ -1,4 +1,4 @@
-import TableComponent from "./TableComponent/TableComponent";
+import TableComponent from "../components/TableComponent/TableComponent";
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Trash2, Plus } from "lucide-react";
@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import CreateCategoryDialog from "../components/categories/CreateCategoryDialog";
 
 const CategoriesList = () => {
-    console.log("✅ CategoriesList component mounted");
+    console.log("✅ CategoriesList component mounted" );
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -51,6 +51,7 @@ const CategoriesList = () => {
       >
                   <Button
                       variant="contained"
+                      sx={{backgroundColor:"#6F4E37"}}
                       startIcon={<Plus size={18} />}
                       onClick={() => setOpenDialog(true)}
                   >

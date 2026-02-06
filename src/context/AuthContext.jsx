@@ -10,6 +10,7 @@ import { api_enums } from "../enums/api";
 import { useFetch } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
 import { AUTH_ROLES } from "../utils/constant";
+import Loader from "../components/common/Loader";
 
 const AuthContext = createContext();
 
@@ -78,7 +79,7 @@ export function AuthProvider({ children }) {
     [logout],
   );
 
-  if (authLoading) return <>Loading...</>;
+  if (authLoading) return <><Loader variant="fullscreen"/></>;
 
   return (
     <AuthContext.Provider
