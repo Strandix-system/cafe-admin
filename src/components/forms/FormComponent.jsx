@@ -36,6 +36,8 @@ import Loader from "../common/Loader";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { adminSchema } from "../../utils/adminSchema/AdminSchema";
+import ImageUploadSection from "../common/ImageUploadSection";
+import InputField from "../common/InputField";
 
 export default function FormComponent({
   defaultValues = {},
@@ -190,199 +192,62 @@ export default function FormComponent({
           <Grid container spacing={4}>
             {/* File Uploads */}
             <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                Cafe Logo
-              </FormLabel>
               <Controller
                 name="logo"
                 control={control}
                 render={({ field }) => (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Box sx={{ position: "relative" }}>
-                      <Avatar
-                        src={logoPreview || field?.value}
-                        sx={{
-                          width: 100,
-                          height: 100,
-                          bgcolor: "#F5EFE6",
-                          border: "3px dashed #6F4E37",
-                          cursor: "pointer",
-                        }}
-                        onClick={() =>
-                          document.getElementById("logo-upload").click()
-                        }
-                      >
-                        {!field.value && (
-                          <PhotoCamera
-                            sx={{ fontSize: 40, color: "#6F4E37" }}
-                          />
-                        )}
-                      </Avatar>
-                      {(logoPreview || field.value) && (
-                        <IconButton
-                          size="small"
-                          sx={{
-                            position: "absolute",
-                            top: -8,
-                            right: -8,
-                            bgcolor: "#fff",
-                            boxShadow: 1,
-                            "&:hover": { bgcolor: "#f5f5f5" },
-                          }}
-                          onClick={() => handleRemoveImage(field)}
-                        >
-                          <Close fontSize="small" />
-                        </IconButton>
-                      )}
-                    </Box>
-                    <input
-                      id="logo-upload"
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      onChange={(e) =>
-                        handleImageChange(
-                          e.target.files[0],
-                          field,
-                          setLogoPreview,
-                        )
-                      }
-                    />
-                    {!logoPreview ||
-                      (!field.value && (
-                        <Box sx={{ color: "#6F4E37", fontSize: "0.875rem" }}>
-                          Click to upload logo
-                        </Box>
-                      ))}
-                  </Box>
-                )}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                Profile Image
-              </FormLabel>
-              <Controller
-                name="profileImage"
-                control={control}
-                render={({ field }) => (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Box sx={{ position: "relative" }}>
-                      <Avatar
-                        src={profilePreview || field?.value}
-                        sx={{
-                          width: 100,
-                          height: 100,
-                          bgcolor: "#F5EFE6",
-                          border: "3px dashed #6F4E37",
-                          cursor: "pointer",
-                        }}
-                        onClick={() =>
-                          document.getElementById("profile-upload").click()
-                        }
-                      >
-                        {!profilePreview && (
-                          <PhotoCamera
-                            sx={{ fontSize: 40, color: "#6F4E37" }}
-                          />
-                        )}
-                      </Avatar>
-                      {profilePreview && (
-                        <IconButton
-                          size="small"
-                          sx={{
-                            position: "absolute",
-                            top: -8,
-                            right: -8,
-                            bgcolor: "#fff",
-                            boxShadow: 1,
-                            "&:hover": { bgcolor: "#f5f5f5" },
-                          }}
-                          onClick={() =>
-                            handleRemoveImage(field, setProfilePreview)
-                          }
-                        >
-                          <Close fontSize="small" />
-                        </IconButton>
-                      )}
-                    </Box>
-                    <input
-                      id="profile-upload"
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      onChange={(e) =>
-                        handleImageChange(
-                          e.target.files[0],
-                          field,
-                          setProfilePreview,
-                        )
-                      }
-                    />
-                    {!profilePreview && (
-                      <Box sx={{ color: "#6F4E37", fontSize: "0.875rem" }}>
-                        Click to upload profile
-                      </Box>
-                    )}
-                  </Box>
-                )}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                First Name *
-              </FormLabel>
-              <Controller
-                name="firstName"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    error={!!errors.firstName}
-                    helperText={errors.firstName?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Users size={20} color="#6F4E37" />
-                        </InputAdornment>
-                      ),
-                    }}
+                  <ImageUploadSection
+                    label="Cafe Logo"
+                    field={field}
+                    preview={logoPreview}
+                    setPreview={setLogoPreview}
+                    handleImageChange={handleImageChange}
+                    handleRemoveImage={handleRemoveImage}
+                    inputId="logo-upload"
                   />
                 )}
               />
             </Grid>
+
+
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Controller
+                name="profileImage"
+                control={control}
+                render={({ field }) => (
+                  <ImageUploadSection
+                    label="Profile Image"
+                    field={field}
+                    preview={profilePreview}
+                    setPreview={setProfilePreview}
+                    handleImageChange={handleImageChange}
+                    handleRemoveImage={handleRemoveImage}
+                    inputId="profile-upload"
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <FormLabel sx={{ color: "#6F4E37", fontWeight: 600, mb: 1 }}>
+                First Name *
+              </FormLabel>
+
+              <Controller
+                name="firstName"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    field={field}
+                    error={errors.firstName}
+                    helperText={errors.firstName?.message}
+                    placeholder="Enter First Name"
+                    startIcon={<Users size={20} color="#6F4E37" />}
+                  />
+                )}
+              />
+            </Grid>
+
 
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormLabel

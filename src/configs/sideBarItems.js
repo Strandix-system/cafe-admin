@@ -42,5 +42,12 @@ export const sideBarItems = {
       path: "/dashboard",
       tab: "stats",
     },
+    {
+      key: "layouts",
+      label: "Layouts",
+      icon: ViewQuiltIcon,
+      path: "/layouts",
+      tab: "layouts",
+    },
   ],
 };

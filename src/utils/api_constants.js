@@ -8,10 +8,19 @@ export const API_ROUTES = {
 
   delete: "/admin/delete",
   superAdminStats: "/admin/get-users",
-  getLayouts: "layout/",
+
+  createLayout: "layout/create",
+  getLayouts: "layout/all-layouts",
+
+  getLayoutById: "layouts",
+  updateLayout: "layouts",
+
+  delete: "/admin/delete",
+  superAdminStats: "/admin/get-users",
   createLayout: "layout/create",
 
-  getCategories: "",
+  createCategory: "category/create",
+  getCategories: "category/get-allcategories",
   getstates: "get-states",
 
   createAdmins: "admin/create",

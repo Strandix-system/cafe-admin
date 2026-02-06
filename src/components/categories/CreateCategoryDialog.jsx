@@ -81,7 +81,7 @@ const CreateCategoryDialog = ({ open, handleClose }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">
+        <Button onClick={handleClose} variant="outlined" sx={{color:"#6F4E37"}}>
           Cancel
         </Button>
 
@@ -89,6 +89,7 @@ const CreateCategoryDialog = ({ open, handleClose }) => {
           variant="contained"
           onClick={handleSubmit(onSubmit)}
           disabled={isLoading || !isValid}
+          sx={{backgroundColor:"#6F4E37"}}
         >
           {isLoading ? "Creating..." : "Create"}
         </Button>

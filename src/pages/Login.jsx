@@ -216,7 +216,7 @@ const Login = () => {
             fullWidth
             type="submit"
             variant="contained"
-            disabled={isPending || isValid}
+            disabled={!isValid}
             sx={{
               mt: 3,
               mb: 2,
