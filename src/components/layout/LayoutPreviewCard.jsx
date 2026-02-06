@@ -1,4 +1,11 @@
-import { Box, Card, CardMedia, IconButton, Radio } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardMedia,
+  IconButton,
+  Radio,
+  Typography,
+} from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export default function LayoutPreviewCard({
@@ -19,7 +26,9 @@ export default function LayoutPreviewCard({
         overflow: "hidden",
         border: isSelected ? "3px solid #6F4E37" : "1px solid #ddd",
         transition: "0.3s",
-        "&:hover .hoverBtn": { opacity: 1 },
+        "&:hover .overlay": {
+          opacity: 1,
+        },
       }}
     >
       {/* RADIO BUTTON (TOP LEFT) */}
@@ -34,27 +43,52 @@ export default function LayoutPreviewCard({
       {/* HOME IMAGE */}
       <CardMedia
         component="img"
-        height="180"
+        className="h-full"
         image={layout.homeImage}
         alt={layout.layoutTitle}
       />
 
-      {/* HOVER PREVIEW BUTTON */}
-      <IconButton
-        className="hoverBtn"
-        onClick={() => onPreview(layout)}
+      <Box
+        className="overlay"
         sx={{
           position: "absolute",
-          bottom: 10,
-          right: 10,
-          bgcolor: "white",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
           opacity: 0,
-          transition: "0.3s",
-          boxShadow: 2,
+          transition: "opacity 0.3s",
+          backgroundColor: "rgba(0,0,0,0.4)", // optional dark overlay
+          zIndex: 100,
         }}
       >
-        <VisibilityIcon />
-      </IconButton>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            color: "white",
+            fontWeight: 700,
+            mb: 1,
+            letterSpacing: 1,
+          }}
+        >
+          {layout.layoutTitle}
+        </Typography>
+
+        <IconButton
+          onClick={() => onPreview(layout)}
+          sx={{
+            bgcolor: "white",
+            boxShadow: 2,
+            "&:hover": { bgcolor: "#F5F5F5" },
+          }}
+        >
+          <VisibilityIcon />
+        </IconButton>
+      </Box>
     </Card>
   );
 }

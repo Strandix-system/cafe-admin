@@ -11,9 +11,8 @@ export const API_ROUTES = {
 
   createLayout: "layout/create",
   getLayouts: "layout/all-layouts",
-
-  getLayoutById: "layouts",
-  updateLayout: "layouts",
+  getLayoutById: "layout/get-layout",
+  updateLayout: "layout/update",
 
   delete: "/admin/delete",
   superAdminStats: "/admin/get-users",
