@@ -13,6 +13,9 @@ import CategoriesList from "../pages/CategoriesList";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
+import CreateMenu from "../pages/Menu/CreateMenu";
+import MenuList from "../pages/Menu/MenuList";
+// import { MenuList } from "@mui/material";
 
 const AppRoutes = () => {
   return (
@@ -86,6 +89,28 @@ const AppRoutes = () => {
           <ProtectedRoutes>
             <DashboardLayout>
               <CategoriesList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+       <Route
+        path="/menu"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CreateMenu />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+       <Route
+        path="/menu-list"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <MenuList/>
             </DashboardLayout>
           </ProtectedRoutes>
         }

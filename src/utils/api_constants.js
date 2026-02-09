@@ -23,4 +23,6 @@ export const API_ROUTES = {
   getstates: "get-states",
 
   createAdmins: "admin/create",
+  MENU_LIST:"menu/all-menu",
+  menulist:"menu/my-menus",
 };

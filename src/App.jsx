@@ -41,6 +41,7 @@ function App() {
               <AppRoutes>
               </AppRoutes>
             <Toaster position="top-right" reverseOrder={false} />
+            
             </AuthProvider>
         </QueryClientProvider>
       </CacheProvider>

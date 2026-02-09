@@ -8,7 +8,8 @@ import { get } from "lodash";
 import { keepPreviousData } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import RestoreIcon from "@mui/icons-material/Restore";
-import ExporterTable from "./ExporterTable";
+// import ExporterTable from "./ExporterTable";
+import ExporterTable from "../../components/TableComponent/ExporterTable"
 import {
   Columns,
   DeleteIcon,

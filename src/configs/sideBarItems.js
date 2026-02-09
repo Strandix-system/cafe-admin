@@ -33,6 +33,7 @@ export const sideBarItems = {
       path: "/categories",
       tab: "categories",
     },
+      
   ],
   admin: [
     {
@@ -48,6 +49,23 @@ export const sideBarItems = {
       icon: ViewQuiltIcon,
       path: "/layouts",
       tab: "layouts",
+
+    },
+
+    {
+      key: "Menu",
+      label: "Menu",
+      icon: CategoryIcon,
+      path: "/menu",
+      tab: "menu",
+    },
+
+    {
+      key: "MenuList",
+      label: "Menu List",
+      icon: CategoryIcon,
+      path: "/menulist",
+      tab: "menulist",
     },
   ],
 };
