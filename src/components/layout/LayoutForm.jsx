@@ -223,7 +223,6 @@ export default function LayoutForm({
             placeholder={placeholder}
             multiline={multiline}
             rows={multiline ? 4 : undefined}
-            disabled={disabled}
           />
         )}
       />
@@ -354,7 +353,6 @@ export default function LayoutForm({
           "Enter layout title",
           false,
           { xs: 12, md: 6 },
-          isAdmin,
         )}
         {renderTextField(
           "menuTitle",

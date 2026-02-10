@@ -54,18 +54,36 @@ export default function AddEditLayout() {
     const isAdminEditing = layoutData?.defaultLayout === false && isAdmin && layoutId;
 
     const onSubmit = (formValue) => {
-        // SuperAdmin editing existing default layout
-        if (layoutId && isSuperAdmin && !isAdminEditing) {
-            const payload = {
-                ...formValue,
-                defaultLayout: true, // Boolean
-            };
-
-            // Check if there are file uploads
+        // Admin editing their own layout (CHECK THIS FIRST!)
+        if (isAdminEditing) {
             const hasFiles = formValue.homeImage instanceof File || formValue.aboutImage instanceof File;
 
             if (hasFiles) {
-                // Use FormData only if there are new images
+                const formData = new FormData();
+                Object.entries(formValue).forEach(([key, value]) => {
+                    if (value instanceof File) {
+                        formData.append(key, value);
+                    } else if (typeof value === 'object' && value !== null) {
+                        formData.append(key, JSON.stringify(value));
+                    } else {
+                        formData.append(key, value);
+                    }
+                });
+                updateLayoutMutate(formData);
+            } else {
+                updateLayoutMutate(formValue);
+            }
+        }
+        // SuperAdmin editing existing default layout
+        else if (layoutId && isSuperAdmin) {
+            const payload = {
+                ...formValue,
+                defaultLayout: true,
+            };
+
+            const hasFiles = formValue.homeImage instanceof File || formValue.aboutImage instanceof File;
+
+            if (hasFiles) {
                 const formData = new FormData();
                 Object.entries(payload).forEach(([key, value]) => {
                     if (value instanceof File) {
@@ -78,7 +96,6 @@ export default function AddEditLayout() {
                 });
                 updateLayoutMutate(formData);
             } else {
-                // Send as JSON if no new images
                 updateLayoutMutate(payload);
             }
         }
@@ -109,28 +126,7 @@ export default function AddEditLayout() {
                 createLayoutMutate(payload);
             }
         }
-        // Admin editing their own layout
-        else if (isAdminEditing) {
-            const hasFiles = formValue.homeImage instanceof File || formValue.aboutImage instanceof File;
-
-            if (hasFiles) {
-                const formData = new FormData();
-                Object.entries(formValue).forEach(([key, value]) => {
-                    if (value instanceof File) {
-                        formData.append(key, value);
-                    } else if (typeof value === 'object' && value !== null) {
-                        formData.append(key, JSON.stringify(value));
-                    } else {
-                        formData.append(key, value);
-                    }
-                });
-                updateLayoutMutate(formData);
-            } else {
-                updateLayoutMutate(formValue);
-            }
-        }
     };
-
     // Prepare default values based on context
     const getDefaultValues = () => {
         if (!layoutData) return undefined;
