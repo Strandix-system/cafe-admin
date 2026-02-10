@@ -2,6 +2,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import ViewQuiltIcon from "@mui/icons-material/ViewQuilt";
 import CategoryIcon from "@mui/icons-material/Category";
+import Restaurant from "@mui/icons-material/Restaurant";
 
 export const sideBarItems = {
   superAdmin: [
@@ -33,7 +34,7 @@ export const sideBarItems = {
       path: "/categories",
       tab: "categories",
     },
-      
+
   ],
   admin: [
     {
@@ -61,11 +62,11 @@ export const sideBarItems = {
     },
 
     {
-      key: "MenuList",
-      label: "Menu List",
-      icon: CategoryIcon,
-      path: "/menulist",
-      tab: "menulist",
+      key: "OrderManagement",
+      label: "Order Management",
+      icon: Restaurant,
+      path: "/ordermanagement",
+      tab: "ordermanagement",
     },
   ],
 };

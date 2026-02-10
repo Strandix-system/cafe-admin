@@ -14,7 +14,7 @@ export default function LayoutsPage() {
   const { data: defaultLayoutData, isLoading: isLoadingDefault } = useFetch(
     "getDefaultLayouts",
     API_ROUTES.getLayouts,
-    { defaultLayout: isSuperAdmin }, // SuperAdmin sees all, Admin sees only default templates
+    { defaultLayout: true }, // SuperAdmin sees all, Admin sees only default templates
   );
 
   // Fetch admin's custom layouts (only for non-superAdmin)

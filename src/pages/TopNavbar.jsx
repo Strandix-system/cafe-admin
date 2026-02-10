@@ -30,6 +30,7 @@ export default function TopNavbar() {
     "/cafe/create-edit",
     "/layouts/create-edit",
     "/categories/create",
+    "/order-history",
   ];
 
   // Check if current route should show back button
