@@ -94,7 +94,7 @@ const AppRoutes = () => {
         }
       />
 
-       <Route
+      <Route
         path="/menu"
         element={
           <ProtectedRoutes>
@@ -105,12 +105,12 @@ const AppRoutes = () => {
         }
       />
 
-       <Route
+      <Route
         path="/menu-list"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <MenuList/>
+              <MenuList />
             </DashboardLayout>
           </ProtectedRoutes>
         }

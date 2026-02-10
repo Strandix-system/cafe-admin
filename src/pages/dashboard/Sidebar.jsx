@@ -1,6 +1,6 @@
 // Sidebar.jsx
 import { useState, useEffect } from "react";
-import { Box, Typography, Divider, Stack, IconButton } from "@mui/material";
+import { Box, Typography, Divider, Stack, IconButton, useMediaQuery, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -11,8 +11,24 @@ export default function Sidebar() {
   const { isSuperAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useTheme();
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Detect screen size changes
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg')); // >= 1200px
+  const isMediumScreen = useMediaQuery(theme.breakpoints.up('md')); // >= 900px
+
+  const [sidebarOpen, setSidebarOpen] = useState(isLargeScreen);
+
+  // Automatically adjust sidebar based on screen size
+  useEffect(() => {
+    if (isLargeScreen) {
+      setSidebarOpen(true); // Always open on large screens
+    } else if (isMediumScreen) {
+      setSidebarOpen(false); // Collapsed on medium screens
+    } else {
+      setSidebarOpen(false); // Collapsed on small screens
+    }
+  }, [isLargeScreen, isMediumScreen]);
 
   const sidebarMenu = isSuperAdmin
     ? sideBarItems.superAdmin
@@ -25,6 +41,10 @@ export default function Sidebar() {
 
   const handleMenuClick = (path) => {
     navigate(path);
+    // Auto-close sidebar on mobile after navigation
+    if (!isMediumScreen) {
+      setSidebarOpen(false);
+    }
   };
 
   const isActiveItem = (itemPath) => {
@@ -43,6 +63,12 @@ export default function Sidebar() {
       sx={{
         width: sidebarOpen ? 260 : 80,
         transition: "width 0.3s ease",
+        // Optional: Make it overlay on small screens instead of pushing content
+        ...((!isMediumScreen && sidebarOpen) && {
+          position: 'fixed',
+          zIndex: theme.zIndex.drawer,
+          boxShadow: theme.shadows[8],
+        }),
       }}
     >
       <Box>
@@ -96,6 +122,7 @@ export default function Sidebar() {
                 {sidebarOpen && (
                   <Typography
                     fontWeight={isActive ? 600 : 500}
+                    noWrap
                     sx={{
                       transition: "font-weight 0.2s ease",
                     }}

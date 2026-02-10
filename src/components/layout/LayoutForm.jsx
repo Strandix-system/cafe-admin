@@ -18,16 +18,37 @@ import {
 import InputField from "../common/InputField";
 import ImageUploadSection from "../common/ImageUploadSection";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
+import { m } from "framer-motion";
 
 const layoutSchema = yup.object({
   layoutTitle: yup.string().required("Layout title is required"),
-  homeImage: yup.mixed().required("Home image is required"),
+  homeImage: yup
+    .mixed()
+    .test("required", "Home image is required", (value) => {
+      return value instanceof File || (typeof value === 'string' && value.trim() !== '');
+    })
+    .test("fileOrUrl", "Invalid image", (value) => {
+      if (!value) return false;
+      if (value instanceof File) return true;
+      if (typeof value === 'string') return value.trim() !== '';
+      return false;
+    }),
   menuTitle: yup
     .string()
     .trim()
     .min(3, "Menu title must be at least 3 characters")
     .required("Menu title is required"),
-  aboutImage: yup.mixed().required("About image is required"),
+  aboutImage: yup
+    .mixed()
+    .test("required", "About image is required", (value) => {
+      return value instanceof File || (typeof value === 'string' && value.trim() !== '');
+    })
+    .test("fileOrUrl", "Invalid image", (value) => {
+      if (!value) return false;
+      if (value instanceof File) return true;
+      if (typeof value === 'string') return value.trim() !== '';
+      return false;
+    }),
   aboutTitle: yup
     .string()
     .trim()
@@ -63,6 +84,7 @@ export default function LayoutForm({
   onSubmit,
   isLoading = false,
   isSubmitting = false,
+  isAdmin = false,
 }) {
   const isEdit = Object?.entries(defaultValues)?.length > 0;
   const {
@@ -70,6 +92,7 @@ export default function LayoutForm({
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { isValid, errors },
   } = useForm({
     resolver: yupResolver(layoutSchema),
@@ -94,8 +117,10 @@ export default function LayoutForm({
     mode: "all",
   });
 
+  console.log("values", watch());
+
   // Use custom hook for image upload management
-  const { previews, handleImageChange, handleRemoveImage, setPreview } =
+  const { previews, handleImageChange, handleReplaceImage, setPreview } =
     useImageUpload(setValue);
 
   const handleFormSubmit = (data) => {
@@ -107,43 +132,50 @@ export default function LayoutForm({
       reset(defaultValues);
       if (defaultValues.homeImage) {
         setPreview("homeImage", defaultValues.homeImage);
+        setValue("homeImage", defaultValues.homeImage, { shouldValidate: true }); // ← Add this
       }
       if (defaultValues.aboutImage) {
         setPreview("aboutImage", defaultValues.aboutImage);
+        setValue("aboutImage", defaultValues.aboutImage, { shouldValidate: true }); // ← Add this
       }
     }
-  }, [defaultValues, reset, isEdit, setPreview]);
+  }, [defaultValues, reset, isEdit, setPreview, setValue]);
 
   const renderTimePickers = (field) => {
-    const [open, close] = field.value ? field.value.split(" - ") : [null, null];
+    const parts = field.value ? field.value.split(" - ") : [null, null];
+    const openTime = parts[0]?.trim() || null;
+    const closeTime = parts[1]?.trim() || null;
 
     const handleOpenChange = (newVal) => {
-      const formatted =
-        newVal && close
-          ? `${dayjs(newVal).format("h:mm A")} - ${close}`
-          : field.value;
-      field.onChange(formatted);
+      if (newVal) {
+        const formatted = `${dayjs(newVal).format("h:mm A")}${closeTime ? ` - ${closeTime}` : ""}`;
+        field.onChange(formatted);
+      }
     };
 
     const handleCloseChange = (newVal) => {
-      const formatted =
-        open && newVal
-          ? `${open} - ${dayjs(newVal).format("h:mm A")}`
-          : field.value;
-      field.onChange(formatted);
+      if (newVal) {
+        const formatted = `${openTime || ""} - ${dayjs(newVal).format("h:mm A")}`;
+        field.onChange(formatted);
+      }
     };
 
     return (
       <>
         <TimePicker
           label="Open"
-          value={open ? dayjs(open, "h:mm A") : null}
+          ampm={true}
+          format="h:mm A"
+          value={openTime ? dayjs(openTime, "h:mm A") : null}
           onChange={handleOpenChange}
           slotProps={TIME_PICKER_STYLES}
         />
+
         <TimePicker
           label="Close"
-          value={close ? dayjs(close, "h:mm A") : null}
+          ampm={true}
+          format="h:mm A"
+          value={closeTime ? dayjs(closeTime, "h:mm A") : null}
           onChange={handleCloseChange}
           slotProps={TIME_PICKER_STYLES}
         />
@@ -159,6 +191,7 @@ export default function LayoutForm({
     placeholder,
     multiline = false,
     gridSize = { xs: 12 },
+    disabled = false,
   ) => (
     <Grid size={gridSize}>
       <FormLabel
@@ -181,13 +214,16 @@ export default function LayoutForm({
               errors[name.split(".").reduce((obj, key) => obj?.[key], errors)]
             }
             helperText={
-              errors[name.split(".").reduce((obj, key) => obj?.[key], errors)]
-                ?.message
+              disabled && name === "layoutTitle"
+                ? "Title cannot be changed"
+                : errors[name.split(".").reduce((obj, key) => obj?.[key], errors)]
+                  ?.message
             }
             startIcon={icon}
             placeholder={placeholder}
             multiline={multiline}
             rows={multiline ? 4 : undefined}
+            disabled={disabled}
           />
         )}
       />
@@ -223,10 +259,9 @@ export default function LayoutForm({
               preview={previews[fieldName]}
               setPreview={(preview) => setPreview(fieldName, preview)}
               handleImageChange={(file) => handleImageChange(file, fieldName)}
-              handleRemoveImage={() =>
-                handleRemoveImage(fieldName, field.onChange)
-              }
+              handleReplaceImage={() => handleReplaceImage(fieldName)}
               inputId={inputId}
+              isEdit={isEdit}
             />
             {errors[fieldName] && (
               <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
@@ -297,7 +332,7 @@ export default function LayoutForm({
             "&:hover": { bgcolor: "#5A3D2B" },
           }}
         >
-          {isEdit ? "Update Layout" : "Create Layout"}
+          {isEdit && !isAdmin ? "Update Layout" : "Create Layout"}
         </Button>
       </div>
       <Grid container spacing={3}>
@@ -319,6 +354,7 @@ export default function LayoutForm({
           "Enter layout title",
           false,
           { xs: 12, md: 6 },
+          isAdmin,
         )}
         {renderTextField(
           "menuTitle",
