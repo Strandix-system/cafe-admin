@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import {
   MaterialReactTable,
@@ -11,7 +9,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import RestoreIcon from "@mui/icons-material/Restore";
 // import ExporterTable from "./ExporterTable";
-import ExporterTable from "../../components/TableComponent/ExporterTable"
+import ExporterTable from "../../components/TableComponent/ExporterTable";
 import {
   Columns,
   DeleteIcon,
@@ -167,7 +165,7 @@ const TableComponent = (props) => {
     },
     muiTableContainerProps: {
       sx: {
-        maxHeight: "calc(100vh - 268px)", 
+        maxHeight: "calc(100vh - 268px)",
         overflow: "auto",
       },
     },
@@ -175,7 +173,7 @@ const TableComponent = (props) => {
     initialState: {
       ...initialState,
       showGlobalFilter: true,
-      density: "spacious", 
+      density: "spacious",
       columnPinning: {
         right: ["mrt-row-actions"],
       },
@@ -183,21 +181,19 @@ const TableComponent = (props) => {
     },
 
     // handle table current State
-   state: {
-  globalFilter,
-  rowSelection,
-  isLoading: isLoading || isDataLoading || isRefetching,
-  ...(manualPagination && { pagination }),
-},
+    state: {
+      globalFilter,
+      rowSelection,
+      isLoading: isLoading || isDataLoading || isRefetching,
+      ...(manualPagination && { pagination }),
+    },
     enableColumnPinning: true,
     enableStickyHeader: true,
     // handle table icons
     icons: tableIcons,
 
-  
     enableColumnFilterModes: false,
 
-   
     enableGrouping: false,
 
     enableColumnOrdering: false,
@@ -210,8 +206,8 @@ const TableComponent = (props) => {
 
     // handle column resizing
     enableColumnResizing: true,
-    layoutMode: "grid", 
-    columnResizeMode: "onChange", 
+    layoutMode: "grid",
+    columnResizeMode: "onChange",
     defaultColumn: {
       maxSize: 400,
       minSize: 100,
@@ -336,11 +332,11 @@ const TableComponent = (props) => {
     positionGlobalFilter: "left",
 
     ...(!rows && {
-  manualGlobalFilter: true,
-  onGlobalFilterChange: (search) => {
-    setGlobalFilter(search);
-  },
-}),
+      manualGlobalFilter: true,
+      onGlobalFilterChange: (search) => {
+        setGlobalFilter(search);
+      },
+    }),
 
     // handle table paginations
     enablePagination: true,
