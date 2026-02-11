@@ -22,7 +22,9 @@ export const API_ROUTES = {
   getCategories: "category/get-allcategories",
   getstates: "get-states",
 
-  createAdmins: "admin/create",
+  createAdmins:"admin/create",
   MENU_LIST:"menu/all-menu",
   menulist:"menu/my-menus",
+  user_list:"customer/get-all",
+  MENU_DELETE: "menu"
 };

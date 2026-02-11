@@ -15,6 +15,10 @@ import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 import CreateMenu from "../pages/Menu/CreateMenu";
 import MenuList from "../pages/Menu/MenuList";
+import EditMenuModal from "../pages/Menu/EditMenuModal";
+// import { User } from "lucide-react";
+import User from "../pages/Menu/User";
+
 // import { MenuList } from "@mui/material";
 
 const AppRoutes = () => {
@@ -99,22 +103,46 @@ const AppRoutes = () => {
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <CreateMenu />
+              <MenuList/>
             </DashboardLayout>
           </ProtectedRoutes>
         }
       />
 
        <Route
-        path="/menu-list"
+        path="/create-menu"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <MenuList/>
+              <CreateMenu/>
             </DashboardLayout>
           </ProtectedRoutes>
         }
       />
+
+      <Route
+        path="/edit-menu"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <EditMenuModal/>
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      
+      <Route
+        path="/user"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <User/>
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+      
 
       {/* CATCH ALL - Redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />

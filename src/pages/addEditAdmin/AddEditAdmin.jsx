@@ -6,69 +6,69 @@ import { API_ROUTES } from "../../utils/api_constants";
 import Loader from "../../components/common/Loader";
 
 export default function AddEditAdmin() {
-  const { userId } = useParams();
-  const navigate = useNavigate();
+    const { userId } = useParams();
+    const navigate = useNavigate();
 
-  const { data, isLoading } = useFetch(
-    `user-${userId}`,
-    `${API_ROUTES.getUserById}/${userId}`,
-    {},
-    {
-      enabled: !!userId,
-    },
-  );
+    const { data, isLoading } = useFetch(
+        `user-${userId}`,
+        `${API_ROUTES.getUserById}/${userId}`,
+        {},
+        {
+            enabled: !!userId,
+        },
+    );
 
-  const { mutate: updateMutate, isPending: updatePending } = usePatch(
-    `${API_ROUTES.updateUsers}/${userId}`,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("get-users");
-        toast.success("User updated successfully");
-        navigate("/users");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    },
-  );
+    const { mutate: updateMutate, isPending: updatePending } = usePatch(
+        `${API_ROUTES.updateUsers}/${userId}`,
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("get-users");
+                toast.success("User updated successfully");
+                navigate("/users");
+            },
+            onError: (error) => {
+                toast.error(error.message);
+            },
+        },
+    );
 
-  const { mutate: createMutate, isPending: createPending } = usePost(
-    API_ROUTES.createAdmins,
-    {
-      onSuccess: () => {
-        toast.success("Admin created successfully");
-        navigate("/users");
-      },
-      onError: (err) => {
-        toast.error(err?.response?.data?.message || "Failed to create cafe");
-      },
-    },
-  );
+    const { mutate: createMutate, isPending: createPending } = usePost(
+        API_ROUTES.createAdmins,
+        {
+            onSuccess: () => {
+                toast.success("Admin created successfully");
+                navigate("/users");
+            },
+            onError: (err) => {
+                toast.error(err?.response?.data?.message || "Failed to create cafe");
+            },
+        },
+    );
 
-  const onSubmit = (data) => {
-    if (userId) {
-      updateMutate(data);
-    } else {
-      const formData = new FormData();
+    const onSubmit = (data) => {
+        if (userId) {
+            updateMutate(data);
+        } else {
+            const formData = new FormData();
 
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          formData.append(key, value);
+            Object.entries(data).forEach(([key, value]) => {
+                if (value !== null && value !== undefined) {
+                    formData.append(key, value);
+                }
+            });
+
+            createMutate(formData);
         }
-      });
+    };
 
-      createMutate(formData);
-    }
-  };
+    if (isLoading) return <div><Loader variant="spinner" /></div>;
 
-  if (isLoading) return <div><Loader variant="spinner"/></div>;
-
-  return (
-    <FormComponent
-      onSubmit={onSubmit}
-      isLoading={isLoading}
-      isSubmitting={updatePending || createPending}
-      {...(data?.result ? { defaultValues: data.result } : {})}
-    />
-  );
+    return (
+        <FormComponent
+            onSubmit={onSubmit}
+            isLoading={isLoading}
+            isSubmitting={updatePending || createPending}
+            {...(data?.result ? { defaultValues: data.result } : {})}
+        />
+    );
 }

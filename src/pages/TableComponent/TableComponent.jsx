@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import {
   MaterialReactTable,
@@ -65,9 +67,9 @@ const TableComponent = (props) => {
     columns = [],
     rows,
     actions = [],
-    actionsType = "icons", // 'icons' | 'menu'
-    slug = "item",
-    querykey = "get-items",
+    actionsType = "icons",
+    slug = "User",
+    querykey = "get-cafe-users",
     apiEndpointId = null,
     getApiEndPoint,
     deleteApiEndPoint,
@@ -109,7 +111,7 @@ const TableComponent = (props) => {
       ...params,
       ...(globalFilter && { search: globalFilter }),
       ...(manualPagination && {
-        ...(!globalFilter && { page: pagination.pageIndex }),
+        ...(!globalFilter && { page: pagination.pageIndex }), // API usually starts page index at 1
         limit: pagination.pageSize,
       }),
     },
@@ -165,7 +167,7 @@ const TableComponent = (props) => {
     },
     muiTableContainerProps: {
       sx: {
-        maxHeight: "calc(100vh - 268px)", // Adjust height
+        maxHeight: "calc(100vh - 268px)", 
         overflow: "auto",
       },
     },
@@ -173,7 +175,7 @@ const TableComponent = (props) => {
     initialState: {
       ...initialState,
       showGlobalFilter: true,
-      density: "spacious", //'comfortable' | 'compact' | 'spacious'
+      density: "spacious", 
       columnPinning: {
         right: ["mrt-row-actions"],
       },
@@ -181,26 +183,23 @@ const TableComponent = (props) => {
     },
 
     // handle table current State
-    state: {
-      ...(!rows && {
-        globalFilter: globalFilter,
-      }),
-      rowSelection,
-      isLoading: isLoading || isDataLoading || isRefetching,
-      ...(manualPagination && { pagination }),
-    },
+   state: {
+  globalFilter,
+  rowSelection,
+  isLoading: isLoading || isDataLoading || isRefetching,
+  ...(manualPagination && { pagination }),
+},
     enableColumnPinning: true,
     enableStickyHeader: true,
     // handle table icons
     icons: tableIcons,
 
-    // handle column filter, move and grouping
+  
     enableColumnFilterModes: false,
 
-    // handle column filter by column or grouping
+   
     enableGrouping: false,
 
-    // handle column move or ordering
     enableColumnOrdering: false,
 
     // handle column actions dot icon
@@ -211,8 +210,8 @@ const TableComponent = (props) => {
 
     // handle column resizing
     enableColumnResizing: true,
-    layoutMode: "grid", // for getting rid of an extra space
-    columnResizeMode: "onChange", //default, onChange, onEnd
+    layoutMode: "grid", 
+    columnResizeMode: "onChange", 
     defaultColumn: {
       maxSize: 400,
       minSize: 100,
@@ -337,11 +336,11 @@ const TableComponent = (props) => {
     positionGlobalFilter: "left",
 
     ...(!rows && {
-      manualGlobalFilter: true,
-      onGlobalFilterChange: (search) => {
-        setGlobalFilter(search);
-      },
-    }),
+  manualGlobalFilter: true,
+  onGlobalFilterChange: (search) => {
+    setGlobalFilter(search);
+  },
+}),
 
     // handle table paginations
     enablePagination: true,
