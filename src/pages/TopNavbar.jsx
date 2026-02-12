@@ -29,6 +29,7 @@ export default function TopNavbar() {
   const showBackButtonRoutes = [
     "/cafe/create-edit",
     "/layouts/create-edit",
+    "/cafe/view-customers/",
     "/categories/create",
     "/order-history",
   ];

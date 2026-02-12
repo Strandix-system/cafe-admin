@@ -2,7 +2,7 @@ import TableComponent from "../components/TableComponent/TableComponent"
 import { Box, Button, Switch, Chip, Typography } from "@mui/material"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate, useParams } from 'react-router-dom'
-import { Edit, Eye, Power, Trash2, Plus } from 'lucide-react'
+import { Edit, Eye, Power, Trash2, Plus, User } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
@@ -90,6 +90,13 @@ const AdminList = () => {
       icon: Eye,
       onClick: (row) => {
         navigate(`/cafe/create-edit/${row.original._id}`);
+      },
+    },
+    {
+      label: "View Customer",
+      icon: User,
+      onClick: (row) => {
+        navigate(`/cafe/view-customers/${row.original._id}`);
       },
     },
     {
