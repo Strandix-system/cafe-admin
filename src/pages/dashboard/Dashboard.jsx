@@ -8,35 +8,35 @@ import StatCard from "./StatCard";
 
 export default function Dashboard() {
   const { isSuperAdmin, isAdmin } = useAuth();
-  const [statsData, setStatsData] = useState(null);
 
-  const { data: superAdminStats, isLoading: isSuperAdminLoading } = useFetch(
+  const { data: superAdminStatsData, isLoading: isSuperAdminLoading } = useFetch(
     "super-admin-stats",
-    API_ROUTES.superAdminStats,
+    API_ROUTES.getStats,
     {},
     {
       enabled: isSuperAdmin,
-      onSuccess: (res) => setStatsData(res.result),
     },
   );
 
-  const { data: adminStats, isLoading: isAdminLoading } = useFetch(
+  const { data: adminStatsData, isLoading: isAdminLoading } = useFetch(
     "admin-stats",
-    API_ROUTES.adminStats,
+    API_ROUTES.getStats,
     {},
     {
       enabled: isAdmin,
-      onSuccess: (res) => setStatsData(res.result),
     },
   );
 
   const isLoading = isSuperAdminLoading || isAdminLoading;
 
   const stats = isSuperAdmin
-    ? getSuperAdminStats(superAdminStats)
+    ? getSuperAdminStats(superAdminStatsData)
     : isAdmin
-      ? getAdminStats(adminStats)
+      ? getAdminStats(adminStatsData)
       : [];
+
+  console.log("Stats Data being passed:", superAdminStatsData || adminStatsData);
+  console.log("Processed stats:", stats);
 
   return (
     <Box px={4} py={3}>

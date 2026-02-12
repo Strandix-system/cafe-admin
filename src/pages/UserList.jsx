@@ -43,15 +43,22 @@ const UserList = () => {
         []
     );
 
-    const actions = [
-        {
-            label: "Orders",
-            icon: Plus,
-            onClick: (row) => {
-                navigate(`/cafe/orders/${row.original._id}`);
-            },
-        },
-    ];
+    // Conditionally set actions based on role
+    // const actions = useMemo(() => {
+    //     // Only enable actions for admin, not for superadmin
+    //     if (isAdmin && !isSuperAdmin) {
+    //         return [
+    //             {
+    //                 label: "Orders",
+    //                 icon: Plus,
+    //                 onClick: (row) => {
+    //                     navigate(`/cafe/my-orders/${row.original._id}`);
+    //                 },
+    //             },
+    //         ];
+    //     }
+    //     return []; // No actions for superadmin or other roles
+    // }, [isAdmin, isSuperAdmin, navigate]);
 
     return (
         <div className="overflow-hidden">

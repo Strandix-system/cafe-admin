@@ -7,7 +7,7 @@ export const API_ROUTES = {
   updateUsers: "admin/update",
 
   delete: "/admin/delete",
-  superAdminStats: "/admin/get-users",
+  getStats: "admin/dashboard/stats",
 
   createLayout: "layout/create",
   getLayouts: "layout/all-layouts",

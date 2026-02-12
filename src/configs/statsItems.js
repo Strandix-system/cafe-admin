@@ -1,13 +1,23 @@
 export const getSuperAdminStats = (statsData) => [
-  { label: "Total Cafes", value: statsData?.totalCafes },
-  { label: "Active Cafes", value: statsData?.activeCafes },
-  { label: "Inactive Cafes", value: statsData?.inactiveCafes },
-  { label: "Total Orders", value: statsData?.totalOrders },
-  { label: "Total Earnings", value: `₹${statsData?.totalEarnings?.toLocaleString()}` },
+  { label: "Total Cafes", value: statsData?.totalCafe ?? 0 },
+  { label: "Active Cafes", value: statsData?.totalActive ?? 0 },
+  { label: "Inactive Cafes", value: statsData?.totalInActive ?? 0 },
+  {
+    label: "Total Income",
+    value: `₹${(statsData?.totalIncome ?? 0).toLocaleString()}`
+  },
 ];
 
 export const getAdminStats = (statsData) => [
-  { label: "Today's Orders", value: statsData?.todayOrders },
-  { label: "Total Earnings", value: `₹${statsData?.totalEarnings?.toLocaleString()}` },
-  { label: "Most Ordered Item", value: statsData?.mostOrderedItem },
+  { label: "Total Customers", value: statsData?.totalCustomer ?? 0 },
+  { label: "Total Orders", value: statsData?.totalOrder ?? 0 },
+  { label: "Today's Orders", value: statsData?.todayOrder ?? 0 },
+  {
+    label: "Total Income",
+    value: `₹${(statsData?.totalIncome ?? 0).toLocaleString()}`
+  },
+  {
+    label: "Today's Income",
+    value: `₹${(statsData?.todayIncome ?? 0).toLocaleString()}`
+  },
 ];

@@ -161,7 +161,7 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       />
-      <Route
+      {/* <Route
         path="/cafe/orders/:userId"
         element={
           <ProtectedRoutes>
@@ -170,7 +170,7 @@ const AppRoutes = () => {
             </DashboardLayout>
           </ProtectedRoutes>
         }
-      />
+      /> */}
 
       {/* CATCH ALL - Redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
