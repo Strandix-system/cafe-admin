@@ -16,6 +16,7 @@ import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 import CreateMenu from "../pages/Menu/CreateMenu";
 import MenuList from "../pages/Menu/MenuList";
 // import { MenuList } from "@mui/material";
+import CafeTableManagement from "../pages/CafeTableManagement";
 
 const AppRoutes = () => {
   return (
@@ -93,8 +94,18 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       />
+      <Route
+        path="/table-management"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CafeTableManagement />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
 
-       <Route
+      <Route
         path="/menu"
         element={
           <ProtectedRoutes>
@@ -105,12 +116,12 @@ const AppRoutes = () => {
         }
       />
 
-       <Route
+      <Route
         path="/menu-list"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <MenuList/>
+              <MenuList />
             </DashboardLayout>
           </ProtectedRoutes>
         }

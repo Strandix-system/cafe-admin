@@ -18,6 +18,7 @@ export default function LayoutPreviewCard({
 
   return (
     <Card
+      onClick={() => onSelect(layout._id)} // Make entire card clickable
       sx={{
         position: "relative",
         width: 260,
@@ -26,17 +27,39 @@ export default function LayoutPreviewCard({
         overflow: "hidden",
         border: isSelected ? "3px solid #6F4E37" : "1px solid #ddd",
         transition: "0.3s",
+        cursor: "pointer",
         "&:hover .overlay": {
           opacity: 1,
         },
       }}
     >
-      {/* RADIO BUTTON (TOP LEFT) */}
-      <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 2 }}>
+      {/* RADIO BUTTON (TOP RIGHT) */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+          zIndex: 101, // Above overlay
+          bgcolor: "rgba(255, 255, 255, 0.9)",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent card click when clicking radio
+          onSelect(layout._id);
+        }}
+      >
         <Radio
           checked={isSelected}
           onChange={() => onSelect(layout._id)}
-          sx={{ color: "#6F4E37" }}
+          sx={{
+            color: "#6F4E37",
+            "&.Mui-checked": {
+              color: "#6F4E37",
+            },
+          }}
         />
       </Box>
 
@@ -62,7 +85,7 @@ export default function LayoutPreviewCard({
           justifyContent: "center",
           opacity: 0,
           transition: "opacity 0.3s",
-          backgroundColor: "rgba(0,0,0,0.4)", // optional dark overlay
+          backgroundColor: "rgba(0,0,0,0.4)",
           zIndex: 100,
         }}
       >
@@ -79,7 +102,10 @@ export default function LayoutPreviewCard({
         </Typography>
 
         <IconButton
-          onClick={() => onPreview(layout)}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent card selection when clicking preview
+            onPreview(layout);
+          }}
           sx={{
             bgcolor: "white",
             boxShadow: 2,

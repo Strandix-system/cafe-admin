@@ -2,6 +2,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import ViewQuiltIcon from "@mui/icons-material/ViewQuilt";
 import CategoryIcon from "@mui/icons-material/Category";
+import { QrCode } from "lucide-react";
 
 export const sideBarItems = {
   superAdmin: [
@@ -66,6 +67,13 @@ export const sideBarItems = {
       icon: CategoryIcon,
       path: "/menulist",
       tab: "menulist",
+    },
+    {
+      key: "categories",
+      label: "Generate QR-Code",
+      icon: QrCode,
+      path: "/table-management",
+      tab: "table-management",
     },
   ],
 };

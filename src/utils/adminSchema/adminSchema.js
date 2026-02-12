@@ -9,12 +9,18 @@ export const adminSchema = yup.object().shape({
     .required("Email is required"),
   password: yup
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/,
-      "Password must contain uppercase, lowercase, number & special character",
-    )
-    .required("Password is required"),
+    .when("$isEdit", {
+      is: false, // Only require password when not in edit mode
+      then: yup
+        .string()
+        .min(8, "Password must be at least 8 characters")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/,
+          "Password must contain uppercase, lowercase, number & special character",
+        )
+        .required("Password is required"),
+      otherwise: yup.string().notRequired(), // Optional in edit mode
+    }),
   cafeName: yup.string().trim().required("Cafe name is required"),
   phoneNumber: yup
     .string()
@@ -27,20 +33,27 @@ export const adminSchema = yup.object().shape({
     .string()
     .matches(/^\d{6}$/, "Pincode must be 6 digits")
     .required("Pincode is required"),
+  gstPercentage: yup.number().required("GST percentage is required").min(5, "GST must be at least 5%").max(28, "GST cannot exceed 28%"),
   logo: yup
     .mixed()
-    .required("Cafe logo is required")
-    .test(
-      "fileType",
-      "Only image files are allowed",
-      (value) => value && value.type?.startsWith("image/"),
-    ),
+    .test("required", "Cafe logo is required", (value) => {
+      return value instanceof File || (typeof value === "string" && value.trim() !== "");
+    })
+    .test("fileOrUrl", "Invalid image", (value) => {
+      if (!value) return false;
+      if (value instanceof File) return true;
+      if (typeof value === "string") return value.trim() !== "";
+      return false;
+    }),
   profileImage: yup
     .mixed()
-    .required("Profile image is required")
-    .test(
-      "fileType",
-      "Only image files are allowed",
-      (value) => value && value.type?.startsWith("image/"),
-    ),
+    .test("required", "Profile image is required", (value) => {
+      return value instanceof File || (typeof value === "string" && value.trim() !== "");
+    })
+    .test("fileOrUrl", "Invalid image", (value) => {
+      if (!value) return false;
+      if (value instanceof File) return true;
+      if (typeof value === "string") return value.trim() !== "";
+      return false;
+    }),
 });

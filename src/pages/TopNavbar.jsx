@@ -66,21 +66,6 @@ export default function TopNavbar() {
       .substring(0, 2);
   };
 
-  // Get page title based on current route
-  const getPageTitle = () => {
-    const path = location.pathname;
-    if (path.includes("/admin/create-edit")) return "Create Cafe";
-    if (path.includes("/admin/edit")) return "Edit Admin";
-    if (path.includes("/layouts/create")) return "Create Layout";
-    if (path.includes("/categories/create")) return "Create Category";
-    if (path === "/dashboard")
-      return isSuperAdmin ? "Super Admin Panel" : "Admin Panel";
-    if (path === "/cafes") return "Admin Management";
-    if (path === "/layouts") return "Layout Management";
-    if (path === "/categories") return "Category Management";
-    return isSuperAdmin ? "Super Admin Panel" : "Admin Panel";
-  };
-
   return (
     <Box
       sx={{
@@ -114,14 +99,6 @@ export default function TopNavbar() {
           </Button>
         )}
 
-        {/* <Box>
-          <Typography variant="h6" fontWeight={600} color="text.primary">
-            {getPageTitle()}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            {user?.email || "Welcome"}
-          </Typography>
-        </Box> */}
       </Box>
 
       {/* Right Side - Actions & Profile */}

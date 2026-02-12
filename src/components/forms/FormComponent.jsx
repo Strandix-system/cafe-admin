@@ -38,6 +38,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { adminSchema } from "../../utils/adminSchema/adminSchema";
 import ImageUploadSection from "../common/ImageUploadSection";
 import InputField from "../common/InputField";
+import { useImageUpload } from "../../utils/hooks/useImageUpload";
 
 export default function FormComponent({
   defaultValues = {},
@@ -64,6 +65,7 @@ export default function FormComponent({
       city: "",
       state: "",
       pincode: "",
+      gstPercentage: "",
       logo: null,
       profileImage: null,
     },
@@ -80,23 +82,27 @@ export default function FormComponent({
     API_ROUTES.getstates,
   );
 
+  const { previews, handleImageChange, handleReplaceImage, setPreview } =
+    useImageUpload(setValue);
+
   const handleFormSubmit = (data) => {
     onSubmit({
       ...data,
       phoneNumber: Number(data.phoneNumber),
+      gstPercentage: Number(data.gstPercentage),
     });
   };
 
-  const handleImageChange = (file, field, setPreview) => {
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-        setValue(field.name, file);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleImageChange = (file, field, setPreview) => {
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPreview(reader.result);
+  //       setValue(field.name, file);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleRemoveImage = (field) => {
     setLogoPreview(null);
@@ -203,12 +209,13 @@ export default function FormComponent({
                     setPreview={setLogoPreview}
                     handleImageChange={handleImageChange}
                     handleRemoveImage={handleRemoveImage}
+                    handleReplaceImage={handleReplaceImage}
                     inputId="logo-upload"
+                    isEdit={isEdit}
                   />
                 )}
               />
             </Grid>
-
 
             <Grid size={{ xs: 12, sm: 6 }}>
               <Controller
@@ -222,7 +229,9 @@ export default function FormComponent({
                     setPreview={setProfilePreview}
                     handleImageChange={handleImageChange}
                     handleRemoveImage={handleRemoveImage}
+                    handleReplaceImage={handleReplaceImage}
                     inputId="profile-upload"
+                    isEdit={isEdit}
                   />
                 )}
               />
@@ -627,6 +636,31 @@ export default function FormComponent({
                         "&:hover": { bgcolor: "#EFE5D8" },
                       },
                     }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <FormLabel
+                sx={{
+                  color: "#6F4E37",
+                  fontWeight: 600,
+                  mb: 1,
+                  display: "block",
+                }}
+              >
+                GST Percentage *
+              </FormLabel>
+              <Controller
+                name="gstPercentage"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    field={field}
+                    error={errors.gstPercentage}
+                    helperText={errors.gstPercentage?.message}
+                    placeholder="Enter GST Percentage"
+                    type="number"
                   />
                 )}
               />
