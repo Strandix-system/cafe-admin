@@ -11,7 +11,7 @@ const defaultQueryOptions = {
 
 const useFetch = (key, endpoint, params = {}, options = {}) => {
     return useQuery({
-        queryKey: [key, params],
+        queryKey: key,
         queryFn: () => APIRequest.get(endpoint, params),
         ...defaultQueryOptions,
         ...options,
@@ -39,11 +39,20 @@ const usePatch = (endpoint, options = {}) => {
     });
 };
 
+// const useDelete = (endpoint, options = {}) => {
+//     return useMutation({
+//         mutationFn: (data) => APIRequest.remove(`${endpoint}/${typeof (data) === "string" ? data : ""}`, {}, typeof (data) === "object" ? data : {}),
+//         ...options,
+//     });
+// };
+
 const useDelete = (endpoint, options = {}) => {
-    return useMutation({
-        mutationFn: (data) => APIRequest.remove(`${endpoint}/${typeof (data) === "string" ? data : ""}`, {}, typeof (data) === "object" ? data : {}),
-        ...options,
-    });
+  return useMutation({
+    mutationFn: (id) => {
+      return APIRequest.remove(`${endpoint}/${id}`);
+    },
+    ...options,
+  });
 };
 
 export { useFetch, usePost, usePut, usePatch, useDelete };

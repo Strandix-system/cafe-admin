@@ -1,3 +1,5 @@
+import { create, get, update } from "lodash";
+
 export const API_ROUTES = {
   login: "auth/login",
   getMe: "auth/me",
@@ -21,14 +23,19 @@ export const API_ROUTES = {
 
   createCategory: "category/create",
   getCategories: "category/get-allcategories",
+  getCategoryById: "category/get-by-id",
+  updateCategory: "category/update",
+  deleteCategory: "category/delete",
   getstates: "get-states",
 
   createAdmins:"admin/create",
-  MENU_LIST:"menu/all-menu",
   menulist:"menu/my-menus",
   user_list:"customer/get-all",
-  MENU_DELETE: "menu",
-
   createQRCodes: "qr/create",
   getQRCodes: "qr/get-all",
+
+  createMenu: "menu/create",
+  getMenuById: "menu/get-by-id",
+  MENU_DELETE: "menu/delete",
+  updateMenu: "menu/update",
 };

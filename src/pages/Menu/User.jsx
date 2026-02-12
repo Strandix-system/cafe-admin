@@ -20,24 +20,24 @@ const UserList = () => {
         accessorKey: "phoneNumber",
         header: "Phone Number",
       },
-      {
-        accessorKey: "tableNumber", 
-        header: "Table Number",
-        Cell: ({ row }) => {
-            const val = row.original.tableNumber;
-            return val ? (
-                <Box sx={{ 
-                    backgroundColor: '#F5F5F5', 
-                    px: 1.5, py: 0.5, 
-                    borderRadius: 1, 
-                    display: 'inline-block',
-                    fontWeight: 600 
-                }}>
-                    {val}
-                </Box>
-            ) : "-";
-        },
-      },
+      // {
+      //   accessorKey: "tableNumber", 
+      //   header: "Table Number",
+      //   Cell: ({ row }) => {
+      //       const val = row.original.tableNumber;
+      //       return val ? (
+      //           <Box sx={{ 
+      //               backgroundColor: '#F5F5F5', 
+      //               px: 1.5, py: 0.5, 
+      //               borderRadius: 1, 
+      //               display: 'inline-block',
+      //               fontWeight: 600 
+      //           }}>
+      //               {val}
+      //           </Box>
+      //       ) : "-";
+      //   },
+      // },
     ],
     []
   );

@@ -124,16 +124,12 @@ const TableComponent = (props) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: [
-            querykey,
-            {
-              ...(globalFilter && { search: globalFilter }),
-            },
-          ],
+          queryKey: [querykey],
+          exact: false, // 🔥 IMPORTANT
         });
         setDeleteState({ open: false, id: null, name: "" });
         afterSuccessfullDeletion && afterSuccessfullDeletion();
-        toast.error(`${slug} has been successfully deleted.`);
+        toast.success(`${slug} has been successfully deleted.`);
       },
       onError: (error) => {
         toast.error(error ?? "Something went wrong");
@@ -248,20 +244,20 @@ const TableComponent = (props) => {
       ({ row, closeMenu }) => {
         const tableActions = deleteAction
           ? [
-              ...actions,
-              {
-                label: deleteAction?.label ? deleteAction?.label : "Delete",
-                // complete delete flow
-                onClick: deleteAction?.onClick
-                  ? deleteAction?.onClick
-                  : () => handleClickDelete(row),
-                isDisabled: deleteAction?.isDisabled
-                  ? deleteAction?.isDisabled
-                  : false,
-                icon: Trash,
-                color: "#f00",
-              },
-            ]
+            ...actions,
+            {
+              label: deleteAction?.label ? deleteAction?.label : "Delete",
+              // complete delete flow
+              onClick: deleteAction?.onClick
+                ? deleteAction?.onClick
+                : () => handleClickDelete(row),
+              isDisabled: deleteAction?.isDisabled
+                ? deleteAction?.isDisabled
+                : false,
+              icon: Trash,
+              color: "#f00",
+            },
+          ]
           : actions;
 
         return tableActions.map((action, i) => {
@@ -378,57 +374,57 @@ const TableComponent = (props) => {
           paddingBottom: "10px",
         },
         "& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-Content-Labels":
-          {
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          },
+        {
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        },
         "& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-Content-Actions > button":
-          {
-            width: "auto",
-            height: "auto",
-            background: "none",
-          },
+        {
+          width: "auto",
+          height: "auto",
+          background: "none",
+        },
         "& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-ResizeHandle-Wrapper":
-          {
-            position: "static",
-            padding: 0,
-            margin: 0,
-          },
+        {
+          position: "static",
+          padding: 0,
+          margin: 0,
+        },
       },
     },
 
     enableRowOrdering: enableRowDrag,
     muiRowDragHandleProps: enableRowDrag
       ? {
-          onDragEnd: (event) => {
-            const { draggingRow, hoveredRow } = table.getState();
-            if (hoveredRow && draggingRow) {
-              const dataSource = rows
-                ? localRows
-                : get(data, "result.results", []);
-              const newData = [...dataSource];
+        onDragEnd: (event) => {
+          const { draggingRow, hoveredRow } = table.getState();
+          if (hoveredRow && draggingRow) {
+            const dataSource = rows
+              ? localRows
+              : get(data, "result.results", []);
+            const newData = [...dataSource];
 
-              newData.splice(
-                hoveredRow.index,
-                0,
-                newData.splice(draggingRow.index, 1)[0],
-              );
+            newData.splice(
+              hoveredRow.index,
+              0,
+              newData.splice(draggingRow.index, 1)[0],
+            );
 
-              if (rows) {
-                setLocalRows(newData);
-                if (onRowDragEnd) {
-                  onRowDragEnd(newData);
-                }
-              } else {
-                if (onRowDragEnd) {
-                  onRowDragEnd(newData);
-                }
+            if (rows) {
+              setLocalRows(newData);
+              if (onRowDragEnd) {
+                onRowDragEnd(newData);
+              }
+            } else {
+              if (onRowDragEnd) {
+                onRowDragEnd(newData);
               }
             }
-          },
-        }
+          }
+        },
+      }
       : undefined,
   });
 

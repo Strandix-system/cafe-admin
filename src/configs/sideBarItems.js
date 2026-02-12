@@ -66,14 +66,14 @@ export const sideBarItems = {
 
     {
       key: "userData",
-      label: "User Data",
+      label: "User Management",
       icon: SupervisedUserCircleIcon,
       path: "/user",
       tab: "user-data",
     },
     {
       key: "categories",
-      label: "Generate QR-Code",
+      label: " QR Management",
       icon: QrCode,
       path: "/table-management",
       tab: "table-management",

@@ -7,9 +7,10 @@ import { useAuth } from "../context/AuthContext";
 import CreateCategoryDialog from "../components/categories/CreateCategoryDialog";
 
 const CategoriesList = () => {
-    console.log("✅ CategoriesList component mounted" );
+  // console.log("✅ CategoriesList component mounted" );
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { isSuperAdmin } = useAuth();
 
@@ -19,12 +20,12 @@ const CategoriesList = () => {
         accessorKey: "name",
         header: "Category",
       },
-      {
-        accessorKey: "createdAt",
-        header: "Created At",
-        Cell: ({ row }) =>
-          new Date(row.original.createdAt).toLocaleDateString(),
-      },
+      // {
+      //   accessorKey: "createdAt",
+      //   header: "Created At",
+      //   Cell: ({ row }) =>
+      //     new Date(row.original.createdAt).toLocaleDateString(),
+      // },
     ],
     []
   );
@@ -34,10 +35,16 @@ const CategoriesList = () => {
       label: "Edit",
       icon: Edit,
       onClick: (row) => {
-        navigate(`/dashboard/categories/edit/${row.original._id}`);
+        setSelectedCategory(row.original);
+        setOpenDialog(true);
       },
     },
   ];
+
+  const handleClose = () => {
+    setOpenDialog(false);
+    setSelectedCategory(null);
+  };
 
   return (
     <div>
@@ -45,25 +52,27 @@ const CategoriesList = () => {
         sx={{
           p: 3,
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
         }}
       >
-                  <Button
-                      variant="contained"
-                      sx={{backgroundColor:"#6F4E37"}}
-                      startIcon={<Plus size={18} />}
-                      onClick={() => setOpenDialog(true)}
-                  >
-                      Create Category
-                  </Button>
-       </Box>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#6F4E37" }}
+          startIcon={<Plus size={18} />}
+          onClick={() => {
+            setSelectedCategory(null);
+            setOpenDialog(true);
+          }}
+        >
+          Create Category
+        </Button>
+      </Box>
 
       <TableComponent
         slug="category"
         columns={columns}
         actions={actions}
-        actionsType="menu"
+        actionsType="icons"
         querykey="get-categories"
         getApiEndPoint="getCategories"
         deleteApiEndPoint="deleteCategory"
@@ -73,7 +82,8 @@ const CategoriesList = () => {
 
       <CreateCategoryDialog
         open={openDialog}
-        handleClose={() => setOpenDialog(false)}
+        handleClose={handleClose}
+        category={selectedCategory}
       />
     </div>
   );

@@ -101,23 +101,24 @@ const TableComponent = (props) => {
         },
         {
             enabled: Boolean(getApiEndPoint),
-            placeholderData: keepPreviousData
+            placeholderData: keepPreviousData,
+            refetchOnMount: "always",
+            refetchOnWindowFocus: false,
+            staleTime: 0,
         }
     );
 
-    const { mutate: deleteMutation, isPending: isDeletePending} = useDelete(API_ROUTES[deleteApiEndPoint], {
+    const { mutate: deleteMutation, isPending: isDeletePending } = useDelete(API_ROUTES[deleteApiEndPoint], {
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [
-                    querykey,
-                    {
-                        ...(globalFilter && { search: globalFilter }),
-                    }
-                ]
-            });
+
+            queryClient.refetchQueries({
+                queryKey: querykey,
+                type: "active",
+            });;
+
             setDeleteState({ open: false, id: null, name: "" });
             afterSuccessfullDeletion && afterSuccessfullDeletion();
-            toast.error(`${slug} has been successfully deleted.`)
+            toast.success(`${slug} has been successfully deleted.`)
         },
         onError: (error) => {
             toast.error(error ?? 'Something went wrong')
@@ -138,10 +139,16 @@ const TableComponent = (props) => {
         deleteMutation(deleteState.id);
     };
 
+    const tableData =
+        rows ??
+        (Array.isArray(data?.result)
+            ? data.result                // ✅ Category API (flat array)
+            : get(data, "result.results", []));
+
     const table = useMaterialReactTable({
         columns,
-        data: rows ?? get(data, "result.results", []),
-
+        // data: rows ?? get(data, "result.results", []),
+        data: tableData,
 
         enableSortingRemoval: false,
         sortingFns: {
@@ -253,7 +260,8 @@ const TableComponent = (props) => {
                         >
                             <IconButton
                                 onClick={() => {
-                                    setTimeout(action?.onClick(row));
+                                    // setTimeout(action?.onClick(row));
+                                    action?.onClick(row);
                                 }}
                                 disabled={isDisabled}
                             >
@@ -270,7 +278,8 @@ const TableComponent = (props) => {
                             key={`material-react-table-action-${action?.label}-${i}`}
                             onClick={() => {
                                 closeMenu();
-                                setTimeout(action?.onClick(row));
+                                // setTimeout(action?.onClick(row));
+                                action?.onClick(row);
                             }}
                             disabled={isDisabled}
                         >

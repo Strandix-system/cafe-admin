@@ -1,422 +1,304 @@
-// import React, { useState } from "react";
-// import { useForm, Controller } from "react-hook-form";
-// import { APIRequest } from "../../utils/api_request";
-// import { useNavigate } from "react-router-dom";
-// export default function CreateMenu() {
-//   const {
-//     register,
-//     handleSubmit,
-//     control,
-//     formState: { errors },
-//   } = useForm();
-
-//   const navigate = useNavigate(); 
-//   const [preview, setPreview] = useState(null);
-
-//   const categories = [
-  
-//     {
-//          id: "69831350b0cdd7f248d87f97",
-//          name: "Beverages",
-//     }
-//   ];
-
-// const onSubmit = async (data) => {
-//   try {
-//     console.log("Form Data:", data);
-
-//     const formData = new FormData();
-
-//     formData.append("name", data.itemName);
-//     formData.append("description", data.description);
-//     formData.append("price", data.price);
-//     formData.append("category", data.categoryId);
-//     formData.append("image", data.image[0]);
-//     formData.append(
-//   "discountPrice",
-//   data.discountPrice
-//     ? Number(data.discountPrice)
-//     : 0
-// );
-
-//     // 🔥 API CALL
-//     const response = await APIRequest.post("menu/create", formData);
-
-//     console.log("API Response:", response);
-
-//     alert("Menu Created Successfully ✅");
-
-//   } catch (error) {
-//     console.error("Error:", error);
-//     alert(error);
-//   }
-
-//   console.error("Error:", error);
-//      alert(error?.message || "Something went wrong");
-
-// };
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-//       <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8">
-        
-//         {/* Title */}
-//         <h2 className="text-2xl font-bold mb-6 text-gray-800">
-//           Create Menu Item
-//         </h2>
-        
-//         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
-//           {/* Item Name */}
-//           <div>
-//             <label className="block text-sm font-medium mb-1">
-//               Item Name
-//             </label>
-//             <input
-//               type="text"
-//               {...register("itemName", { required: "Item name is required" })}
-//               className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-//               placeholder="Enter item name"
-//             />
-//             {errors.itemName && (
-//               <p className="text-red-500 text-sm">
-//                 {errors.itemName.message}
-//               </p>
-//             )}
-//           </div>
-
-//           {/* Description */}
-//           <div>
-//             <label className="block text-sm font-medium mb-1">
-//               Description
-//             </label>
-//             <textarea
-//               {...register("description")}
-//               className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-//               placeholder="Enter description"
-//             />
-//           </div>
-
-//           {/* Price */}
-//           <div>
-//             <label className="block text-sm font-medium mb-1">
-//               Price
-//             </label>
-//             <input
-//               type="number"
-//               {...register("price", { required: "Price is required" })}
-//               className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-//               placeholder="Enter price"
-//             />
-//             {errors.price && (
-//               <p className="text-red-500 text-sm">
-//                 {errors.price.message}
-//               </p>
-//             )}
-//           </div>
-
-//           {/* Category Dropdown */}
-//           <div>
-//             <label className="block text-sm font-medium mb-1">
-//               Category
-//             </label>
-
-//             <Controller
-//               name="categoryId"
-//               control={control}
-//               rules={{ required: "Category is required" }}
-//               render={({ field }) => (
-//                 <select
-//                   {...field}
-//                   className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-//                 >
-//                   <option value="">Select Category</option>
-//                   {categories.map((cat) => (
-//                     <option key={cat.id} value={cat.id}>
-//                       {cat.name}
-//                     </option>
-//                   ))}
-//                 </select>
-//               )}
-//             />
-
-//             {errors.categoryId && (
-//               <p className="text-red-500 text-sm">
-//                 {errors.categoryId.message}
-//               </p>
-//             )}
-//           </div>
-
-//           {/* Image Upload */}
-//           <div>
-//             <label className="block text-sm font-medium mb-1">
-//               Item Image
-//             </label>
-
-//             <input
-//               type="file"
-//               accept="image/*"
-//               {...register("image", {
-//                 required: "Image is required",
-//                 onChange: (e) => {
-//                   const file = e.target.files[0];
-//                   if (file) {
-//                     setPreview(URL.createObjectURL(file));
-//                   }
-//                 },
-//               })}
-//               className="w-full"
-//             />
-
-//             {errors.image && (
-//               <p className="text-red-500 text-sm">
-//                 {errors.image.message}
-//               </p>
-//             )}
-
-//             {/* Preview */}
-//             {preview && (
-//               <img
-//                 src={preview}
-//                 alt="Preview"
-//                 className="mt-3 w-32 h-32 object-cover rounded-lg border"
-//               />
-//             )}
-//           </div>
-
-//           {/* Submit Button */}
-//           <div className="pt-4">
-//             <button
-//               type="submit"
-//               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-//             >
-//               submit
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { MenuItem, FormLabel } from "@mui/material";
-
-// import InputField from "../../components/InputField";
+import { useNavigate, useParams } from "react-router-dom";
+import { FormLabel, MenuItem } from "@mui/material";
+import { toast } from "react-hot-toast";
 import { APIRequest } from "../../utils/api_request";
 import InputField from "../../components/common/InputField";
+import { API_ROUTES } from "../../utils/api_constants";
+import { queryClient } from "../../lib/queryClient";
 
 export default function CreateMenu() {
+  const { menuId } = useParams();
+  const navigate = useNavigate();
+
   const {
     handleSubmit,
     control,
     register,
+    reset,
     formState: { errors },
-  } = useForm();
-
-  const navigate = useNavigate();
-  const [preview, setPreview] = useState(null);
-
-  // Dummy category (later from API)
-  const categories = [
-    {
-      id: "69831350b0cdd7f248d87f97",
-      name: "Beverages",
+  } = useForm({
+    defaultValues: {
+      itemName: "",
+      description: "",
+      price: "",
+      discountPrice: "",
+      category: "",
     },
-  ];
+  });
 
-  // 🔥 SUBMIT
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [pageLoading, setPageLoading] = useState(false);
+
+  // 🔹 FETCH CATEGORIES
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await APIRequest.get(API_ROUTES.getCategories);
+        setCategories(res.result);
+      } catch (error) {
+        console.error("Category fetch failed", error);
+        toast.error("Failed to load categories");
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // FETCH MENU DETAILS IF EDITING
+
+  useEffect(() => {
+    if (!menuId) return;
+
+    const fetchMenu = async () => {
+      try {
+        setPageLoading(true);
+        const res = await APIRequest.get(`${API_ROUTES.getMenuById}/${menuId}`);
+
+        reset({
+          itemName: res.result.name,
+          description: res.result.description,
+          price: res.result.price,
+          discountPrice: res.result.discountPrice,
+          category: res.result.categoryId,
+        });
+
+        setPreview(res.result.image);
+      } catch (error) {
+        toast.error("Failed to fetch menu details");
+      } finally {
+        setPageLoading(false);
+      }
+    };
+
+    fetchMenu();
+  }, [menuId, reset]);
+
+  useEffect(() => {
+    queryClient.refetchQueries({
+      queryKey: ["menu-list"],
+    });
+  }, []);
+
   const onSubmit = async (data) => {
     try {
-      const formData = new FormData();
+      setLoading(true);
 
+      const formData = new FormData();
       formData.append("name", data.itemName);
       formData.append("description", data.description);
       formData.append("price", data.price);
-      formData.append("category", data.categoryId);
-      formData.append("image", data.image[0]);
-      formData.append(
-        "discountPrice",
-        data.discountPrice ? Number(data.discountPrice) : 0
+      formData.append("discountPrice", data.discountPrice);
+
+      const selectedCategory = categories.find(
+        (cat) => cat._id === data.category
       );
 
-      const response = await APIRequest.post(
-        "menu/create",
-        formData
-      );
+      formData.append("category", selectedCategory.name);
 
-      alert("Menu Created Successfully ✅");
-      navigate("/menu-list");
+      if (data.image && data.image[0]) {
+        formData.append("image", data.image[0]);
+      }
+      // formData.append("image", data.image[0]);
+
+      if (menuId) {
+        await APIRequest.patch(`${API_ROUTES.updateMenu}/${menuId}`, formData);
+        toast.success("Menu updated successfully ✅");
+      } else {
+        await APIRequest.post(API_ROUTES.createMenu, formData);
+        toast.success("Menu created successfully ✅");
+      }
+
+      await queryClient.refetchQueries({ queryKey: ["menu-list"], type: "active" });
+
+      navigate("/menu");
 
     } catch (error) {
       console.error(error);
-      alert(error?.message || "Something went wrong");
+      toast.error(error?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8">
 
-        <h2 className="text-2xl font-bold mb-6">
-          Create Menu Item
+  // if (pageLoading) return <Loader variant="spinner" />;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-3xl bg-white shadow-2xl rounded-3xl p-8">
+        <h2 className="text-3xl font-semibold mb-8 text-gray-800 text-center">
+          🍽️{menuId ? "Edit Menu Item" : "Create Menu Item"}
         </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           {/* ITEM NAME */}
-          <FormLabel>Item Name</FormLabel>
-          <Controller
-            name="itemName"
-            control={control}
-            rules={{ required: "Item name is required" }}
-            render={({ field }) => (
-              <InputField
-                field={field}
-                error={errors.itemName}
-                helperText={errors.itemName?.message}
-                placeholder="Enter item name"
-              />
-            )}
-          />
-
-          {/* DESCRIPTION */}
-          <FormLabel sx={{ mt: 2 }}>
-            Description
-          </FormLabel>
-          <Controller
-            name="description"
-            control={control}
-            rules={{ required: "Description required" }}
-            render={({ field }) => (
-              <InputField
-                field={field}
-                error={errors.description}
-                helperText={errors.description?.message}
-                multiline
-                rows={3}
-                placeholder="Enter description"
-              />
-            )}
-          />
-
-          {/* PRICE */}
-          <FormLabel sx={{ mt: 2 }}>
-            Price
-          </FormLabel>
-          <Controller
-            name="price"
-            control={control}
-            rules={{
-              required: "Price is required",
-              min: {
-                value: 1,
-                message: "Price must be > 0",
-              },
-            }}
-            render={({ field }) => (
-              <InputField
-                field={field}
-                type="number"
-                error={errors.price}
-                helperText={errors.price?.message}
-                placeholder="Enter price"
-              />
-            )}
-          />
-
-          {/* DISCOUNT PRICE */}
-          <FormLabel sx={{ mt: 2 }}>
-            Discount Price
-          </FormLabel>
-          <Controller
-            name="discountPrice"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                field={field}
-                type="number"
-                placeholder="Enter discount price"
-              />
-            )}
-          />
+          <div>
+            <FormLabel>Item Name</FormLabel>
+            <Controller
+              name="itemName"
+              control={control}
+              rules={{ required: "Item name is required" }}
+              render={({ field }) => (
+                <InputField
+                  field={field}
+                  placeholder="Chocolate Brownie"
+                  error={errors.itemName}
+                  helperText={errors.itemName?.message}
+                />
+              )}
+            />
+          </div>
 
           {/* CATEGORY */}
-          <FormLabel sx={{ mt: 2 }}>
-            Category
-          </FormLabel>
-          <Controller
-            name="categoryId"
-            control={control}
-            rules={{ required: "Category is required" }}
-            render={({ field }) => (
-              <InputField
-                field={field}
-                select
-                error={errors.categoryId}
-                helperText={errors.categoryId?.message}
-              >
-                <MenuItem value="">
-                  Select Category
-                </MenuItem>
-
-                {categories.map((cat) => (
-                  <MenuItem
-                    key={cat.id}
-                    value={cat.id}
-                  >
-                    {cat.name}
-                  </MenuItem>
-                ))}
-              </InputField>
-            )}
-          />
-
-          {/* IMAGE */}
-          <FormLabel sx={{ mt: 2 }}>
-            Item Image
-          </FormLabel>
-
-          <input
-            type="file"
-            accept="image/*"
-            {...register("image", {
-              required: "Image is required",
-              onChange: (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  setPreview(
-                    URL.createObjectURL(file)
-                  );
-                }
-              },
-            })}
-          />
-
-          {errors.image && (
-            <p className="text-red-500 text-sm">
-              {errors.image.message}
-            </p>
-          )}
-
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="mt-3 w-32 h-32 object-cover rounded-lg border"
+          <div>
+            <FormLabel>Category</FormLabel>
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: "Category is required" }}
+              render={({ field }) => (
+                <InputField
+                  field={field}
+                  select
+                  error={errors.category}
+                  helperText={errors.category?.message}
+                >
+                  <MenuItem value="">Select Category</MenuItem>
+                  {Array.isArray(categories) &&
+                    categories.map((cat) => (
+                      <MenuItem key={cat._id} value={cat._id}>{cat.name}</MenuItem>
+                    ))
+                  }
+                </InputField>
+              )}
             />
+          </div>
+
+          {/* PRICE */}
+          <div>
+            <FormLabel>Price</FormLabel>
+            <Controller
+              name="price"
+              control={control}
+              rules={{
+                required: "Price is required",
+                min: { value: 1, message: "Price must be greater than 0" },
+              }}
+              render={({ field }) => (
+                <InputField
+                  field={field}
+                  type="number"
+                  placeholder="₹ 120"
+                  error={errors.price}
+                  helperText={errors.price?.message}
+                />
+              )}
+            />
+          </div>
+
+          {/* DISCOUNT PRICE */}
+          <div>
+            <FormLabel>Discount Price</FormLabel>
+            <Controller
+              name="discountPrice"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  field={field}
+                  type="number"
+                  placeholder="₹ 99"
+                />
+              )}
+            />
+          </div>
+
+          {/* DESCRIPTION */}
+          <div className="md:col-span-2">
+            <FormLabel>Description</FormLabel>
+            <Controller
+              name="description"
+              control={control}
+              rules={{ required: "Description is required" }}
+              render={({ field }) => (
+                <InputField
+                  field={field}
+                  multiline
+                  rows={4}
+                  placeholder="Write a short description..."
+                  error={errors.description}
+                  helperText={errors.description?.message}
+                />
+              )}
+            />
+          </div>
+
+          {/* IMAGE UPLOAD */}
+          <div className="md:col-span-2">
+            <FormLabel>Item Image</FormLabel>
+
+            <label className="flex items-center justify-center h-16 border-2 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+              <span className="text-gray-500">
+                Click to upload image
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                {...register("image", {
+                  required: !menuId ? "Image is required" : false,
+                  onChange: (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      setPreview(URL.createObjectURL(file));
+                    }
+                  },
+                })}
+              />
+            </label>
+
+            {errors.image && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.image.message}
+              </p>
+            )}
+          </div>
+
+          {/* IMAGE PREVIEW */}
+          {preview && (
+            <div className="md:col-span-2 flex justify-center">
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-40 h-40 object-cover rounded-xl shadow-md border"
+              />
+            </div>
           )}
 
           {/* SUBMIT */}
-          <button
-            type="submit"
-            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg"
-          >
-            Submit
-          </button>
-
+          <div className="md:col-span-2 flex justify-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`px-10 py-3 rounded-xl text-lg font-medium text-white transition
+                ${loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+                }`}
+            >
+              {loading
+                ? "Saving..."
+                : menuId
+                  ? "Update Menu Item"
+                  : "Create Menu Item"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

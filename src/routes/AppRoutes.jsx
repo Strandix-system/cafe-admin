@@ -16,10 +16,7 @@ import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 import CreateMenu from "../pages/Menu/CreateMenu";
 import MenuList from "../pages/Menu/MenuList";
 import EditMenuModal from "../pages/Menu/EditMenuModal";
-// import { User } from "lucide-react";
 import User from "../pages/Menu/User";
-
-// import { MenuList } from "@mui/material";
 import CafeTableManagement from "../pages/CafeTableManagement";
 
 const AppRoutes = () => {
@@ -130,7 +127,18 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       />
-      
+
+         <Route
+        path="/create-menu/:menuId"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CreateMenu />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
       <Route
         path="/menu-list"
         element={
@@ -141,18 +149,6 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       />
-
-      <Route
-        path="/edit-menu"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <EditMenuModal />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
 
       <Route
         path="/user"
