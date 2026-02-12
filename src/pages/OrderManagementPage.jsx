@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Box, Tabs, Tab, Typography, Grid, Badge } from "@mui/material";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Box, Tabs, Tab, Typography, Grid, Badge, Chip } from "@mui/material";
 import { useFetch, usePatch } from "../utils/hooks/api_hooks";
 import Loader from "../components/common/Loader";
 import OrderCard from "../components/OderComponent/OrderCard";
+import TableComponent from "../components/TableComponent/TableComponent";
 import { API_ROUTES } from "../utils/api_constants";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { socket } from "../utils/socket";
+import { DollarSign, Eye } from "lucide-react";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -123,6 +125,20 @@ const OrderManagementPage = () => {
         },
     });
 
+    /* ---------------- UPDATE PAYMENT STATUS API ---------------- */
+    const { mutate: updatePaymentStatus } = usePatch(API_ROUTES.updateOrder, {
+        onSuccess: () => {
+            toast.success("Payment status updated to Paid!");
+            // Refetch to sync with backend
+            refetch();
+        },
+        onError: () => {
+            toast.error("Failed to update payment status");
+            // Refetch to restore correct state
+            refetch();
+        },
+    });
+
     /* ---------------- ACTIONS ---------------- */
     const handleAcceptOrder = (orderId) => {
         const orderToMove = pendingOrders.find(o => o._id === orderId);
@@ -139,6 +155,94 @@ const OrderManagementPage = () => {
         setAcceptedOrders((prev) => prev.filter((o) => o._id !== orderId));
         updateOrder({ orderId, orderStatus: "completed" });
     };
+
+    /* ---------------- ORDER HISTORY TABLE CONFIG ---------------- */
+    const historyColumns = useMemo(
+        () => [
+            {
+                id: "customerName",
+                header: "Customer Name",
+                Cell: ({ row }) => {
+                    const name = row.original.userId?.name || "";
+                    return name.charAt(0).toUpperCase() + name.slice(1);
+                },
+            },
+            {
+                id: "itemName",
+                header: "Item Name",
+                Cell: ({ row }) =>
+                    row.original.items?.map((item) => item.name).join(", "),
+            },
+            {
+                accessorKey: "totalAmount",
+                header: "Total Amount (₹)",
+            },
+            {
+                id: "orderStatus",
+                header: "Order Status",
+                Cell: ({ row }) => (
+                    <Chip
+                        label={row.original.orderStatus}
+                        size="small"
+                        sx={{
+                            backgroundColor:
+                                row.original.orderStatus === "pending"
+                                    ? "#FFF3CD"
+                                    : row.original.orderStatus === "accepted"
+                                        ? "#D1E7FF"
+                                        : "#D1FFBE",
+                            color:
+                                row.original.orderStatus === "pending"
+                                    ? "#856404"
+                                    : row.original.orderStatus === "accepted"
+                                        ? "#004085"
+                                        : "#3DB309",
+                        }}
+                    />
+                ),
+            },
+            {
+                id: "paymentStatus",
+                header: "Payment Status",
+                Cell: ({ row }) => (
+                    <Chip
+                        label={row.original.paymentStatus ? "Paid" : "Unpaid"}
+                        size="small"
+                        sx={{
+                            backgroundColor: row.original.paymentStatus
+                                ? "#D1FFBE"
+                                : "#FFDADA",
+                            color: row.original.paymentStatus ? "#3DB309" : "#FF0000",
+                        }}
+                    />
+                ),
+            },
+        ],
+        []
+    );
+
+    const historyActions = [
+        {
+            label: "View",
+            icon: Eye,
+            onClick: (row) => {
+                navigate(`/orders/view/${row.original._id}`);
+            },
+        },
+        {
+            label: "Mark as Paid",
+            icon: DollarSign, // You can change this to a payment icon if available
+            onClick: (row) => {
+                if (!row.original.paymentStatus) {
+                    updatePaymentStatus({
+                        orderId: row.original._id,
+                        paymentStatus: true
+                    });
+                }
+            },
+            disabled: (row) => row.original.paymentStatus, // Disable if already paid
+        },
+    ];
 
     const renderOrderCards = (orders, isPending) => (
         <Grid container spacing={3}>
@@ -180,7 +284,7 @@ const OrderManagementPage = () => {
             >
                 <Tab label={<Badge badgeContent={pendingOrders.length} color="error">Pending Orders</Badge>} />
                 <Tab label={<Badge badgeContent={acceptedOrders.length} color="primary">Accepted Orders</Badge>} />
-                <Tab label="History" onClick={() => navigate("/order-history")} />
+                <Tab label="History" />
             </Tabs>
 
             <TabPanel value={tabValue} index={0}>
@@ -202,9 +306,24 @@ const OrderManagementPage = () => {
             </TabPanel>
 
             <TabPanel value={tabValue} index={2}>
-                <Typography sx={{ cursor: "pointer", color: "#6F4E37", textDecoration: "underline" }}>
-                    View Order History
-                </Typography>
+                <Box>
+                    <Typography variant="h6" color="#6F4E37" mb={2}>
+                        Order History
+                    </Typography>
+                    <TableComponent
+                        slug="orders"
+                        columns={historyColumns}
+                        actions={historyActions}
+                        params={{
+                            populate: "userId",
+                        }}
+                        actionsType="menu"
+                        querykey="get-all-orders"
+                        getApiEndPoint="getAllOrders"
+                        deleteAction={false}
+                        enableExportTable={true}
+                    />
+                </Box>
             </TabPanel>
         </Box>
     );
