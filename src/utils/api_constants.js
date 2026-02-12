@@ -32,4 +32,6 @@ export const API_ROUTES = {
 
   createQRCodes: "qr/create",
   getQRCodes: "qr/get-all",
+
+  getCustomers: "customer/get-all",
 };

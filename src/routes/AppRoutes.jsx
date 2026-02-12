@@ -19,6 +19,7 @@ import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 // import { MenuList } from "@mui/material";
 import CafeTableManagement from "../pages/CafeTableManagement";
+import UserList from "../pages/UserList";
 
 const AppRoutes = () => {
   return (
@@ -62,6 +63,16 @@ const AppRoutes = () => {
         }
       />
 
+      <Route
+        path="/cafe/view-customers/:userId?"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <UserList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
       {/* PROTECTED ROUTES - Layouts Management */}
       <Route
         path="/layouts"
@@ -135,6 +146,27 @@ const AppRoutes = () => {
           <ProtectedRoutes>
             <DashboardLayout>
               <OrderHistoryList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/customers"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <UserList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+      <Route
+        path="/cafe/orders/:userId"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <UserList />
             </DashboardLayout>
           </ProtectedRoutes>
         }

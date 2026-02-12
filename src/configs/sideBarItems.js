@@ -61,7 +61,6 @@ export const sideBarItems = {
       path: "/menu",
       tab: "menu",
     },
-
     {
       key: "OrderManagement",
       label: "Order Management",
@@ -70,11 +69,18 @@ export const sideBarItems = {
       tab: "ordermanagement",
     },
     {
-      key: "categories",
+      key: "qr-code",
       label: "Generate QR-Code",
       icon: QrCode,
       path: "/table-management",
       tab: "table-management",
+    },
+    {
+      key: "Customer Management",
+      label: "Customer Management",
+      icon: PeopleIcon,
+      path: "/customers",
+      tab: "customers",
     },
   ],
 };
