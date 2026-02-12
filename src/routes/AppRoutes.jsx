@@ -18,6 +18,7 @@ import MenuList from "../pages/Menu/MenuList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 // import { MenuList } from "@mui/material";
+import CafeTableManagement from "../pages/CafeTableManagement";
 
 const AppRoutes = () => {
   return (
@@ -91,6 +92,16 @@ const AppRoutes = () => {
           <ProtectedRoutes>
             <DashboardLayout>
               <CategoriesList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+      <Route
+        path="/table-management"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CafeTableManagement />
             </DashboardLayout>
           </ProtectedRoutes>
         }

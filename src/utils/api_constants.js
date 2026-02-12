@@ -29,4 +29,7 @@ export const API_ROUTES = {
   createAdmins: "admin/create",
   MENU_LIST: "menu/all-menu",
   menulist: "menu/my-menus",
+
+  createQRCodes: "qr/create",
+  getQRCodes: "qr/get-all",
 };
