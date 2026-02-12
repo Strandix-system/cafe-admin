@@ -5,8 +5,15 @@ import { Edit, Eye, Trash2, Plus } from "lucide-react";
 import { useMemo } from "react";
 import { API_ROUTES } from "../../utils/api_constants";
 import { APIRequest } from "../../utils/api_request";
+import EditMenuModal from "./EditMenuModal";
+import { useState } from "react";
+
+
 const MenuList = () => {
   const navigate = useNavigate();
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedMenuId, setSelectedMenuId] = useState(null);
+
   // 🔹 Table Columns
   const columns = useMemo(
     () => [
@@ -28,6 +35,7 @@ const MenuList = () => {
       {
         accessorKey: "category",
         header: "Category",
+        Cell: ({ row }) => row.original.category || "-",
       },
       {
         accessorKey: "price",
@@ -37,40 +45,18 @@ const MenuList = () => {
       {
         accessorKey: "discountPrice",
         header: "Discount Price",
-        Cell: ({ row }) =>
-          row.original.discountPrice
-            ? `₹ ${row.original.discountPrice}`
-            : "-",
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
+        Cell: ({ row }) => `₹ ${row.original.discountPrice}`,
       },
     ],
     []
   );
 
-  // 🔹 Row Actions
   const actions = [
-    {
-      label: "View",
-      icon: Eye,
-      onClick: (row) => {
-        navigate(`/menu/view/${row.original._id}`);
-      },
-    },
     {
       label: "Edit",
       icon: Edit,
       onClick: (row) => {
-      navigate(`/menu/create-edit/${row.original._id}`);
-      },
-    },
-    {
-      label: "Delete",
-      icon: Trash2,
-      onClick: (row) => {
-    //   console.log("Delete:", row.original._id);
+        navigate(`/create-menu/${row.original._id}`);
       },
     },
   ];
@@ -94,7 +80,7 @@ const MenuList = () => {
           variant="contained"
           sx={{ backgroundColor: "#6F4E37" }}
           startIcon={<Plus size={18} />}
-          onClick={() => navigate("/menu-list")}
+          onClick={() => navigate("/create-menu")}
         >
           Create Menu
         </Button>
@@ -102,13 +88,13 @@ const MenuList = () => {
 
       {/* Table */}
       <TableComponent
-        
+        slug="menu"
         columns={columns}
         actions={actions}
-        actionsType="menu"
-        querykey="menu-list"
-        getApiEndPoint="MENU_LIST"
-        deleteApiEndPoint={API_ROUTES.MENU_DELETE}
+          actionsType="icons"
+        querykey={["menu-list"]}
+        getApiEndPoint="menulist"
+        deleteApiEndPoint="MENU_DELETE"
         deleteAction={true}
         enableExportTable={true}
       />

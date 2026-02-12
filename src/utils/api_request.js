@@ -92,13 +92,25 @@ export const APIRequest = {
     });
     return handleResponse(response);
   },
-  remove: async (endpoint, params = {}, data = {}) => {
-    const queryString = buildQueryString(params);
-    const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {
-      method: "DELETE",
-      headers: getHeaders(),
-      body: getBody(data),
-    });
-    return handleResponse(response);
-  },
+  // remove: async (endpoint, params = {}, data = {}) => {
+  //   const queryString = buildQueryString(params);
+  //   const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {
+  //     method: "DELETE",
+  //     headers: getHeaders(),
+  //     body: getBody(data),
+  //   });
+  //   return handleResponse(response);
+  // },
+  remove: async (endpoint) => {
+  const url = `${BASE_URL}/${endpoint}`;
+  console.log("FINAL DELETE REQUEST →", url);
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+
+  return handleResponse(response);
+},
+
 };

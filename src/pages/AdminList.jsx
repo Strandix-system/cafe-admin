@@ -137,7 +137,7 @@ const AdminList = () => {
           </Button>
         )}
       </Box>
-
+      
       <TableComponent
         slug="admin"
         columns={columns}

@@ -1,6 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { APIRequest } from "../../utils/api_request";
 import {
   Dialog,
   DialogTitle,
@@ -14,6 +15,7 @@ import toast from "react-hot-toast";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
+import { useEffect , useState } from "react";
 
 // ✅ Yup Schema
 const schema = yup.object({
@@ -25,7 +27,11 @@ const schema = yup.object({
     .required("Category name is required"),
 });
 
-const CreateCategoryDialog = ({ open, handleClose }) => {
+const CreateCategoryDialog = ({ open, handleClose, category }) => {
+
+  const isEdit = Boolean(category);
+    const [loading, setLoading] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -36,30 +42,51 @@ const CreateCategoryDialog = ({ open, handleClose }) => {
     defaultValues: {
       name: "",
     },
+     mode: "onChange",
   });
 
-  const { mutate: createCategory, isLoading } = usePost(
-    API_ROUTES.createCategory,
-    {
-      onSuccess: () => {
-        toast.success("Category created successfully");
-        queryClient.invalidateQueries({ queryKey: ["get-categories"] });
-        reset();
-        handleClose();
-      },
-      onError: (error) => {
-        toast.error(error || "Failed to create category");
-      },
+  useEffect(() => {
+    if (category) {
+      reset({ name: category.name });
+    } else {
+      reset({ name: "" });
     }
-  );
+  }, [category, reset]);
 
-  const onSubmit = (data) => {
-    createCategory({ name: data.name });
+const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+
+      if (isEdit) {
+        await APIRequest.patch(
+          `${API_ROUTES.updateCategory}/${category._id}`,
+          { name: data.name }
+        );
+        toast.success("Category updated successfully ✅");
+      } else {
+        await APIRequest.post(API_ROUTES.createCategory, {
+          name: data.name,
+        });
+        toast.success("Category created successfully ✅");
+      }
+
+      await queryClient.refetchQueries({
+        queryKey: ["get-categories"],
+        type: "active",
+      });
+
+      reset();
+      handleClose();
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
-
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Create New Category</DialogTitle>
+      <DialogTitle>{isEdit ? "Update Category" : "Create New Category"}</DialogTitle>
 
       <DialogContent>
         <Box mt={1}>
@@ -88,10 +115,16 @@ const CreateCategoryDialog = ({ open, handleClose }) => {
         <Button
           variant="contained"
           onClick={handleSubmit(onSubmit)}
-          disabled={isLoading || !isValid}
+          disabled={loading || !isValid}
           sx={{backgroundColor:"#6F4E37"}}
         >
-          {isLoading ? "Creating..." : "Create"}
+          {loading
+            ? isEdit
+              ? "Updating..."
+              : "Creating..."
+            : isEdit
+            ? "Update"
+            : "Create"}
         </Button>
       </DialogActions>
     </Dialog>

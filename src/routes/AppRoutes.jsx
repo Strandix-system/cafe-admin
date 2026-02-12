@@ -15,6 +15,8 @@ import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 import CreateMenu from "../pages/Menu/CreateMenu";
 import MenuList from "../pages/Menu/MenuList";
+import EditMenuModal from "../pages/Menu/EditMenuModal";
+import User from "../pages/Menu/User";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 // import { MenuList } from "@mui/material";
@@ -123,6 +125,28 @@ const AppRoutes = () => {
         element={
           <ProtectedRoutes>
             <DashboardLayout>
+              <MenuList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/create-menu"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CreateMenu />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+         <Route
+        path="/create-menu/:menuId"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
               <CreateMenu />
             </DashboardLayout>
           </ProtectedRoutes>
@@ -171,6 +195,18 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       /> */}
+
+      <Route
+        path="/user"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <User />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
 
       {/* CATCH ALL - Redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
