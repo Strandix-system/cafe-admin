@@ -15,6 +15,8 @@ import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 import CreateMenu from "../pages/Menu/CreateMenu";
 import MenuList from "../pages/Menu/MenuList";
+import OrderManagementPage from "../pages/OrderManagementPage";
+import OrderHistoryList from "../pages/OrderHistoryList";
 // import { MenuList } from "@mui/material";
 import CafeTableManagement from "../pages/CafeTableManagement";
 
@@ -117,11 +119,22 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/menu-list"
+        path="/ordermanagement"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <MenuList />
+              <OrderManagementPage />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/order-history"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <OrderHistoryList />
             </DashboardLayout>
           </ProtectedRoutes>
         }
