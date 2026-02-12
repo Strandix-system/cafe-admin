@@ -20,6 +20,7 @@ import EditMenuModal from "../pages/Menu/EditMenuModal";
 import User from "../pages/Menu/User";
 
 // import { MenuList } from "@mui/material";
+import CafeTableManagement from "../pages/CafeTableManagement";
 
 const AppRoutes = () => {
   return (
@@ -97,24 +98,45 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       />
-
-       <Route
-        path="/menu"
+      <Route
+        path="/table-management"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <MenuList/>
+              <CafeTableManagement />
             </DashboardLayout>
           </ProtectedRoutes>
         }
       />
 
-       <Route
+      <Route
+        path="/menu"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <MenuList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
         path="/create-menu"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <CreateMenu/>
+              <CreateMenu />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+      
+      <Route
+        path="/menu-list"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <MenuList />
             </DashboardLayout>
           </ProtectedRoutes>
         }
@@ -125,24 +147,24 @@ const AppRoutes = () => {
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <EditMenuModal/>
+              <EditMenuModal />
             </DashboardLayout>
           </ProtectedRoutes>
         }
       />
 
-      
+
       <Route
         path="/user"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <User/>
+              <User />
             </DashboardLayout>
           </ProtectedRoutes>
         }
       />
-      
+
 
       {/* CATCH ALL - Redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />

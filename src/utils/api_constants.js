@@ -13,6 +13,7 @@ export const API_ROUTES = {
   getLayouts: "layout/all-layouts",
   getLayoutById: "layout/get-layout",
   updateLayout: "layout/update",
+  getLayoutByAdmin: "layout/admin-layout",
 
   delete: "/admin/delete",
   superAdminStats: "/admin/get-users",
@@ -26,5 +27,8 @@ export const API_ROUTES = {
   MENU_LIST:"menu/all-menu",
   menulist:"menu/my-menus",
   user_list:"customer/get-all",
-  MENU_DELETE: "menu"
+  MENU_DELETE: "menu",
+
+  createQRCodes: "qr/create",
+  getQRCodes: "qr/get-all",
 };

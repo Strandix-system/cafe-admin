@@ -26,6 +26,16 @@ export const useImageUpload = (setValue) => {
       [fieldName]: null,
     }));
     fieldOnChange(null);
+    setValue(fieldName, null, { shouldValidate: true });
+  }, [setValue]);
+
+  const handleReplaceImage = useCallback((fieldName) => {
+    // Just clear the preview, but keep validation happy
+    // The new file will be set when user selects one
+    setPreviews((prev) => ({
+      ...prev,
+      [fieldName]: null,
+    }));
   }, []);
 
   const setPreview = useCallback((fieldName, preview) => {
@@ -40,5 +50,6 @@ export const useImageUpload = (setValue) => {
     handleImageChange,
     handleRemoveImage,
     setPreview,
+    handleReplaceImage
   };
 };

@@ -5,6 +5,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import { QrCode } from "lucide-react";
 
 export const sideBarItems = {
   superAdmin: [
@@ -69,6 +70,13 @@ export const sideBarItems = {
       icon: SupervisedUserCircleIcon,
       path: "/user",
       tab: "user-data",
+    },
+    {
+      key: "categories",
+      label: "Generate QR-Code",
+      icon: QrCode,
+      path: "/table-management",
+      tab: "table-management",
     },
   ],
 };

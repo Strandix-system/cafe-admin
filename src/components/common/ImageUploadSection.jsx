@@ -1,5 +1,5 @@
 import { Box, Avatar, IconButton, FormLabel } from "@mui/material";
-import { PhotoCamera, Close } from "@mui/icons-material";
+import { PhotoCamera, Close, Refresh } from "@mui/icons-material";
 
 const ImageUploadSection = ({
   label,
@@ -8,8 +8,21 @@ const ImageUploadSection = ({
   setPreview,
   handleImageChange,
   handleRemoveImage,
+  handleReplaceImage,
   inputId,
+  isEdit = false,
 }) => {
+  const handleButtonClick = () => {
+    if (isEdit && (preview || field.value)) {
+      // In edit mode with existing image, trigger re-upload
+      handleReplaceImage?.();
+      document.getElementById(inputId)?.click();
+    } else {
+      // In create mode, just remove
+      handleRemoveImage?.(field, setPreview);
+    }
+  };
+
   return (
     <>
       <FormLabel
@@ -51,9 +64,13 @@ const ImageUploadSection = ({
                 bgcolor: "#fff",
                 boxShadow: 1,
               }}
-              onClick={() => handleRemoveImage(field, setPreview)}
+              onClick={handleButtonClick}
             >
-              <Close fontSize="small" />
+              {isEdit ? (
+                <Refresh fontSize="small" sx={{ color: "#6F4E37" }} />
+              ) : (
+                <Close fontSize="small" />
+              )}
             </IconButton>
           )}
         </Box>
