@@ -29,7 +29,9 @@ export default function TopNavbar() {
   const showBackButtonRoutes = [
     "/cafe/create-edit",
     "/layouts/create-edit",
+    "/cafe/view-customers/",
     "/categories/create",
+    "/order-history",
   ];
 
   // Check if current route should show back button

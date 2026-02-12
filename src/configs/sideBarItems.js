@@ -5,6 +5,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import Restaurant from "@mui/icons-material/Restaurant";
 import { QrCode } from "lucide-react";
 
 export const sideBarItems = {
@@ -37,7 +38,7 @@ export const sideBarItems = {
       path: "/categories",
       tab: "categories",
     },
-      
+
   ],
   admin: [
     {
@@ -63,7 +64,6 @@ export const sideBarItems = {
       path: "/menu",
       tab: "menu",
     },
-
     {
       key: "userData",
       label: "User Management",
@@ -74,9 +74,25 @@ export const sideBarItems = {
     {
       key: "categories",
       label: " QR Management",
+      key: "OrderManagement",
+      label: "Order Management",
+      icon: Restaurant,
+      path: "/ordermanagement",
+      tab: "ordermanagement",
+    },
+    {
+      key: "qr-code",
+      label: "Generate QR-Code",
       icon: QrCode,
       path: "/table-management",
       tab: "table-management",
+    },
+    {
+      key: "Customer Management",
+      label: "Customer Management",
+      icon: PeopleIcon,
+      path: "/customers",
+      tab: "customers",
     },
   ],
 };

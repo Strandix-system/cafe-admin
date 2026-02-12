@@ -9,13 +9,16 @@ export const API_ROUTES = {
   updateUsers: "admin/update",
 
   delete: "/admin/delete",
-  superAdminStats: "/admin/get-users",
+  getStats: "admin/dashboard/stats",
 
   createLayout: "layout/create",
   getLayouts: "layout/all-layouts",
   getLayoutById: "layout/get-layout",
   updateLayout: "layout/update",
   getLayoutByAdmin: "layout/admin-layout",
+
+  getAllOrders: "order/get-all",
+  updateOrder: "order/status",
 
   delete: "/admin/delete",
   superAdminStats: "/admin/get-users",
@@ -38,4 +41,5 @@ export const API_ROUTES = {
   getMenuById: "menu/get-by-id",
   MENU_DELETE: "menu/delete",
   updateMenu: "menu/update",
+  getCustomers: "customer/get-all",
 };
