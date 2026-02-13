@@ -12,7 +12,7 @@ const OrderHistoryList = () => {
             {
                 id: "customerName",
                 header: "Customer Name",
-                Cell: ({ row }) => row.original.userId, // Change later to customerName if API sends it
+                Cell: ({ row }) => row.original.userId?.name.charAt(0).toUpperCase() + row.original.userId?.name.slice(1), // Change later to customerName if API sends it
             },
             {
                 id: "itemName",
@@ -93,11 +93,14 @@ const OrderHistoryList = () => {
                 slug="orders"
                 columns={columns}
                 actions={actions}
+                params={{
+                    populate: "userId",
+                }}
                 actionsType="menu"
                 querykey="get-all-orders"
                 getApiEndPoint="getAllOrders"
                 deleteApiEndPoint="deleteOrder"
-                deleteAction={true}
+                deleteAction={false}
                 enableExportTable={true}
             />
         </div>

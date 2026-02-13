@@ -93,7 +93,7 @@ const UserList = () => {
             <TableComponent
                 slug="User"
                 columns={columns}
-                actions={actions}
+                actions={[]}
                 actionType="menu"
                 querykey="get-customers"
                 getApiEndPoint="getCustomers"
