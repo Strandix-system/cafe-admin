@@ -231,7 +231,7 @@ const OrderManagementPage = () => {
         },
         {
             label: "Mark as Paid",
-            icon: DollarSign, // You can change this to a payment icon if available
+            icon: DollarSign,
             onClick: (row) => {
                 if (!row.original.paymentStatus) {
                     updatePaymentStatus({
