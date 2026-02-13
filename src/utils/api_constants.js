@@ -36,6 +36,7 @@ export const API_ROUTES = {
   user_list: "customer/get-all",
   createQRCodes: "qr/create",
   getQRCodes: "qr/get-all",
+  getQRCount: "qr/count",
 
   createMenu: "menu/create",
   getMenuById: "menu/get-by-id",

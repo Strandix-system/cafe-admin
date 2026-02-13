@@ -75,7 +75,7 @@ export default function AddEditLayout() {
 
   const handleNavigateToQRGenerator = () => {
     setSuccessDialog({ open: false, layoutId: null });
-    navigate("/qr-codes", { state: { layoutId: successDialog.layoutId } });
+    navigate(`/qr-codes/${successDialog.layoutId}`);
   };
 
   const preparePayload = (formValue, additionalFields = {}) => {
@@ -189,7 +189,7 @@ export default function AddEditLayout() {
       {/* Success Dialog */}
       <Dialog
         open={successDialog.open}
-        onClose={() => {}} // Disable closing via backdrop or escape
+        onClose={() => { }} // Disable closing via backdrop or escape
         maxWidth="sm"
         fullWidth
         disableEscapeKeyDown

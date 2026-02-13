@@ -6,20 +6,21 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Typography,
 } from "@mui/material";
-import { Plus, Download, QrCode } from "lucide-react";
+import { Download, QrCode } from "lucide-react";
 import TableComponent from "../components/TableComponent/TableComponent";
+import InputField from "../components/common/InputField";
 import toast from "react-hot-toast";
 import { useFetch, usePost } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
 import { queryClient } from "../lib/queryClient";
 import { useAuth } from "../context/AuthContext";
-import { useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const CafeTableManagement = () => {
-  const location = useLocation();
+  const { layoutId: urlLayoutId } = useParams();
+  const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [totalTables, setTotalTables] = useState("");
   const [selectedLayoutId, setSelectedLayoutId] = useState("");
@@ -27,27 +28,71 @@ const CafeTableManagement = () => {
   const { user } = useAuth();
 
   // Fetch admin's layouts
-  const { data: layoutsData, isLoading: layoutsLoading } = useFetch(
-    "admin-layouts",
-    API_ROUTES.getLayoutByAdmin,
+  const { data: layoutData,
+    isLoading: layoutsLoading } = useFetch(
+      "admin-layouts",
+      API_ROUTES.getLayoutByAdmin,
+      {},
+      {
+        adminId: user?.id,
+      },
+      {
+        enabled: !!user?.id,
+      }
+    );
+
+  const layouts = layoutData?.result?.results || [];
+
+
+  // Fetch QR codes for the selected layout
+  const {
+    data: layoutQRCodesData,
+    isLoading: qrCodesLoading,
+    refetch: refetchLayoutQRCodes,
+  } = useFetch(
+    `layout-qr-codes-${selectedLayoutId}`,
+    API_ROUTES.getQRCodes,
     {},
     {
       adminId: user?.id,
+      layoutId: selectedLayoutId,
+      populate: "layoutId",
     },
     {
-      enabled: !!user?.id,
-    },
-  );
-
-  // Auto-open dialog if coming from layout creation with layoutId
-  useEffect(() => {
-    if (location.state?.layoutId) {
-      setSelectedLayoutId(location.state.layoutId);
-      setOpenDialog(true);
-      // Clear the location state to prevent re-opening on page refresh
-      window.history.replaceState({}, document.title);
+      enabled: !!selectedLayoutId && !!user?.id,
     }
-  }, [location.state]);
+  );
+  const qrCodes = layoutQRCodesData?.result?.results || [];
+
+  // Filter existing QR codes for the selected layout
+  const existingQRCodesForLayout = useMemo(() => {
+    if (!selectedLayoutId || !qrCodes) return [];
+    return qrCodes.filter((qr) => qr.layoutId?._id === selectedLayoutId);
+  }, [selectedLayoutId, qrCodes]);
+
+  // Get the highest table number already created for this layout
+  const maxExistingTableNumber = useMemo(() => {
+    if (existingQRCodesForLayout.length === 0) return 0;
+
+    return Math.max(
+      ...existingQRCodesForLayout.map((qr) => qr.tableNumber || 0)
+    );
+  }, [existingQRCodesForLayout]);
+
+  // Auto-open dialog and set layout if coming from layout creation with layoutId
+  useEffect(() => {
+    if (urlLayoutId) {
+      setSelectedLayoutId(urlLayoutId);
+      setOpenDialog(true);
+    }
+  }, [urlLayoutId]);
+
+  // Refetch QR codes when selectedLayoutId changes
+  useEffect(() => {
+    if (selectedLayoutId) {
+      refetchLayoutQRCodes();
+    }
+  }, [selectedLayoutId, refetchLayoutQRCodes]);
 
   // Create QR codes mutation
   const { mutate: createQRCodes, isPending: isCreating } = usePost(
@@ -57,14 +102,23 @@ const CafeTableManagement = () => {
         toast.success("QR codes generated successfully!");
         setOpenDialog(false);
         setTotalTables("");
+
+        // Clear URL param if it exists
+        if (urlLayoutId) {
+          navigate("/qr-codes", { replace: true });
+        }
+
         setSelectedLayoutId("");
         setErrors({});
         queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] });
+        queryClient.invalidateQueries({
+          queryKey: [`layout-qr-codes-${selectedLayoutId}`],
+        });
       },
       onError: (error) => {
         toast.error(error?.message || "Failed to generate QR codes");
       },
-    },
+    }
   );
 
   const columns = useMemo(
@@ -77,6 +131,15 @@ const CafeTableManagement = () => {
             <QrCode size={18} color="#6F4E37" />
             <Typography>Table {row.original.tableNumber}</Typography>
           </Box>
+        ),
+      },
+      {
+        accessorKey: "layoutId.layoutTitle",
+        header: "Layout",
+        Cell: ({ row }) => (
+          <Typography>
+            {row.original.layoutId?.layoutTitle || "N/A"}
+          </Typography>
         ),
       },
       {
@@ -112,7 +175,7 @@ const CafeTableManagement = () => {
           }),
       },
     ],
-    [],
+    []
   );
 
   const actions = [
@@ -128,7 +191,7 @@ const CafeTableManagement = () => {
           link.click();
           document.body.removeChild(link);
           toast.success(
-            `QR code for Table ${row.original.tableNumber} downloaded!`,
+            `QR code for Table ${row.original.tableNumber} downloaded!`
           );
         }
       },
@@ -140,16 +203,18 @@ const CafeTableManagement = () => {
     const newErrors = {};
     const range = parseInt(totalTables);
 
-    if (!totalTables) {
-      newErrors.totalTables = "Please enter the number of tables";
-    } else if (isNaN(range) || range < 1) {
-      newErrors.totalTables = "Please enter a valid number greater than 0";
-    } else if (range > 500) {
-      newErrors.totalTables = "Maximum 500 tables can be created at once";
+    if (!selectedLayoutId) {
+      newErrors.layoutId = "Please select a layout";
     }
 
-    if (!selectedLayoutId) {
-      newErrors.layoutId = "No layout selected. Please create a layout first.";
+    if (!totalTables) {
+      newErrors.totalTables = "Please select the number of tables";
+    } else if (isNaN(range) || range < 1) {
+      newErrors.totalTables = "Please select a valid number";
+    } else if (range <= maxExistingTableNumber) {
+      newErrors.totalTables = `QR codes already exist for tables 1-${maxExistingTableNumber}. Please select a number greater than ${maxExistingTableNumber}.`;
+    } else if (range > 500) {
+      newErrors.totalTables = "Maximum 500 tables allowed";
     }
 
     setErrors(newErrors);
@@ -167,21 +232,30 @@ const CafeTableManagement = () => {
     }
   };
 
-  const availableLayouts = layoutsData?.result || [];
-
   const handleOpenDialog = () => {
-    if (availableLayouts.length === 0) {
+    if (!layouts || layouts.length === 0) {
       toast.error("No layouts available. Please create a layout first.");
       return;
     }
 
     // If there's only one layout and no layout is selected, auto-select it
-    if (availableLayouts.length === 1 && !selectedLayoutId) {
-      const layoutId = availableLayouts[0]._id || availableLayouts[0].id;
-      setSelectedLayoutId(layoutId);
+    if (layouts?.length === 1 && !selectedLayoutId) {
+      const layoutId = layouts[0]._id || layouts[0].id; setSelectedLayoutId(layoutId);
     }
 
     setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setTotalTables("");
+    setErrors({});
+
+    // Clear URL param if it exists
+    if (urlLayoutId) {
+      navigate("/qr-codes", { replace: true });
+      setSelectedLayoutId("");
+    }
   };
 
   return (
@@ -221,7 +295,7 @@ const CafeTableManagement = () => {
       {/* Generate QR Codes Dialog */}
       <Dialog
         open={openDialog}
-        onClose={() => !isCreating && setOpenDialog(false)}
+        onClose={() => !isCreating && handleCloseDialog()}
         maxWidth="sm"
         fullWidth
       >
@@ -230,92 +304,156 @@ const CafeTableManagement = () => {
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
-            {/* Display selected layout info */}
-            {selectedLayoutId && (
+            {/* Layout Selection Dropdown */}
+            <Box sx={{ mb: 3 }}>
+              <Typography
+                variant="body2"
+                sx={{ mb: 1.5, color: "#666", fontWeight: 500 }}
+              >
+                Select Layout
+              </Typography>
+              <InputField
+                select
+                field={{
+                  value: selectedLayoutId,
+                  onChange: (e) => {
+                    setSelectedLayoutId(e.target.value);
+                    setTotalTables(""); // Reset table count when layout changes
+                    setErrors((prev) => ({ ...prev, layoutId: undefined }));
+                  },
+                }}
+                error={errors.layoutId}
+                helperText={errors.layoutId}
+                disabled={isCreating || !!urlLayoutId} // Disable if coming from URL
+                SelectProps={{
+                  native: true,
+                }}
+              >
+                <option value="">Select a layout</option>
+                {layouts?.map((layout) => (
+                  <option
+                    key={layout._id || layout.id}
+                    value={layout._id || layout.id}
+                  >
+                    {layout.layoutTitle}
+                  </option>
+                ))}
+              </InputField>
+              {urlLayoutId && (
+                <Typography
+                  variant="caption"
+                  sx={{ mt: 1, display: "block", color: "#6F4E37" }}
+                >
+                  Layout pre-selected from creation
+                </Typography>
+              )}
+            </Box>
+
+            {/* Show existing QR info if any */}
+            {selectedLayoutId && qrCodesLoading && (
               <Box
                 sx={{
                   p: 2,
                   mb: 3,
-                  bgcolor: "#F5EFE6",
+                  bgcolor: "#F5F5F5",
                   borderRadius: 2,
-                  border: "1px solid #6F4E37",
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "#666" }}>
+                  Loading existing QR codes...
+                </Typography>
+              </Box>
+            )}
+
+            {selectedLayoutId && !qrCodesLoading && maxExistingTableNumber > 0 && (
+              <Box
+                sx={{
+                  p: 2,
+                  mb: 3,
+                  bgcolor: "#FFF4E6",
+                  borderRadius: 2,
+                  border: "1px solid #FFB74D",
                 }}
               >
                 <Typography
                   variant="caption"
                   sx={{
-                    color: "#6F4E37",
+                    color: "#E65100",
                     fontWeight: 600,
                     display: "block",
                     mb: 0.5,
                   }}
                 >
-                  Selected Layout
+                  Existing QR Codes
                 </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{ color: "#6F4E37", fontWeight: 500 }}
-                >
-                  {availableLayouts.find(
-                    (l) => (l._id || l.id) === selectedLayoutId,
-                  )?.layoutTitle || "Loading..."}
+                <Typography variant="body2" sx={{ color: "#E65100" }}>
+                  Tables 1-{maxExistingTableNumber} already have QR codes for
+                  this layout
                 </Typography>
               </Box>
             )}
 
-            {/* Number of Tables */}
+            {/* Number of Tables Dropdown */}
             <Box>
-              <Typography variant="body2" sx={{ mb: 2, color: "#666" }}>
-                Enter the number of tables for which you want to generate QR
-                codes. Table numbering will start from 1.
+              <Typography
+                variant="body2"
+                sx={{ mb: 1.5, color: "#666", fontWeight: 500 }}
+              >
+                Number of Tables
               </Typography>
-              <TextField
-                fullWidth
-                label="Number of Tables"
-                type="number"
-                value={totalTables}
-                onChange={(e) => {
-                  setTotalTables(e.target.value);
-                  setErrors((prev) => ({ ...prev, totalTables: undefined }));
-                }}
-                error={!!errors.totalTables}
-                helperText={errors.totalTables}
-                placeholder="e.g., 10"
-                InputProps={{
-                  inputProps: { min: 1, max: 500 },
-                }}
-                disabled={isCreating}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "#F5EFE6",
-                    borderRadius: 2,
+              <Typography
+                variant="caption"
+                sx={{ mb: 2, display: "block", color: "#888" }}
+              >
+                {maxExistingTableNumber > 0
+                  ? `Select a number greater than ${maxExistingTableNumber} to continue generating QR codes.`
+                  : "Table numbering will start from 1."}
+              </Typography>
+              <InputField
+                select
+                field={{
+                  value: totalTables,
+                  onChange: (e) => {
+                    setTotalTables(e.target.value);
+                    setErrors((prev) => ({ ...prev, totalTables: undefined }));
                   },
                 }}
-              />
+                error={errors.totalTables}
+                helperText={errors.totalTables}
+                disabled={isCreating || !selectedLayoutId || qrCodesLoading}
+                SelectProps={{
+                  native: true,
+                }}
+              >
+                <option value="">Select number of tables</option>
+                {Array.from({ length: 500 }, (_, i) => i + 1).map((num) => {
+                  const isDisabled = num <= maxExistingTableNumber;
+
+                  return (
+                    <option key={num} value={num} disabled={isDisabled}>
+                      {num} {isDisabled ? "(Already generated)" : ""}
+                    </option>
+                  );
+                })}
+              </InputField>
               {totalTables && !errors.totalTables && (
                 <Typography
                   variant="caption"
                   sx={{ mt: 1, display: "block", color: "#6F4E37" }}
                 >
-                  This will generate QR codes for tables 1 to {totalTables}
+                  This will generate QR codes for tables{" "}
+                  {maxExistingTableNumber > 0
+                    ? `${maxExistingTableNumber + 1}-${totalTables}`
+                    : `1-${totalTables}`}
                 </Typography>
               )}
             </Box>
-
-            {/* Show error if no layout is selected */}
-            {errors.layoutId && (
-              <Typography
-                variant="caption"
-                sx={{ mt: 2, display: "block", color: "error.main" }}
-              >
-                {errors.layoutId}
-              </Typography>
-            )}
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
           <Button
-            onClick={() => setOpenDialog(false)}
+            onClick={handleCloseDialog}
             disabled={isCreating}
             sx={{ color: "#666" }}
           >
@@ -325,7 +463,7 @@ const CafeTableManagement = () => {
             onClick={handleSubmit}
             variant="contained"
             sx={{ backgroundColor: "#6F4E37" }}
-            disabled={isCreating}
+            disabled={isCreating || !selectedLayoutId || !totalTables || qrCodesLoading}
           >
             {isCreating ? "Generating..." : "Generate"}
           </Button>
