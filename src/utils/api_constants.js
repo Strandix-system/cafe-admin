@@ -25,15 +25,15 @@ export const API_ROUTES = {
   createLayout: "layout/create",
 
   createCategory: "category/create",
-  getCategories: "category/get-allcategories",
+  getCategories: "category",
   getCategoryById: "category/get-by-id",
   updateCategory: "category/update",
   deleteCategory: "category/delete",
   getstates: "get-states",
 
-  createAdmins:"admin/create",
-  menulist:"menu/my-menus",
-  user_list:"customer/get-all",
+  createAdmins: "admin/create",
+  menulist: "menu/my-menus",
+  user_list: "customer/get-all",
   createQRCodes: "qr/create",
   getQRCodes: "qr/get-all",
 

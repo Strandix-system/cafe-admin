@@ -7,20 +7,19 @@ export const adminSchema = yup.object().shape({
     .string()
     .email("Enter a valid email address")
     .required("Email is required"),
-  password: yup
-    .string()
-    .when("$isEdit", {
-      is: false, // Only require password when not in edit mode
-      then: yup
-        .string()
+  password: yup.string().when("$isEdit", {
+    is: false,
+    then: (schema) =>
+      schema
         .min(8, "Password must be at least 8 characters")
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/,
-          "Password must contain uppercase, lowercase, number & special character",
+          "Password must contain uppercase, lowercase, number & special character"
         )
         .required("Password is required"),
-      otherwise: yup.string().notRequired(), // Optional in edit mode
-    }),
+    otherwise: (schema) =>
+      schema.notRequired().optional(),
+  }),
   cafeName: yup.string().trim().required("Cafe name is required"),
   phoneNumber: yup
     .string()
@@ -33,7 +32,7 @@ export const adminSchema = yup.object().shape({
     .string()
     .matches(/^\d{6}$/, "Pincode must be 6 digits")
     .required("Pincode is required"),
-  gstPercentage: yup.number().required("GST percentage is required").min(5, "GST must be at least 5%").max(28, "GST cannot exceed 28%"),
+  gst: yup.number().required("GST percentage is required").min(5, "GST must be at least 5%").max(28, "GST cannot exceed 28%"),
   logo: yup
     .mixed()
     .test("required", "Cafe logo is required", (value) => {

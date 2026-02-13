@@ -12,10 +12,10 @@ import {
   Box,
 } from "@mui/material";
 import toast from "react-hot-toast";
-import { usePost } from "../../utils/hooks/api_hooks";
+import { usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
-import { useEffect , useState } from "react";
+import { useEffect, useState } from "react";
 
 // ✅ Yup Schema
 const schema = yup.object({
@@ -30,7 +30,7 @@ const schema = yup.object({
 const CreateCategoryDialog = ({ open, handleClose, category }) => {
 
   const isEdit = Boolean(category);
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -42,8 +42,35 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
     defaultValues: {
       name: "",
     },
-     mode: "onChange",
+    mode: "onChange",
   });
+
+  const { mutate: createCategory, isPending: createPending } = usePost(API_ROUTES.createCategory, {
+    onSuccess: () => {
+      toast.success("Category created successfully ✅");
+      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      reset();
+      handleClose();
+    },
+    onError: (error) => {
+      console.error("Create category failed:", error);
+      toast.error(error?.message || "Failed to create category");
+    }
+  });
+
+  const { mutate: updateCategory, isPending: updatePending } = usePatch(`${API_ROUTES.updateCategory}/${category?._id}`, {
+    onSuccess: () => {
+      toast.success("Category updated successfully ✅");
+      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      reset();
+      handleClose();
+    },
+    onError: (error) => {
+      console.error("Update category failed:", error);
+      toast.error(error?.message || "Failed to update category");
+    }
+  }
+  );
 
   useEffect(() => {
     if (category) {
@@ -53,30 +80,15 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
     }
   }, [category, reset]);
 
-const onSubmit = async (data) => {
+  const onSubmit = async (data) => {
     try {
       setLoading(true);
 
       if (isEdit) {
-        await APIRequest.patch(
-          `${API_ROUTES.updateCategory}/${category._id}`,
-          { name: data.name }
-        );
-        toast.success("Category updated successfully ✅");
+        updateCategory({ name: data.name });
       } else {
-        await APIRequest.post(API_ROUTES.createCategory, {
-          name: data.name,
-        });
-        toast.success("Category created successfully ✅");
+        createCategory({ name: data.name });
       }
-
-      await queryClient.refetchQueries({
-        queryKey: ["get-categories"],
-        type: "active",
-      });
-
-      reset();
-      handleClose();
     } catch (error) {
       console.error(error);
       toast.error(error?.message || "Something went wrong");
@@ -108,23 +120,23 @@ const onSubmit = async (data) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} variant="outlined" sx={{color:"#6F4E37"}}>
+        <Button onClick={handleClose} variant="outlined" sx={{ color: "#6F4E37" }}>
           Cancel
         </Button>
 
         <Button
           variant="contained"
           onClick={handleSubmit(onSubmit)}
-          disabled={loading || !isValid}
-          sx={{backgroundColor:"#6F4E37"}}
+          disabled={createPending || updatePending || !isValid}
+          sx={{ backgroundColor: "#6F4E37" }}
         >
-          {loading
+          {createPending || updatePending
             ? isEdit
               ? "Updating..."
               : "Creating..."
             : isEdit
-            ? "Update"
-            : "Create"}
+              ? "Update"
+              : "Create"}
         </Button>
       </DialogActions>
     </Dialog>

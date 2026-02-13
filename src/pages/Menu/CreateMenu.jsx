@@ -7,6 +7,7 @@ import { APIRequest } from "../../utils/api_request";
 import InputField from "../../components/common/InputField";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
+import { useFetch } from "../../utils/hooks/api_hooks";
 
 export default function CreateMenu() {
   const { menuId } = useParams();
@@ -33,22 +34,16 @@ export default function CreateMenu() {
   const [categories, setCategories] = useState([]);
   const [pageLoading, setPageLoading] = useState(false);
 
+  const { data: { result: { results: categoriesData } } = {} } = useFetch("get-categories", API_ROUTES.getCategories, {}, {
+    enabled: true
+  });
+
   // 🔹 FETCH CATEGORIES
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await APIRequest.get(API_ROUTES.getCategories);
-        setCategories(res.result);
-      } catch (error) {
-        console.error("Category fetch failed", error);
-        toast.error("Failed to load categories");
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  // FETCH MENU DETAILS IF EDITING
+    if (categoriesData) {
+      setCategories(categoriesData);
+    }
+  }, [categoriesData]);
 
   useEffect(() => {
     if (!menuId) return;
@@ -171,10 +166,9 @@ export default function CreateMenu() {
                   helperText={errors.category?.message}
                 >
                   <MenuItem value="">Select Category</MenuItem>
-                  {Array.isArray(categories) &&
-                    categories.map((cat) => (
-                      <MenuItem key={cat._id} value={cat._id}>{cat.name}</MenuItem>
-                    ))
+                  {categories?.map((cat) => (
+                    <MenuItem key={cat._id} value={cat._id}>{cat.name}</MenuItem>
+                  ))
                   }
                 </InputField>
               )}
