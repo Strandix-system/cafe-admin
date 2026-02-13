@@ -65,7 +65,7 @@ export default function FormComponent({
       city: "",
       state: "",
       pincode: "",
-      gstPercentage: "",
+      gst: "",
       logo: null,
       profileImage: null,
     },
@@ -89,20 +89,9 @@ export default function FormComponent({
     onSubmit({
       ...data,
       phoneNumber: Number(data.phoneNumber),
-      gstPercentage: Number(data.gstPercentage),
+      gst: Number(data.gst),
     });
   };
-
-  // const handleImageChange = (file, field, setPreview) => {
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setPreview(reader.result);
-  //       setValue(field.name, file);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   const handleRemoveImage = (field) => {
     setLogoPreview(null);
@@ -205,11 +194,11 @@ export default function FormComponent({
                   <ImageUploadSection
                     label="Cafe Logo"
                     field={field}
-                    preview={logoPreview}
-                    setPreview={setLogoPreview}
-                    handleImageChange={handleImageChange}
-                    handleRemoveImage={handleRemoveImage}
-                    handleReplaceImage={handleReplaceImage}
+                    preview={previews["logo"]}
+                    setPreview={(preview) => setPreview("logo", preview)}
+                    handleImageChange={(file) => handleImageChange(file, "logo")}
+                    handleRemoveImage={() => handleRemoveImage("logo")}
+                    handleReplaceImage={() => handleReplaceImage("logo")}
                     inputId="logo-upload"
                     isEdit={isEdit}
                   />
@@ -225,11 +214,11 @@ export default function FormComponent({
                   <ImageUploadSection
                     label="Profile Image"
                     field={field}
-                    preview={profilePreview}
-                    setPreview={setProfilePreview}
-                    handleImageChange={handleImageChange}
-                    handleRemoveImage={handleRemoveImage}
-                    handleReplaceImage={handleReplaceImage}
+                    preview={previews["profileImage"]}
+                    setPreview={(preview) => setPreview("profileImage", preview)}
+                    handleImageChange={(file) => handleImageChange(file, "profileImage")}
+                    handleRemoveImage={() => handleRemoveImage("profileImage")}
+                    handleReplaceImage={() => handleReplaceImage("profileImage")}
                     inputId="profile-upload"
                     isEdit={isEdit}
                   />
@@ -256,7 +245,6 @@ export default function FormComponent({
                 )}
               />
             </Grid>
-
 
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormLabel
@@ -652,13 +640,13 @@ export default function FormComponent({
                 GST Percentage *
               </FormLabel>
               <Controller
-                name="gstPercentage"
+                name="gst"
                 control={control}
                 render={({ field }) => (
                   <InputField
                     field={field}
-                    error={errors.gstPercentage}
-                    helperText={errors.gstPercentage?.message}
+                    error={errors.gst}
+                    helperText={errors.gst?.message}
                     placeholder="Enter GST Percentage"
                     type="number"
                   />
