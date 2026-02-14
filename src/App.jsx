@@ -30,10 +30,8 @@ function App() {
       <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <AppRoutes>
-            </AppRoutes>
+            <AppRoutes />
             <Toaster position="top-right" reverseOrder={false} />
-
           </AuthProvider>
         </QueryClientProvider>
       </CacheProvider>

@@ -56,7 +56,6 @@ export const sideBarItems = {
       tab: "layouts",
 
     },
-
     {
       key: "Menu",
       label: "Menu",

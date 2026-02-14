@@ -56,15 +56,6 @@ const layoutSchema = yup.object({
     .required("About title is required"),
   aboutDescription: yup.string().required("About description is required"),
   cafeDescription: yup.string().required("Cafe description is required"),
-  hours: yup.object({
-    weekdays: yup.string().required("Weekdays hours required"),
-    weekends: yup.string().required("Weekends hours required"),
-  }),
-  socialLinks: yup.object({
-    instagram: yup.string().url("Invalid Instagram URL").required("Required"),
-    facebook: yup.string().url("Invalid Facebook URL").required("Required"),
-    twitter: yup.string().url("Invalid Twitter URL").required("Required"),
-  }),
 });
 
 const TIME_PICKER_STYLES = {
@@ -104,15 +95,6 @@ export default function LayoutForm({
       aboutTitle: "",
       aboutDescription: "",
       cafeDescription: "",
-      hours: {
-        weekdays: "",
-        weekends: "",
-      },
-      socialLinks: {
-        instagram: "",
-        facebook: "",
-        twitter: "",
-      },
     },
     mode: "all",
   });
@@ -212,12 +194,6 @@ export default function LayoutForm({
             field={field}
             error={
               errors[name.split(".").reduce((obj, key) => obj?.[key], errors)]
-            }
-            helperText={
-              disabled && name === "layoutTitle"
-                ? "Title cannot be changed"
-                : errors[name.split(".").reduce((obj, key) => obj?.[key], errors)]
-                  ?.message
             }
             startIcon={icon}
             placeholder={placeholder}
@@ -389,43 +365,6 @@ export default function LayoutForm({
           { xs: 12, md: 6 },
         )}
 
-        {/* Hours */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          {renderTimeField("hours.weekdays", "Weekdays Hours", {
-            xs: 12,
-            md: 6,
-          })}
-          {renderTimeField("hours.weekends", "Weekends Hours", {
-            xs: 12,
-            md: 6,
-          })}
-        </LocalizationProvider>
-
-        {/* Social Links */}
-        {renderTextField(
-          "socialLinks.instagram",
-          "Instagram Link",
-          <Instagram sx={{ color: "#6F4E37" }} />,
-          "https://instagram.com/yourcafe",
-          false,
-          { xs: 12, md: 4 },
-        )}
-        {renderTextField(
-          "socialLinks.facebook",
-          "Facebook Link",
-          <Facebook sx={{ color: "#6F4E37" }} />,
-          "https://facebook.com/yourcafe",
-          false,
-          { xs: 12, md: 4 },
-        )}
-        {renderTextField(
-          "socialLinks.twitter",
-          "Twitter Link",
-          <Twitter sx={{ color: "#6F4E37" }} />,
-          "https://twitter.com/yourcafe",
-          false,
-          { xs: 12, md: 4 },
-        )}
       </Grid>
     </form>
   );
