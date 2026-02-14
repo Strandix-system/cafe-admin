@@ -56,13 +56,19 @@ export const sideBarItems = {
       tab: "layouts",
 
     },
-
     {
       key: "Menu",
       label: "Menu",
       icon: MenuBookIcon,
       path: "/menu",
       tab: "menu",
+    },
+    {
+      key: "customerData",
+      label: "Customer Management",
+      icon: SupervisedUserCircleIcon,
+      path: "/customer",
+      tab: "customer-data",
     },
     {
       key: "categories",
@@ -79,13 +85,6 @@ export const sideBarItems = {
       icon: QrCode,
       path: "/table-management",
       tab: "table-management",
-    },
-    {
-      key: "Customer Management",
-      label: "Customer Management",
-      icon: PeopleIcon,
-      path: "/customers",
-      tab: "customers",
     },
   ],
 };

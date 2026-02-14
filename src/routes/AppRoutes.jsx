@@ -13,13 +13,12 @@ import CategoriesList from "../pages/CategoriesList";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
-import CreateMenu from "../pages/Menu/CreateEditMenuModal";
-import MenuList from "../pages/Menu/MenuList";
-import User from "../pages/Menu/User";
+import CreateMenu from "../pages/menu/CreateMenu";
+import MenuList from "../pages/menu/MenuList";
+import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 import CafeTableManagement from "../pages/CafeTableManagement";
-import UserList from "../pages/UserList";
 
 const AppRoutes = () => {
   return (
@@ -68,7 +67,7 @@ const AppRoutes = () => {
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <UserList />
+              <CustomerList />
             </DashboardLayout>
           </ProtectedRoutes>
         }
@@ -129,7 +128,7 @@ const AppRoutes = () => {
         }
       />
 
-         <Route
+      <Route
         path="/create-menu/:menuId"
         element={
           <ProtectedRoutes>
@@ -163,32 +162,11 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/customers"
+        path="/customer"
         element={
           <ProtectedRoutes>
             <DashboardLayout>
-              <UserList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-      {/* <Route
-        path="/cafe/orders/:userId"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <UserList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      /> */}
-
-      <Route
-        path="/user"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <User />
+              <CustomerList />
             </DashboardLayout>
           </ProtectedRoutes>
         }

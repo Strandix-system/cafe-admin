@@ -5,6 +5,8 @@ export const API_ROUTES = {
   getMe: "auth/me",
   getUsers: "/admin/get-users",
 
+  dashboardStats: "admin/dashboard/stats",
+
   getUserById: "admin/get-user",
   updateUsers: "admin/update",
 
@@ -34,6 +36,7 @@ export const API_ROUTES = {
   createAdmins: "admin/create",
   menulist: "menu/my-menus",
   user_list: "customer/get-all",
+  deleteUser: "customer/delete",
   createQRCodes: "qr/create",
   getQRCodes: "qr/get-all",
 
