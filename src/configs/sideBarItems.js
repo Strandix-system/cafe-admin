@@ -65,13 +65,6 @@ export const sideBarItems = {
       tab: "menu",
     },
     {
-      key: "userData",
-      label: "User Management",
-      icon: SupervisedUserCircleIcon,
-      path: "/user",
-      tab: "user-data",
-    },
-    {
       key: "categories",
       label: " QR Management",
       key: "OrderManagement",
