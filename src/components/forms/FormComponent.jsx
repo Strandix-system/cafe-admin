@@ -44,6 +44,11 @@ import { adminSchema } from "../../utils/adminSchema/adminSchema";
 import ImageUploadSection from "../common/ImageUploadSection";
 import InputField from "../common/InputField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { parseHoursFromBackend } from "../../utils/utils";
+
+// Enable custom parse format plugin
+dayjs.extend(customParseFormat);
 
 const TIME_PICKER_STYLES = {
   textField: {
@@ -133,7 +138,15 @@ export default function FormComponent({
 
   useEffect(() => {
     if (isEdit) {
-      reset(defaultValues);
+      const transformedDefaults = {
+        ...defaultValues,
+        hours: {
+          weekdays: parseHoursFromBackend(defaultValues.hours?.weekdays),
+          weekends: parseHoursFromBackend(defaultValues.hours?.weekends),
+        },
+      };
+
+      reset(transformedDefaults);
       // Set image previews from deployed URLs
       if (defaultValues.logo) {
         setPreview("logo", defaultValues.logo);
