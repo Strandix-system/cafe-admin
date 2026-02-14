@@ -142,7 +142,7 @@ const AppRoutes = () => {
         }
       />
 
-         <Route
+      <Route
         path="/create-menu/:menuId"
         element={
           <ProtectedRoutes>
@@ -170,6 +170,17 @@ const AppRoutes = () => {
           <ProtectedRoutes>
             <DashboardLayout>
               <OrderHistoryList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
+
+      <Route
+        path="/qr-codes/:layoutId"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <CafeTableManagement />
             </DashboardLayout>
           </ProtectedRoutes>
         }

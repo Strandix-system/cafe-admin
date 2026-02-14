@@ -48,7 +48,6 @@ const CafeTableManagement = () => {
   const {
     data: layoutQRCodesData,
     isLoading: qrCodesLoading,
-    refetch: refetchLayoutQRCodes,
   } = useFetch(
     `layout-qr-codes-${selectedLayoutId}`,
     API_ROUTES.getQRCodes,
@@ -64,11 +63,12 @@ const CafeTableManagement = () => {
   );
   const qrCodes = layoutQRCodesData?.result?.results || [];
 
+  const existingQRCodesForLayout = qrCodes || [];
   // Filter existing QR codes for the selected layout
-  const existingQRCodesForLayout = useMemo(() => {
-    if (!selectedLayoutId || !qrCodes) return [];
-    return qrCodes.filter((qr) => qr.layoutId?._id === selectedLayoutId);
-  }, [selectedLayoutId, qrCodes]);
+  // const existingQRCodesForLayout = useMemo(() => {
+  //   if (!selectedLayoutId || !qrCodes) return [];
+  //   return qrCodes.filter((qr) => qr.layoutId?._id === selectedLayoutId);
+  // }, [selectedLayoutId, qrCodes]);
 
   // Get the highest table number already created for this layout
   const maxExistingTableNumber = useMemo(() => {
@@ -90,9 +90,9 @@ const CafeTableManagement = () => {
   // Refetch QR codes when selectedLayoutId changes
   useEffect(() => {
     if (selectedLayoutId) {
-      refetchLayoutQRCodes();
+      queryClient.invalidateQueries({ queryKey: [`layout-qr-codes-${selectedLayoutId}`] });
     }
-  }, [selectedLayoutId, refetchLayoutQRCodes]);
+  }, [selectedLayoutId]);
 
   // Create QR codes mutation
   const { mutate: createQRCodes, isPending: isCreating } = usePost(
@@ -101,15 +101,15 @@ const CafeTableManagement = () => {
       onSuccess: () => {
         toast.success("QR codes generated successfully!");
         setOpenDialog(false);
+        setSelectedLayoutId("");
         setTotalTables("");
+        setErrors({});
 
         // Clear URL param if it exists
         if (urlLayoutId) {
           navigate("/qr-codes", { replace: true });
         }
 
-        setSelectedLayoutId("");
-        setErrors({});
         queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] });
         queryClient.invalidateQueries({
           queryKey: [`layout-qr-codes-${selectedLayoutId}`],
@@ -250,11 +250,11 @@ const CafeTableManagement = () => {
     setOpenDialog(false);
     setTotalTables("");
     setErrors({});
+    setSelectedLayoutId("");
 
     // Clear URL param if it exists
     if (urlLayoutId) {
       navigate("/qr-codes", { replace: true });
-      setSelectedLayoutId("");
     }
   };
 
