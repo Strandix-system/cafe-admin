@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { Grid, Button, Box, Typography, Skeleton, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useFetch } from "../utils/hooks/api_hooks";
+import { useFetch, usePatch } from "../utils/hooks/api_hooks";
 import LayoutPreviewCard from "../components/layout/LayoutPreviewCard";
 import { API_ROUTES } from "../utils/api_constants";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import { queryClient } from "../lib/queryClient";
 
 export default function LayoutsPage() {
   const navigate = useNavigate();
-  const { isAdmin, isSuperAdmin, adminId } = useAuth();
+  const { isAdmin, isSuperAdmin, user } = useAuth();
+  const [selectedDefaultLayout, setSelectedDefaultLayout] = useState(null);
+  const [selectedAdminLayout, setSelectedAdminLayout] = useState(null);
 
   // Fetch default layouts (templates)
   const { data: defaultLayoutData, isLoading: isLoadingDefault } = useFetch(
@@ -21,15 +25,28 @@ export default function LayoutsPage() {
   const { data: adminLayoutData, isLoading: isLoadingAdmin } = useFetch(
     "getAdminLayouts",
     API_ROUTES.getLayoutByAdmin,
-    { adminId },
+    { adminId: user?.id },
     { enabled: isAdmin && !isSuperAdmin },
+  );
+
+  const activeLayoutId = adminLayoutData?.result?.results.find(layout => layout.isActive)?._id;
+
+  const { mutate: setActiveLayout, isPending: isSettingActive } = usePatch(
+    `${API_ROUTES.setActiveLayout}`,
+    {
+      onSuccess: () => {
+        toast.success("Active layout set successfully");
+        queryClient.invalidateQueries({ queryKey: ["getAdminLayouts"] });
+      },
+      onError: (error) => {
+        console.error("Error setting active layout:", error);
+        toast.error("Failed to set active layout");
+      },
+    }
   );
 
   const defaultLayouts = defaultLayoutData?.result?.results || [];
   const adminLayouts = adminLayoutData?.result?.results || [];
-
-  const [selectedDefaultLayout, setSelectedDefaultLayout] = useState(null);
-  const [selectedAdminLayout, setSelectedAdminLayout] = useState(null);
 
   // Auto-select if only one default layout exists
   useEffect(() => {
@@ -39,11 +56,11 @@ export default function LayoutsPage() {
   }, [defaultLayouts]);
 
   // Auto-select if only one admin layout exists
-  useEffect(() => {
-    if (adminLayouts.length === 1 && !isSuperAdmin) {
-      setSelectedAdminLayout(adminLayouts[0]._id);
-    }
-  }, [adminLayouts, isSuperAdmin]);
+  // useEffect(() => {
+  //   if (adminLayouts.length === 1 && !isSuperAdmin) {
+  //     setSelectedAdminLayout(adminLayouts[0]._id);
+  //   }
+  // }, [adminLayouts, isSuperAdmin]);
 
   const handlePreview = (layout) => {
     if (!layout?._id) {
@@ -66,6 +83,13 @@ export default function LayoutsPage() {
       // For superAdmin: edit the default layout directly
       navigate(`/layouts/create-edit/${selectedDefaultLayout}`);
     }
+  };
+
+  const handleSetActive = (layoutId) => {
+    setActiveLayout({
+      layoutId,
+      active: true,
+    });
   };
 
   // SuperAdmin view
@@ -110,9 +134,13 @@ export default function LayoutsPage() {
               <Grid item key={layout._id}>
                 <LayoutPreviewCard
                   layout={layout}
-                  selectedId={selectedDefaultLayout}
+                  isActive={false}
+                  isSelected={selectedDefaultLayout === layout._id}
                   onSelect={setSelectedDefaultLayout}
+                  onSetActive={() => { }}
+                  onEdit={() => { }}
                   onPreview={handlePreview}
+                  showEditButton={false}
                 />
               </Grid>
             ))
@@ -170,9 +198,13 @@ export default function LayoutsPage() {
             <Grid item key={layout._id}>
               <LayoutPreviewCard
                 layout={layout}
-                selectedId={selectedDefaultLayout}
+                isActive={false}
+                isSelected={selectedDefaultLayout === layout._id}
                 onSelect={setSelectedDefaultLayout}
+                onSetActive={() => { }}
+                onEdit={() => { }}
                 onPreview={handlePreview}
+                showEditButton={false}
               />
             </Grid>
           ))
@@ -226,9 +258,13 @@ export default function LayoutsPage() {
             <Grid item key={layout._id}>
               <LayoutPreviewCard
                 layout={layout}
-                selectedId={selectedAdminLayout}
+                isActive={layout._id === activeLayoutId}
+                isSelected={selectedAdminLayout === layout._id}
                 onSelect={setSelectedAdminLayout}
+                onSetActive={handleSetActive}
+                onEdit={handleEditAdmin}
                 onPreview={handlePreview}
+                showEditButton={true}
               />
             </Grid>
           ))
