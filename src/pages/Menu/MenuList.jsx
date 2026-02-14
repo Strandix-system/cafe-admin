@@ -7,11 +7,15 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { APIRequest } from "../../utils/api_request";
 import EditMenuModal from "./EditMenuModal";
 import { useState } from "react";
+import CreateEditMenuModal from "./CreateEditMenuModal";
 
 
 const MenuList = () => {
   const navigate = useNavigate();
-  const [editOpen, setEditOpen] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [menuId, setMenuId] = useState(null);
+
   const [selectedMenuId, setSelectedMenuId] = useState(null);
 
   // 🔹 Table Columns
@@ -56,7 +60,8 @@ const MenuList = () => {
       label: "Edit",
       icon: Edit,
       onClick: (row) => {
-        navigate(`/create-menu/${row.original._id}`);
+        setMenuId(row.original._id); // edit mode
+        setOpen(true);
       },
     },
   ];
@@ -80,7 +85,10 @@ const MenuList = () => {
           variant="contained"
           sx={{ backgroundColor: "#6F4E37" }}
           startIcon={<Plus size={18} />}
-          onClick={() => navigate("/create-menu")}
+          onClick={() => {
+            setMenuId(null); // create mode
+            setOpen(true);
+          }}
         >
           Create Menu
         </Button>
@@ -91,13 +99,24 @@ const MenuList = () => {
         slug="menu"
         columns={columns}
         actions={actions}
-          actionsType="icons"
+        actionsType="icons"
         querykey={["menu-list"]}
         getApiEndPoint="menulist"
         deleteApiEndPoint="MENU_DELETE"
         deleteAction={true}
         enableExportTable={true}
       />
+
+
+      <CreateEditMenuModal
+        open={open}
+        menuId={menuId}
+        onClose={() => {
+          setOpen(false);
+          setMenuId(null);
+        }}
+      />
+
     </div>
   );
 };
