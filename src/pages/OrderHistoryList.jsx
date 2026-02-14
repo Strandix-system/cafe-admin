@@ -64,15 +64,15 @@ const OrderHistoryList = () => {
         []
     );
 
-    const actions = [
-        {
-            label: "View",
-            icon: Eye,
-            onClick: (row) => {
-                navigate(`/orders/view/${row.original._id}`);
-            },
-        },
-    ];
+    // const actions = [
+    //     {
+    //         label: "View",
+    //         icon: Eye,
+    //         onClick: (row) => {
+    //             // navigate(`/orders/view/${row.original._id}`);
+    //         },
+    //     },
+    // ];
 
     return (
         <div className="overflow-hidden">
@@ -92,7 +92,7 @@ const OrderHistoryList = () => {
             <TableComponent
                 slug="orders"
                 columns={columns}
-                actions={actions}
+                actions={[]}
                 params={{
                     populate: "userId",
                 }}

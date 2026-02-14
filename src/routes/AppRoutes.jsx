@@ -13,13 +13,11 @@ import CategoriesList from "../pages/CategoriesList";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
-import CreateMenu from "../pages/Menu/CreateMenu";
+import CreateMenu from "../pages/Menu/CreateEditMenuModal";
 import MenuList from "../pages/Menu/MenuList";
-import EditMenuModal from "../pages/Menu/EditMenuModal";
 import User from "../pages/Menu/User";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
-// import { MenuList } from "@mui/material";
 import CafeTableManagement from "../pages/CafeTableManagement";
 import UserList from "../pages/UserList";
 
@@ -126,17 +124,6 @@ const AppRoutes = () => {
           <ProtectedRoutes>
             <DashboardLayout>
               <MenuList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/create-menu"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CreateMenu />
             </DashboardLayout>
           </ProtectedRoutes>
         }
