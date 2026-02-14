@@ -118,36 +118,9 @@ export const adminSchema = yup.object().shape({
       })
       .required("Weekend hours are required"),
   }),
-  socialLinks: yup.object().shape({
-    instagram: yup
-      .string()
-      .trim()
-      .url("Enter a valid URL")
-      .matches(
-        /^https?:\/\/(www\.)?instagram\.com\/.+/,
-        "Enter a valid Instagram URL"
-      )
-      .nullable()
-      .notRequired(),
-    facebook: yup
-      .string()
-      .trim()
-      .url("Enter a valid URL")
-      .matches(
-        /^https?:\/\/(www\.)?facebook\.com\/.+/,
-        "Enter a valid Facebook URL"
-      )
-      .nullable()
-      .notRequired(),
-    twitter: yup
-      .string()
-      .trim()
-      .url("Enter a valid URL")
-      .matches(
-        /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/.+/,
-        "Enter a valid Twitter/X URL"
-      )
-      .nullable()
-      .notRequired(),
+  socialLinks: yup.object({
+    instagram: yup.string().url("Invalid Instagram URL").required("Required"),
+    facebook: yup.string().url("Invalid Facebook URL").required("Required"),
+    twitter: yup.string().url("Invalid Twitter URL").required("Required"),
   }),
 });
