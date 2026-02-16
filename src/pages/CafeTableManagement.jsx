@@ -23,7 +23,6 @@ const CafeTableManagement = () => {
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [totalTables, setTotalTables] = useState("");
-  const [selectedLayoutId, setSelectedLayoutId] = useState("");
   const [errors, setErrors] = useState({});
   const { user } = useAuth();
 
@@ -43,7 +42,6 @@ const CafeTableManagement = () => {
       onSuccess: () => {
         toast.success("QR codes generated successfully!");
         setOpenDialog(false);
-        setSelectedLayoutId("");
         setTotalTables("");
         setErrors({});
 
@@ -71,15 +69,6 @@ const CafeTableManagement = () => {
             <QrCode size={18} color="#6F4E37" />
             <Typography>Table {row.original.tableNumber}</Typography>
           </Box>
-        ),
-      },
-      {
-        accessorKey: "layoutId.layoutTitle",
-        header: "Layout",
-        Cell: ({ row }) => (
-          <Typography>
-            {row.original.layoutId?.layoutTitle || "N/A"}
-          </Typography>
         ),
       },
       {
@@ -139,50 +128,40 @@ const CafeTableManagement = () => {
     },
   ];
 
+  const maxExistingTableNumber = useMemo(() => {
+    if (qrCodesData?.result?.totalResults === 0) return 0;
+    return qrCodesData?.result?.totalResults;
+  }, [qrCodesData]);
+
   const validateForm = () => {
     const newErrors = {};
-    const range = parseInt(totalTables);
-
-    if (!selectedLayoutId) {
-      newErrors.layoutId = "Please select a layout";
-    }
+    const selectedTotal = Number(totalTables);
 
     if (!totalTables) {
-      newErrors.totalTables = "Please select the number of tables";
-    } else if (isNaN(range) || range < 1) {
-      newErrors.totalTables = "Please select a valid number";
-    } else if (range <= maxExistingTableNumber) {
-      newErrors.totalTables = `QR codes already exist for tables 1-${maxExistingTableNumber}. Please select a number greater than ${maxExistingTableNumber}.`;
-    } else if (range > 500) {
-      newErrors.totalTables = "Maximum 500 tables allowed";
+      newErrors.totalTables = "Please select number of tables";
+    } else if (isNaN(selectedTotal)) {
+      newErrors.totalTables = "Invalid number";
+    } else if (selectedTotal <= maxExistingTableNumber) {
+      newErrors.totalTables = `Tables 1-${maxExistingTableNumber} already have QR codes. Please select a number greater than ${maxExistingTableNumber}.`;
+    } else if (selectedTotal > 50) {
+      newErrors.totalTables = "Maximum 50 tables allowed";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = () => {
     if (validateForm()) {
-      const range = parseInt(totalTables);
       createQRCodes({
-        totalTables: range,
+        totalTables: Number(totalTables),
         adminId: user?.id,
-        layoutId: selectedLayoutId,
       });
     }
   };
 
   const handleOpenDialog = () => {
-    if (!layouts || layouts.length === 0) {
-      toast.error("No layouts available. Please create a layout first.");
-      return;
-    }
-
-    // If there's only one layout and no layout is selected, auto-select it
-    if (layouts?.length === 1 && !selectedLayoutId) {
-      const layoutId = layouts[0]._id || layouts[0].id; setSelectedLayoutId(layoutId);
-    }
-
     setOpenDialog(true);
   };
 
@@ -190,7 +169,6 @@ const CafeTableManagement = () => {
     setOpenDialog(false);
     setTotalTables("");
     setErrors({});
-    setSelectedLayoutId("");
 
     // Clear URL param if it exists
     if (urlLayoutId) {
@@ -244,69 +222,7 @@ const CafeTableManagement = () => {
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
-            {/* Layout Selection Dropdown */}
-            <Box sx={{ mb: 3 }}>
-              <Typography
-                variant="body2"
-                sx={{ mb: 1.5, color: "#666", fontWeight: 500 }}
-              >
-                Select Layout
-              </Typography>
-              <InputField
-                select
-                field={{
-                  value: selectedLayoutId,
-                  onChange: (e) => {
-                    setSelectedLayoutId(e.target.value);
-                    setTotalTables(""); // Reset table count when layout changes
-                    setErrors((prev) => ({ ...prev, layoutId: undefined }));
-                  },
-                }}
-                error={errors.layoutId}
-                helperText={errors.layoutId}
-                disabled={isCreating || !!urlLayoutId} // Disable if coming from URL
-                SelectProps={{
-                  native: true,
-                }}
-              >
-                <option value="">Select a layout</option>
-                {layouts?.map((layout) => (
-                  <option
-                    key={layout._id || layout.id}
-                    value={layout._id || layout.id}
-                  >
-                    {layout.layoutTitle}
-                  </option>
-                ))}
-              </InputField>
-              {urlLayoutId && (
-                <Typography
-                  variant="caption"
-                  sx={{ mt: 1, display: "block", color: "#6F4E37" }}
-                >
-                  Layout pre-selected from creation
-                </Typography>
-              )}
-            </Box>
-
-            {/* Show existing QR info if any */}
-            {selectedLayoutId && qrCodesLoading && (
-              <Box
-                sx={{
-                  p: 2,
-                  mb: 3,
-                  bgcolor: "#F5F5F5",
-                  borderRadius: 2,
-                  textAlign: "center",
-                }}
-              >
-                <Typography variant="body2" sx={{ color: "#666" }}>
-                  Loading existing QR codes...
-                </Typography>
-              </Box>
-            )}
-
-            {selectedLayoutId && !qrCodesLoading && maxExistingTableNumber > 0 && (
+            {maxExistingTableNumber > 0 && (
               <Box
                 sx={{
                   p: 2,
@@ -329,7 +245,7 @@ const CafeTableManagement = () => {
                 </Typography>
                 <Typography variant="body2" sx={{ color: "#E65100" }}>
                   Tables 1-{maxExistingTableNumber} already have QR codes for
-                  this layout
+                  your cafe
                 </Typography>
               </Box>
             )}
@@ -361,22 +277,23 @@ const CafeTableManagement = () => {
                 }}
                 error={errors.totalTables}
                 helperText={errors.totalTables}
-                disabled={isCreating || !selectedLayoutId || qrCodesLoading}
-                SelectProps={{
-                  native: true,
-                }}
+                disabled={isCreating}
+                SelectProps={{ native: true }}
               >
                 <option value="">Select number of tables</option>
-                {Array.from({ length: 500 }, (_, i) => i + 1).map((num) => {
+
+                {Array.from({ length: 50 }, (_, i) => {
+                  const num = i + 1;
                   const isDisabled = num <= maxExistingTableNumber;
 
                   return (
                     <option key={num} value={num} disabled={isDisabled}>
-                      {num} {isDisabled ? "(Already generated)" : ""}
+                      {num} {isDisabled ? "(Already created)" : ""}
                     </option>
                   );
                 })}
               </InputField>
+
               {totalTables && !errors.totalTables && (
                 <Typography
                   variant="caption"
@@ -403,7 +320,7 @@ const CafeTableManagement = () => {
             onClick={handleSubmit}
             variant="contained"
             sx={{ backgroundColor: "#6F4E37" }}
-            disabled={isCreating || !selectedLayoutId || !totalTables || qrCodesLoading}
+            disabled={isCreating || !totalTables}
           >
             {isCreating ? "Generating..." : "Generate"}
           </Button>
