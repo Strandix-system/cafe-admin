@@ -99,8 +99,6 @@ export default function LayoutForm({
     mode: "all",
   });
 
-  console.log("values", watch());
-
   // Use custom hook for image upload management
   const { previews, handleImageChange, handleReplaceImage, setPreview } =
     useImageUpload(setValue);

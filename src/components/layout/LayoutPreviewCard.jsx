@@ -30,10 +30,14 @@ export default function LayoutPreviewCard({
         borderRadius: 3,
         overflow: "hidden",
         border: isActive
-          ? "3px solid #4CAF50" // Green for active
+          ? "3px solid #4CAF50"
           : isSelected
-            ? "3px solid #6F4E37" // Brown for selected
-            : "1px solid #ddd", // Default gray
+            ? "3px solid #6F4E37"
+            : "1px solid #ddd",
+
+        boxShadow: isActive
+          ? "0 0 0 2px rgba(76, 175, 80, 0.3), 0 8px 20px rgba(0,0,0,0.15)"
+          : "0 4px 10px rgba(0,0,0,0.1)",
         transition: "0.3s",
         cursor: "pointer",
         "&:hover .overlay": {
@@ -67,15 +71,6 @@ export default function LayoutPreviewCard({
           }}
           onClick={(e) => {
             e.stopPropagation();
-            if (showEditButton) {
-              // My Layouts section - set as active
-              if (!isActive && onSetActive) {
-                onSetActive(layout._id);
-              }
-            } else {
-              // Default templates or SuperAdmin - just select
-              onSelect(layout._id);
-            }
           }}
         >
           <Radio
@@ -99,6 +94,28 @@ export default function LayoutPreviewCard({
         </Box>
       </Tooltip>
 
+      {isActive && showEditButton && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            bgcolor: "#4CAF50",
+            color: "white",
+            px: 1.5,
+            py: 0.5,
+            borderRadius: 2,
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: 0.5,
+            zIndex: 101,
+            boxShadow: 2,
+          }}
+        >
+          ACTIVE
+        </Box>
+      )}
+
       {/* HOME IMAGE */}
       <CardMedia
         component="img"
@@ -106,6 +123,19 @@ export default function LayoutPreviewCard({
         image={layout.homeImage}
         alt={layout.layoutTitle}
       />
+
+      {isActive && (
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.05))",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        />
+      )}
 
       {/* HOVER OVERLAY */}
       <Box
