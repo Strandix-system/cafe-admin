@@ -27,6 +27,13 @@ export const API_ROUTES = {
     superAdminStats: "/admin/get-users",
     createLayout: "layout/create",
 
+    createAdmins: "admin/create",
+    menulist: "menu/my-menus",
+    user_list: "customer/get-all",
+    createQRCodes: "qr/create",
+    getQRCodes: "qr/get-all",
+    getQRCount: "qr/count",
+
     createCategory: "category/create",
     getCategories: "category",
     getCategoryById: "category/get-by-id",
