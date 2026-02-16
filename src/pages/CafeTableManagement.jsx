@@ -14,27 +14,15 @@ const CafeTableManagement = () => {
   const [errors, setErrors] = useState({});
   const { user } = useAuth();
 
-  const { data: qrCodesData } = useFetch(
+  const { data: qrCodesData, refetch } = useFetch(
     "get-qr-codes",
     API_ROUTES.getQRCodes,
-    queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] }),
     { adminId: user?.id },
-    { 
+    {
       enabled: !!user?.id,
-      // Transform the data to match TableComponent's expected format
-      select: (data) => {
-        if (!data?.result) return { result: { qrs: [], totalResults: 0 } };
-        
-        return {
-          result: {
-            results: data.result, // Put the array in results
-            totalResults: data.result.length // Add totalResults count
-          }
-        };
-      }
     }
   );
-  console.log("Fetched QR Codes Data:", qrCodesData);
+
   // Create QR codes mutation
   const { mutate: createQRCodes, isPending: isCreating } = usePost(
     API_ROUTES.createQRCodes,
@@ -45,6 +33,7 @@ const CafeTableManagement = () => {
         settotalTables("");
         setErrors({});
         queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] });
+        refetch();
       },
       onError: (error) => {
         console.error("Full error object:", error);
@@ -188,8 +177,8 @@ const CafeTableManagement = () => {
       />
 
       {/* Generate QR Codes Dialog */}
-      <Dialog 
-        open={openDialog} 
+      <Dialog
+        open={openDialog}
         onClose={() => !isCreating && setOpenDialog(false)}
         maxWidth="sm"
         fullWidth
@@ -228,8 +217,8 @@ const CafeTableManagement = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
-          <Button 
-            onClick={() => setOpenDialog(false)} 
+          <Button
+            onClick={() => setOpenDialog(false)}
             disabled={isCreating}
             sx={{ color: "#666" }}
           >
