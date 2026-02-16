@@ -202,7 +202,7 @@ const CafeTableManagement = () => {
         slug="QR Code"
         columns={columns}
         actions={actions}
-        params={{ adminId: user?.id, populate: "layoutId" }}
+        params={{ adminId: user?.id }}
         actionsType="icons"
         querykey="get-qr-codes"
         getApiEndPoint="getQRCodes"
