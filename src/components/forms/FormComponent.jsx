@@ -1,10 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  Close,
   Email,
-  PhotoCamera,
   Visibility,
   VisibilityOff,
+  Instagram,
+  Facebook,
+  Twitter,
 } from "@mui/icons-material";
 import {
   Button,
@@ -20,7 +21,6 @@ import {
   Box,
   Paper,
   Typography,
-  Avatar,
 } from "@mui/material";
 import {
   Building2,
@@ -29,9 +29,14 @@ import {
   MapPin,
   UserRoundPlus,
   Users,
+  Clock,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs from "dayjs";
 import Loader from "../common/Loader";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
@@ -39,6 +44,25 @@ import { adminSchema } from "../../utils/adminSchema/adminSchema";
 import ImageUploadSection from "../common/ImageUploadSection";
 import InputField from "../common/InputField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { parseHoursFromBackend } from "../../utils/utils";
+
+// Enable custom parse format plugin
+dayjs.extend(customParseFormat);
+
+const TIME_PICKER_STYLES = {
+  textField: {
+    size: "small",
+    fullWidth: true,
+    sx: {
+      "& .MuiOutlinedInput-root": {
+        borderRadius: 2,
+        bgcolor: "#F5EFE6",
+        "&:hover": { bgcolor: "#EFE5D8" },
+      },
+    },
+  },
+};
 
 export default function FormComponent({
   defaultValues = {},
@@ -52,6 +76,7 @@ export default function FormComponent({
     control,
     reset,
     setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
@@ -68,6 +93,21 @@ export default function FormComponent({
       gst: "",
       logo: null,
       profileImage: null,
+      hours: {
+        weekdays: {
+          open: null,
+          close: null,
+        },
+        weekends: {
+          open: null,
+          close: null,
+        },
+      },
+      socialLinks: {
+        instagram: "",
+        facebook: "",
+        twitter: "",
+      },
     },
     resolver: yupResolver(adminSchema),
     context: { isEdit },
@@ -75,8 +115,6 @@ export default function FormComponent({
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [logoPreview, setLogoPreview] = useState(null);
-  const [profilePreview, setProfilePreview] = useState(null);
   const { data: { data: statesData } = {} } = useFetch(
     "states",
     API_ROUTES.getstates,
@@ -93,23 +131,192 @@ export default function FormComponent({
     });
   };
 
-  const handleRemoveImage = (field) => {
-    setLogoPreview(null);
-    field.onChange(null);
+  const handleRemoveImage = (fieldName) => {
+    setValue(fieldName, null);
+    setPreview(fieldName, null);
   };
 
   useEffect(() => {
     if (isEdit) {
-      reset(defaultValues);
+      const transformedDefaults = {
+        ...defaultValues,
+        hours: {
+          weekdays: parseHoursFromBackend(defaultValues.hours?.weekdays),
+          weekends: parseHoursFromBackend(defaultValues.hours?.weekends),
+        },
+      };
+
+      reset(transformedDefaults);
       // Set image previews from deployed URLs
       if (defaultValues.logo) {
-        setLogoPreview(defaultValues.logo);
+        setPreview("logo", defaultValues.logo);
+        setValue("logo", defaultValues.logo, { shouldValidate: true });
       }
       if (defaultValues.profileImage) {
-        setProfilePreview(defaultValues.profileImage);
+        setPreview("profileImage", defaultValues.profileImage);
+        setValue("profileImage", defaultValues.profileImage, {
+          shouldValidate: true,
+        });
       }
     }
-  }, [defaultValues, reset, isEdit]);
+  }, [defaultValues, reset, isEdit, setPreview, setValue]);
+
+  // Render helper functions
+  const renderTextField = (
+    name,
+    label,
+    icon,
+    placeholder,
+    disabled = false,
+    gridSize = { xs: 12, sm: 6 },
+    type = "text",
+  ) => (
+    <Grid size={gridSize}>
+      <FormLabel
+        sx={{
+          color: "#6F4E37",
+          fontWeight: 600,
+          mb: 1,
+          display: "block",
+        }}
+      >
+        {label}
+      </FormLabel>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <InputField
+            field={field}
+            error={
+              name.includes(".")
+                ? name
+                  .split(".")
+                  .reduce((obj, key) => obj?.[key], errors)
+                : errors[name]
+            }
+            helperText={
+              name.includes(".")
+                ? name
+                  .split(".")
+                  .reduce((obj, key) => obj?.[key], errors)?.message
+                : errors[name]?.message
+            }
+            placeholder={placeholder}
+            disabled={disabled}
+            startIcon={icon}
+            type={type}
+          />
+        )}
+      />
+    </Grid>
+  );
+
+  const renderImageField = (
+    fieldName,
+    label,
+    inputId,
+    gridSize = { xs: 12, sm: 6 },
+  ) => (
+    <Grid size={gridSize}>
+      <Controller
+        name={fieldName}
+        control={control}
+        render={({ field }) => (
+          <ImageUploadSection
+            label={label}
+            field={field}
+            preview={previews[fieldName]}
+            setPreview={(preview) => setPreview(fieldName, preview)}
+            handleImageChange={(file) => handleImageChange(file, fieldName)}
+            handleRemoveImage={() => handleRemoveImage(fieldName)}
+            handleReplaceImage={() => handleReplaceImage(fieldName)}
+            inputId={inputId}
+            isEdit={isEdit}
+          />
+        )}
+      />
+      {errors[fieldName] && (
+        <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
+          {errors[fieldName]?.message}
+        </Box>
+      )}
+    </Grid>
+  );
+
+  const renderTimeField = (
+    openName,
+    closeName,
+    label,
+    gridSize = { xs: 12, md: 6 },
+  ) => (
+    <Grid size={gridSize}>
+      <FormLabel
+        sx={{
+          color: "#6F4E37",
+          fontWeight: 600,
+          mb: 1,
+          display: "block",
+        }}
+      >
+        {label}
+      </FormLabel>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <Controller
+          name={openName}
+          control={control}
+          render={({ field }) => (
+            <TimePicker
+              {...field}
+              label="Open"
+              value={field.value ? dayjs(field.value) : null}
+              onChange={(newValue) => {
+                field.onChange(newValue ? newValue.toISOString() : null);
+              }}
+              slotProps={{
+                ...TIME_PICKER_STYLES,
+                textField: {
+                  ...TIME_PICKER_STYLES.textField,
+                  error: !!openName
+                    .split(".")
+                    .reduce((obj, key) => obj?.[key], errors),
+                  helperText: openName
+                    .split(".")
+                    .reduce((obj, key) => obj?.[key], errors)?.message,
+                },
+              }}
+            />
+          )}
+        />
+        <Controller
+          name={closeName}
+          control={control}
+          render={({ field }) => (
+            <TimePicker
+              {...field}
+              label="Close"
+              value={field.value ? dayjs(field.value) : null}
+              onChange={(newValue) => {
+                field.onChange(newValue ? newValue.toISOString() : null);
+              }}
+              slotProps={{
+                ...TIME_PICKER_STYLES,
+                textField: {
+                  ...TIME_PICKER_STYLES.textField,
+                  error: !!closeName
+                    .split(".")
+                    .reduce((obj, key) => obj?.[key], errors),
+                  helperText: closeName
+                    .split(".")
+                    .reduce((obj, key) => obj?.[key], errors)?.message,
+                },
+              }}
+            />
+          )}
+        />
+      </Box>
+    </Grid>
+  );
 
   if (isLoading)
     return (
@@ -186,181 +393,42 @@ export default function FormComponent({
         >
           <Grid container spacing={4}>
             {/* File Uploads */}
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="logo"
-                control={control}
-                render={({ field }) => (
-                  <ImageUploadSection
-                    label="Cafe Logo"
-                    field={field}
-                    preview={previews["logo"]}
-                    setPreview={(preview) => setPreview("logo", preview)}
-                    handleImageChange={(file) => handleImageChange(file, "logo")}
-                    handleRemoveImage={() => handleRemoveImage("logo")}
-                    handleReplaceImage={() => handleReplaceImage("logo")}
-                    inputId="logo-upload"
-                    isEdit={isEdit}
-                  />
-                )}
-              />
-            </Grid>
+            {renderImageField("logo", "Cafe Logo", "logo-upload")}
+            {renderImageField(
+              "profileImage",
+              "Profile Image",
+              "profile-upload",
+            )}
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="profileImage"
-                control={control}
-                render={({ field }) => (
-                  <ImageUploadSection
-                    label="Profile Image"
-                    field={field}
-                    preview={previews["profileImage"]}
-                    setPreview={(preview) => setPreview("profileImage", preview)}
-                    handleImageChange={(file) => handleImageChange(file, "profileImage")}
-                    handleRemoveImage={() => handleRemoveImage("profileImage")}
-                    handleReplaceImage={() => handleReplaceImage("profileImage")}
-                    inputId="profile-upload"
-                    isEdit={isEdit}
-                  />
-                )}
-              />
-            </Grid>
+            {/* Basic Information */}
+            {renderTextField(
+              "firstName",
+              "First Name *",
+              <Users size={20} color="#6F4E37" />,
+              "Enter First Name",
+            )}
+            {renderTextField(
+              "lastName",
+              "Last Name *",
+              <Users size={20} color="#6F4E37" />,
+              "Enter Last Name",
+            )}
+            {renderTextField(
+              "email",
+              "Email *",
+              <Email sx={{ color: "#6F4E37", fontSize: 20 }} />,
+              "Enter Email",
+              isEdit,
+            )}
+            {renderTextField(
+              "cafeName",
+              "Cafe Name *",
+              <Building2 size={20} color="#6F4E37" />,
+              "Enter Cafe Name",
+              isEdit,
+            )}
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel sx={{ color: "#6F4E37", fontWeight: 600, mb: 1 }}>
-                First Name *
-              </FormLabel>
-
-              <Controller
-                name="firstName"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    field={field}
-                    error={errors.firstName}
-                    helperText={errors.firstName?.message}
-                    placeholder="Enter First Name"
-                    startIcon={<Users size={20} color="#6F4E37" />}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                Last Name *
-              </FormLabel>
-              <Controller
-                name="lastName"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    error={!!errors.lastName}
-                    helperText={errors.lastName?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                Email *
-              </FormLabel>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    disabled={isEdit}
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Email sx={{ color: "#6F4E37", fontSize: 20 }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                Cafe Name *
-              </FormLabel>
-              <Controller
-                name="cafeName"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    disabled={isEdit}
-                    error={!!errors.cafeName}
-                    helperText={errors.cafeName?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Building2 size={20} color="#6F4E37" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
+            {/* Password Field - Only in Create Mode */}
             {!isEdit && (
               <Grid size={{ xs: 12, sm: 6 }}>
                 <FormLabel
@@ -385,6 +453,7 @@ export default function FormComponent({
                       <OutlinedInput
                         {...field}
                         type={showPassword ? "text" : "password"}
+                        placeholder="Enter Password"
                         sx={{
                           borderRadius: 2,
                           bgcolor: "#F5EFE6",
@@ -419,6 +488,7 @@ export default function FormComponent({
               </Grid>
             )}
 
+            {/* Contact Information Section */}
             <Grid size={{ xs: 12 }}>
               <Box
                 sx={{
@@ -433,119 +503,26 @@ export default function FormComponent({
               </Box>
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                Phone Number *
-              </FormLabel>
-              <Controller
-                name="phoneNumber"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    error={!!errors.phoneNumber}
-                    helperText={errors.phoneNumber?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Contact size={20} color="#6F4E37" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </Grid>
+            {renderTextField(
+              "phoneNumber",
+              "Phone Number *",
+              <Contact size={20} color="#6F4E37" />,
+              "Enter Phone Number",
+            )}
+            {renderTextField(
+              "address",
+              "Address *",
+              <MapPin size={20} color="#6F4E37" />,
+              "Enter Address",
+            )}
+            {renderTextField(
+              "city",
+              "City *",
+              null,
+              "Enter City",
+            )}
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                Address *
-              </FormLabel>
-              <Controller
-                name="address"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    error={!!errors.address}
-                    helperText={errors.address?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <MapPin size={20} color="#6F4E37" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
-                sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
-                }}
-              >
-                City *
-              </FormLabel>
-              <Controller
-                name="city"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    error={!!errors.city}
-                    helperText={errors.city?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
+            {/* State Dropdown */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormLabel
                 sx={{
@@ -596,63 +573,89 @@ export default function FormComponent({
               />
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
+            {renderTextField(
+              "pincode",
+              "Pincode *",
+              null,
+              "Enter Pincode",
+            )}
+            {renderTextField(
+              "gst",
+              "GST Percentage *",
+              null,
+              "Enter GST Percentage",
+              false,
+              { xs: 12, sm: 6 },
+              "number",
+            )}
+
+            {/* Operating Hours Section */}
+            <Grid size={{ xs: 12 }}>
+              <Box
                 sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
+                  borderBottom: "2px solid #6F4E37",
+                  pb: 1,
+                  mb: 2,
                 }}
               >
-                Pincode *
-              </FormLabel>
-              <Controller
-                name="pincode"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    size="small"
-                    error={!!errors.pincode}
-                    helperText={errors.pincode?.message}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
-                        bgcolor: "#F5EFE6",
-                        "&:hover": { bgcolor: "#EFE5D8" },
-                      },
-                    }}
-                  />
-                )}
-              />
+                <Typography variant="h6" fontWeight={700} color="#6F4E37">
+                  Operating Hours
+                </Typography>
+              </Box>
             </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormLabel
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {renderTimeField(
+                "hours.weekdays.open",
+                "hours.weekdays.close",
+                "Weekdays Hours",
+              )}
+              {renderTimeField(
+                "hours.weekends.open",
+                "hours.weekends.close",
+                "Weekends Hours",
+              )}
+            </LocalizationProvider>
+
+            {/* Social Media Links Section */}
+            <Grid size={{ xs: 12 }}>
+              <Box
                 sx={{
-                  color: "#6F4E37",
-                  fontWeight: 600,
-                  mb: 1,
-                  display: "block",
+                  borderBottom: "2px solid #6F4E37",
+                  pb: 1,
+                  mb: 2,
                 }}
               >
-                GST Percentage *
-              </FormLabel>
-              <Controller
-                name="gst"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    field={field}
-                    error={errors.gst}
-                    helperText={errors.gst?.message}
-                    placeholder="Enter GST Percentage"
-                    type="number"
-                  />
-                )}
-              />
+                <Typography variant="h6" fontWeight={700} color="#6F4E37">
+                  Social Media Links
+                </Typography>
+              </Box>
             </Grid>
+
+            {renderTextField(
+              "socialLinks.instagram",
+              "Instagram Link",
+              <Instagram sx={{ color: "#6F4E37" }} />,
+              "https://instagram.com/yourcafe",
+              false,
+              { xs: 12, md: 4 },
+            )}
+            {renderTextField(
+              "socialLinks.facebook",
+              "Facebook Link",
+              <Facebook sx={{ color: "#6F4E37" }} />,
+              "https://facebook.com/yourcafe",
+              false,
+              { xs: 12, md: 4 },
+            )}
+            {renderTextField(
+              "socialLinks.twitter",
+              "Twitter Link",
+              <Twitter sx={{ color: "#6F4E37" }} />,
+              "https://twitter.com/yourcafe",
+              false,
+              { xs: 12, md: 4 },
+            )}
           </Grid>
         </Box>
       </Paper>

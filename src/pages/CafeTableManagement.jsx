@@ -27,72 +27,14 @@ const CafeTableManagement = () => {
   const [errors, setErrors] = useState({});
   const { user } = useAuth();
 
-  // Fetch admin's layouts
-  const { data: layoutData,
-    isLoading: layoutsLoading } = useFetch(
-      "admin-layouts",
-      API_ROUTES.getLayoutByAdmin,
-      {},
-      {
-        adminId: user?.id,
-      },
-      {
-        enabled: !!user?.id,
-      }
-    );
-
-  const layouts = layoutData?.result?.results || [];
-
-
-  // Fetch QR codes for the selected layout
-  const {
-    data: layoutQRCodesData,
-    isLoading: qrCodesLoading,
-  } = useFetch(
-    `layout-qr-codes-${selectedLayoutId}`,
+  const { data: qrCodesData, refetch } = useFetch(
+    "get-qr-codes",
     API_ROUTES.getQRCodes,
-    {},
+    { adminId: user?.id },
     {
-      adminId: user?.id,
-      layoutId: selectedLayoutId,
-      populate: "layoutId",
-    },
-    {
-      enabled: !!selectedLayoutId && !!user?.id,
+      enabled: !!user?.id,
     }
   );
-  const qrCodes = layoutQRCodesData?.result?.results || [];
-
-  const existingQRCodesForLayout = qrCodes || [];
-  // Filter existing QR codes for the selected layout
-  // const existingQRCodesForLayout = useMemo(() => {
-  //   if (!selectedLayoutId || !qrCodes) return [];
-  //   return qrCodes.filter((qr) => qr.layoutId?._id === selectedLayoutId);
-  // }, [selectedLayoutId, qrCodes]);
-
-  // Get the highest table number already created for this layout
-  const maxExistingTableNumber = useMemo(() => {
-    if (existingQRCodesForLayout.length === 0) return 0;
-
-    return Math.max(
-      ...existingQRCodesForLayout.map((qr) => qr.tableNumber || 0)
-    );
-  }, [existingQRCodesForLayout]);
-
-  // Auto-open dialog and set layout if coming from layout creation with layoutId
-  useEffect(() => {
-    if (urlLayoutId) {
-      setSelectedLayoutId(urlLayoutId);
-      setOpenDialog(true);
-    }
-  }, [urlLayoutId]);
-
-  // Refetch QR codes when selectedLayoutId changes
-  useEffect(() => {
-    if (selectedLayoutId) {
-      queryClient.invalidateQueries({ queryKey: [`layout-qr-codes-${selectedLayoutId}`] });
-    }
-  }, [selectedLayoutId]);
 
   // Create QR codes mutation
   const { mutate: createQRCodes, isPending: isCreating } = usePost(
@@ -111,9 +53,7 @@ const CafeTableManagement = () => {
         }
 
         queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] });
-        queryClient.invalidateQueries({
-          queryKey: [`layout-qr-codes-${selectedLayoutId}`],
-        });
+        refetch();
       },
       onError: (error) => {
         toast.error(error?.message || "Failed to generate QR codes");
