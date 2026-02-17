@@ -44,27 +44,25 @@ const withQuery = (endpoint, params = {}) => {
 };
 
 export const APIRequest = {
-  // get: async (endpoint, params = {}) => {
-  //   const queryString = buildQueryString(params);
-  //   console.log("ENDPOINT:", endpoint);
-
-  //   const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {
-  //     method: "GET",
-  //     headers: getHeaders(),
-  //   });
-  //   return handleResponse(response);
-  // },
-
   get: async (endpoint, params = {}) => {
-  console.log("ENDPOINT:", endpoint);
+    const queryString = buildQueryString(params);
+    const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {
+      method: "GET",
+      headers: getHeaders(),
+    });
+    return handleResponse(response);
+  },
 
-  const response = await fetch(withQuery(endpoint, params), {
-    method: "GET",
-    headers: getHeaders(),
-  });
+//   get: async (endpoint, params = {}) => {
+//   console.log("ENDPOINT:", endpoint);
 
-  return handleResponse(response);
-},
+//   const response = await fetch(withQuery(endpoint, params), {
+//     method: "GET",
+//     headers: getHeaders(),
+//   });
+
+//   return handleResponse(response);
+// },
   post: async (endpoint, data, params = {}) => {
     const queryString = buildQueryString(params);
     const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {

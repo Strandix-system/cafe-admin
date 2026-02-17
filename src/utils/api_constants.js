@@ -9,8 +9,8 @@ export const API_ROUTES = {
 
     getUserById: "admin/get-user",
     updateUsers: "admin/update",
+    updateStatus:"admin/update-status",
 
-    delete: "/admin/delete",
     getStats: "admin/dashboard/stats",
 
     createLayout: "layout/create",
@@ -23,15 +23,13 @@ export const API_ROUTES = {
     getAllOrders: "order/get-all",
     updateOrder: "order/status",
 
-    delete: "/admin/delete",
+    deleteCafe: "/admin/delete",
     superAdminStats: "/admin/get-users",
     createLayout: "layout/create",
 
     createAdmins: "admin/create",
     menulist: "menu/my-menus",
     user_list: "customer/get-all",
-    createQRCodes: "qr/create",
-    getQRCodes: "qr/get-all",
     getQRCount: "qr/count",
 
     createCategory: "category/create",
@@ -42,9 +40,7 @@ export const API_ROUTES = {
     getstates: "get-states",
 
     createAdmins: "admin/create",
-    menulist: "menu/my-menus",
-    user_list: "customer/get-all",
-    deleteUser: "customer/delete",
+
     createQRCodes: "qr/create",
     getQRCodes: "qr/get-all",
 
@@ -52,5 +48,12 @@ export const API_ROUTES = {
     getMenuById: "menu/get-by-id",
     MENU_DELETE: "menu/delete",
     updateMenu: "menu/update",
+    menulist: "menu/my-menus",
+
+    createCustomer:"customer/create",
+    updateUser:"customer/update",
     getCustomers: "customer/get-all",
+    user_list: "customer/get-all",
+
+    deleteUser: "customer/delete",
 };

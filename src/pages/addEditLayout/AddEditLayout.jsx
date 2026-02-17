@@ -1,14 +1,4 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Box,
-} from "@mui/material";
-import { CheckCircle, QrCode } from "lucide-react";
 import Loader from "../../components/common/Loader";
 import LayoutForm from "../../components/layout/LayoutForm";
 import { useAuth } from "../../context/AuthContext";
@@ -40,8 +30,8 @@ export default function AddEditLayout() {
     `${API_ROUTES.updateLayout}/${layoutId}`,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["getAdminLayouts"] });
-        queryClient.invalidateQueries({ queryKey: [`layout-${layoutId}`] });
+        queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
+        queryClient.invalidateQueries({ queryKey: `layout-${layoutId}` });
         toast.success("Layout updated successfully");
         navigate("/layouts");
       },
@@ -56,13 +46,14 @@ export default function AddEditLayout() {
     {
       onSuccess: (response) => {
         const newLayoutId = response?.result?._id || response?.result?.id;
-        queryClient.invalidateQueries({ queryKey: ["getAdminLayouts"] });
+        queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
 
         // Open success dialog with the new layout ID
         setSuccessDialog({
           open: true,
           layoutId: newLayoutId,
         });
+        navigate("/layouts")
       },
       onError: (err) => {
         toast.error(err?.message || "Failed to create layout");
@@ -73,34 +64,52 @@ export default function AddEditLayout() {
   const isAdminEditing =
     layoutData?.defaultLayout === false && isAdmin && layoutId;
 
-  const handleNavigateToQRGenerator = () => {
-    setSuccessDialog({ open: false, layoutId: null });
-    navigate(`/qr-codes/${successDialog.layoutId}`);
-  };
+ const preparePayload = (formValue, additionalFields = {}) => {
+  const payload = { ...formValue, ...additionalFields };
 
-  const preparePayload = (formValue, additionalFields = {}) => {
-    const payload = { ...formValue, ...additionalFields };
-    const hasFiles =
-      formValue.homeImage instanceof File ||
-      formValue.aboutImage instanceof File;
+  const hasFiles =
+    formValue.homeImage instanceof File ||
+    formValue.aboutImage instanceof File;
 
-    if (hasFiles) {
-      const formData = new FormData();
-      Object.entries(payload).forEach(([key, value]) => {
-        if (value instanceof File) {
-          formData.append(key, value);
-        } else if (typeof value === "object" && value !== null) {
-          formData.append(key, JSON.stringify(value));
-        } else {
-          formData.append(key, value);
-        }
-      });
-      return formData;
+  if (!hasFiles) return payload;
+
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value === undefined) return;
+
+    if (key === "adminId") {
+      formData.append("adminId", String(value?._id || value));
+      return;
     }
 
-    return payload;
-  };
+    if (key === "defaultLayoutId") {
+      if (value) {
+        formData.append("defaultLayoutId", String(value));
+      }
+      return;
+    }
 
+    // Files
+    if (value instanceof File) {
+      formData.append(key, value);
+      return;
+    }
+
+    // Objects (hours, socialLinks etc.)
+    if (typeof value === "object" && value !== null) {
+      formData.append(key, JSON.stringify(value));
+      return;
+    }
+
+    // Primitives
+    formData.append(key, value);
+  });
+
+  return formData;
+};
+
+  
   const onSubmit = (formValue) => {
     // Admin editing their own layout
     if (isAdminEditing) {
@@ -115,8 +124,8 @@ export default function AddEditLayout() {
     // Admin creating from template
     else if (isAdmin && layoutId) {
       const payload = preparePayload(formValue, {
-        adminId: adminId,
-        defaultLayoutId: layoutId,
+        adminId: String(adminId),
+        defaultLayoutId: layoutId || null,
         defaultLayout: false,
       });
       createLayoutMutate(payload);
@@ -157,6 +166,7 @@ export default function AddEditLayout() {
           facebook: "",
           twitter: "",
         },
+        gst: ""
       };
     }
 
@@ -185,47 +195,6 @@ export default function AddEditLayout() {
         defaultValues={getDefaultValues()}
         isAdmin={isAdmin}
       />
-
-      {/* Success Dialog */}
-      <Dialog
-        open={successDialog.open}
-        onClose={() => { }} // Disable closing via backdrop or escape
-        maxWidth="sm"
-        fullWidth
-        disableEscapeKeyDown
-      >
-        <DialogTitle>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <CheckCircle size={32} color="#10B981" />
-            <Typography variant="h6" sx={{ color: "#6F4E37", fontWeight: 600 }}>
-              Layout Created Successfully!
-            </Typography>
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" sx={{ mb: 2, color: "#666" }}>
-            Your layout has been created successfully. You can now generate QR
-            codes for your tables.
-          </Typography>
-          <Typography variant="body2" sx={{ color: "#999" }}>
-            QR codes will be associated with this layout and allow customers to
-            access your menu.
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ p: 2.5, justifyContent: "center" }}>
-          <Button
-            onClick={handleNavigateToQRGenerator}
-            variant="contained"
-            startIcon={<QrCode size={18} />}
-            sx={{
-              backgroundColor: "#6F4E37",
-              "&:hover": { backgroundColor: "#5A3D2B" },
-            }}
-          >
-            Generate QR Codes
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }

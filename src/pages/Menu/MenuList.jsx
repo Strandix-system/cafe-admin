@@ -100,13 +100,12 @@ const MenuList = () => {
         columns={columns}
         actions={actions}
         actionsType="icons"
-        querykey={["menu-list"]}
+        querykey="menu-list"
         getApiEndPoint="menulist"
         deleteApiEndPoint="MENU_DELETE"
         deleteAction={true}
         enableExportTable={true}
       />
-
 
       <CreateEditMenuModal
         open={open}

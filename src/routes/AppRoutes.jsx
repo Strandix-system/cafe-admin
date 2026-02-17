@@ -13,7 +13,7 @@ import CategoriesList from "../pages/CategoriesList";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
-import CreateMenu from "../pages/menu/CreateMenu";
+// import CreateMenu from "../pages/menu/CreateMenu";
 import MenuList from "../pages/menu/MenuList";
 import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
@@ -123,17 +123,6 @@ const AppRoutes = () => {
           <ProtectedRoutes>
             <DashboardLayout>
               <MenuList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/create-menu/:menuId"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CreateMenu />
             </DashboardLayout>
           </ProtectedRoutes>
         }
