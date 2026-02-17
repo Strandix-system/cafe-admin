@@ -24,7 +24,7 @@ const AdminList = () => {
       onSuccess: () => {
         // 🔁 refresh admin table after update
         toast.success("Status updated");
-        queryClient.invalidateQueries({ queryKey: ["get-users"] });
+        queryClient.invalidateQueries({ queryKey: "get-users" });
       },
       onError: (error) => {
         console.error("Status update failed:", error);
@@ -33,10 +33,11 @@ const AdminList = () => {
   );
 
   const handleToggleStatus = (row) => {
-    const currentStatus = row.original.isActive;
+    const currentStatus = !row.original.isActive;
     setSelectedUserId(row.original._id);
+    setActiveTab(currentStatus ? "active" : "inactive");
     updateUserStatus({
-      isActive: !currentStatus, // ✅ always true / false
+      isActive: currentStatus,
     });
   };
 
@@ -116,7 +117,7 @@ const AdminList = () => {
       },
     },
     {
-      label: "Toggle Status",
+      label: activeTab === "active" ? "Deactivate" : "Activate",
       icon: Power,
       onClick: handleToggleStatus,
     },
@@ -177,7 +178,7 @@ const AdminList = () => {
         params={queryParams}
         deleteApiEndPoint="deleteCafe"
         deleteAction={isSuperAdmin}
-        // enableExportTable={true}
+      // enableExportTable={true}
       />
     </div>
   );
