@@ -81,7 +81,7 @@ export default function LayoutsPage() {
     let url;
     if (layout.defaultLayout) {
       if (layout.layoutTitle === "COZZY") {
-        url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_COZY_QR}`;
+        url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_COZZY_QR}`;
         window.open(url, "_blank");
       } else if (layout.layoutTitle === "ELEGANT") {
         url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_ELEGANT_QR}`;
