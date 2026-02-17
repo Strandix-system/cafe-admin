@@ -22,170 +22,173 @@ import OrderHistoryList from "../pages/OrderHistoryList";
 // import { MenuList } from "@mui/material";
 import CafeTableManagement from "../pages/CafeTableManagement";
 import UserList from "../pages/UserList";
+import MyOrders from "../pages/dashboard/MyOrders";
+// import UserProfile from "../pages/dashboard/UserProfile";
+import Profile from "../pages/Profile/Profile";
 
 const AppRoutes = () => {
-  return (
-    <Routes>
-      {/* PUBLIC ROUTES */}
-      <Route path="/" element={<Login />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+    return (
+        <Routes>
+            {/* PUBLIC ROUTES */}
+            <Route path="/" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* PROTECTED ROUTES - Dashboard Stats/Overview */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            {/* PROTECTED ROUTES - Dashboard Stats/Overview */}
+            <Route
+                path="/dashboard"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <Dashboard />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      {/* PROTECTED ROUTES - Admin Management (Super Admin Only) */}
-      <Route
-        path="/cafes"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <AdminList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            {/* PROTECTED ROUTES - Admin Management (Super Admin Only) */}
+            <Route
+                path="/cafes"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <AdminList />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/cafe/create-edit/:userId?"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <AddEditAdmin />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/cafe/create-edit/:userId?"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <AddEditAdmin />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/cafe/view-customers/:userId?"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <UserList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-      {/* PROTECTED ROUTES - Layouts Management */}
-      <Route
-        path="/layouts"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <LayoutsPage />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/cafe/view-customers/:userId?"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <UserList />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
+            {/* PROTECTED ROUTES - Layouts Management */}
+            <Route
+                path="/layouts"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <LayoutsPage />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/layouts/create-edit/:layoutId?"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <AddEditLayout />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/layouts/create-edit/:layoutId?"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <AddEditLayout />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      {/* PROTECTED ROUTES - Categories Management */}
-      <Route
-        path="/categories"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CategoriesList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-      <Route
-        path="/table-management"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CafeTableManagement />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            {/* PROTECTED ROUTES - Categories Management */}
+            <Route
+                path="/categories"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <CategoriesList />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
+            <Route
+                path="/table-management"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <CafeTableManagement />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/menu"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <MenuList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/menu"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <MenuList />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/create-menu"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CreateMenu />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/create-menu"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <CreateMenu />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-         <Route
-        path="/create-menu/:menuId"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CreateMenu />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/create-menu/:menuId"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <CreateMenu />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/ordermanagement"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <OrderManagementPage />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/ordermanagement"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <OrderManagementPage />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/order-history"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <OrderHistoryList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            <Route
+                path="/order-history"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <OrderHistoryList />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
 
-      <Route
-        path="/customers"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <UserList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-      {/* <Route
+            <Route
+                path="/customers"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <UserList />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
+            {/* <Route
         path="/cafe/orders/:userId"
         element={
           <ProtectedRoutes>
@@ -196,22 +199,40 @@ const AppRoutes = () => {
         }
       /> */}
 
-      <Route
-        path="/user"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <User />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-
-      {/* CATCH ALL - Redirect to home */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
+            <Route
+                path="/user"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <User />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
+            <Route
+                path="/cafe/my-orders/:userId"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <MyOrders />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout>
+                            <Profile />
+                        </DashboardLayout>
+                    </ProtectedRoutes>
+                }
+            />
+            {/* CATCH ALL - Redirect to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+    );
 };
 
 export default AppRoutes;

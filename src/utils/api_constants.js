@@ -44,4 +44,9 @@ export const API_ROUTES = {
     MENU_DELETE: "menu/delete",
     updateMenu: "menu/update",
     getCustomers: "customer/get-all",
+    myOrders: "order/my-orders",
+    // uploadEmailFile: "admin/user/upload",
+    getMyProfile: "profile/me",
+    updateProfile: "profile/update",
+    profileImage: "profile/image",
 };

@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 const UserList = () => {
     const navigate = useNavigate();
     const { isAdmin } = useAuth();
+
     //  Table Columns
     const columns = useMemo(
         () => [
@@ -21,6 +22,8 @@ const UserList = () => {
                 accessorKey: "phoneNumber",
                 header: "Phone Number",
             },
+
+
             // {
             //   accessorKey: "tableNumber",
             //   header: "Table Number",
@@ -43,6 +46,17 @@ const UserList = () => {
         []
     );
 
+    const actions = useMemo(() => {
+        return [
+            {
+                label: "Show Orders",
+                icon: Plus, // you can change icon later
+                onClick: (row) => {
+                    navigate(`/cafe/my-orders/${row.original._id}`);
+                },
+            },
+        ];
+    }, [navigate]);
     // Conditionally set actions based on role
     // const actions = useMemo(() => {
     //     // Only enable actions for admin, not for superadmin
@@ -93,7 +107,7 @@ const UserList = () => {
             <TableComponent
                 slug="User"
                 columns={columns}
-                actions={[]}
+                actions={actions}
                 actionType="menu"
                 querykey="get-customers"
                 getApiEndPoint="getCustomers"
