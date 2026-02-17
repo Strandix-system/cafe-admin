@@ -14,7 +14,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 // import CreateMenu from "../pages/menu/CreateMenu";
-import MenuList from "../pages/menu/MenuList";
+import MenuList from "../pages/Menu/MenuList";
 import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
