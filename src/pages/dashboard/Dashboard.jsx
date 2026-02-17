@@ -8,12 +8,15 @@ import StatCard from "./StatCard";
 
 export default function Dashboard() {
     const { isSuperAdmin, isAdmin } = useAuth();
+
+    const roleReady = isSuperAdmin || isAdmin;
+
     const { data, isLoading } = useFetch(
-        "dashboard-stats",
+        ["dashboard-stats", isSuperAdmin ? "super" : "admin"],
         API_ROUTES.dashboardStats,
         {},
         {
-            enabled: true,
+            enabled: roleReady, // 🔥 THIS IS THE FIX
         }
     );
     const statsData = data?.data ?? [];

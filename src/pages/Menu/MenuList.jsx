@@ -1,4 +1,4 @@
-import TableComponent from "../TableComponent/TableComponent";
+import TableComponent from "../../components/TableComponent/TableComponent";
 import { Box, Button, Chip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Eye, Trash2, Plus } from "lucide-react";
@@ -105,6 +105,7 @@ const MenuList = () => {
         deleteApiEndPoint="MENU_DELETE"
         deleteAction={true}
         enableExportTable={true}
+        
       />
 
       <CreateEditMenuModal

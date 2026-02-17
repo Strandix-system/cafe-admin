@@ -18,7 +18,7 @@ export default function EditLayout() {
     API_ROUTES.updateLayout(id),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["getLayouts"] }); 
+        queryClient.invalidateQueries({ queryKey: "getLayouts" }); 
         toast.success("Layout updated successfully");
         navigate("/layouts");
       },
