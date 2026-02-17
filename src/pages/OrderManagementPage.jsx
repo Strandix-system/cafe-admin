@@ -313,7 +313,7 @@ const OrderManagementPage = () => {
                     <TableComponent
                         slug="orders"
                         columns={historyColumns}
-                        actions={historyActions}
+                        actions={[]}
                         params={{
                             populate: "userId",
                         }}
