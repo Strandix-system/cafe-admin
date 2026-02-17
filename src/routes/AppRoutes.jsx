@@ -6,6 +6,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import LayoutsPage from "../pages/LayoutsPage";
+
 import AdminList from "../pages/AdminList";
 import CategoriesList from "../pages/CategoriesList";
 

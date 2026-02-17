@@ -1,8 +1,8 @@
 import TableComponent from "../components/TableComponent/TableComponent"
-import { Box, Button, Switch, Chip, Typography } from "@mui/material"
+import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate, useParams } from 'react-router-dom'
-import { Edit, Eye, Power, Trash2, Plus, User } from 'lucide-react'
+import { Edit, Power, Plus, User } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
@@ -22,7 +22,6 @@ const AdminList = () => {
     `${API_ROUTES.updateStatus}/${selectedUserId}`,
     {
       onSuccess: () => {
-        // 🔁 refresh admin table after update
         toast.success("Status updated");
         queryClient.invalidateQueries({ queryKey: "get-users" });
       },
@@ -35,10 +34,14 @@ const AdminList = () => {
   const handleToggleStatus = (row) => {
     const currentStatus = !row.original.isActive;
     setSelectedUserId(row.original._id);
-    setActiveTab(currentStatus ? "active" : "inactive");
     updateUserStatus({
       isActive: currentStatus,
     });
+  };
+
+  const handleTabChange = (_, newValue) => {
+    setActiveTab(newValue);
+    setSelectedCafeId(null); // reset drill-down when switching tabs
   };
 
   const customerColumns = useMemo(
@@ -60,7 +63,6 @@ const AdminList = () => {
     ],
     []
   );
-
 
   const cafeColumns = useMemo(
     () => [
@@ -91,6 +93,7 @@ const AdminList = () => {
           return (
             <Chip
               label={isActive ? "Active" : "Inactive"}
+              color={isActive ? "success" : "failure"}
               size="small"
             />
           );
@@ -100,13 +103,12 @@ const AdminList = () => {
     []
   );
 
-  // 🔹 Row actions (icons)
   const actions = [
     {
       label: "View Customer",
       icon: User,
       onClick: (row) => {
-        setSelectedCafeId(row.original._id); // ✅ cafeId
+        setSelectedCafeId(row.original._id);
       },
     },
     {
@@ -122,16 +124,14 @@ const AdminList = () => {
       onClick: handleToggleStatus,
     },
   ];
-  const endPoint = selectedCafeId
-    ? "user_list"
-    : "getUsers"
+
+  const endPoint = selectedCafeId ? "user_list" : "getUsers";
 
   const queryParams = selectedCafeId
     ? { adminId: selectedCafeId }
-    : {};
+    : { isActive: activeTab === "active" }; // 👈 pass status filter to API
 
   return (
-
     <div className="overflow-hidden">
       <Box
         sx={{
@@ -144,25 +144,43 @@ const AdminList = () => {
         <Typography variant="h6" fontWeight={600}>
           Cafe Management
         </Typography>
-        {isSuperAdmin && (
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#6F4E37" }}
-            startIcon={<Plus size={18} />}
-            onClick={() => navigate("/cafe/create-edit")}
-          >
-            Create Cafe
-          </Button>
-        )}
-        {selectedCafeId && (
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedCafeId(null)}
-          >
-            Back to Cafes
-          </Button>
-        )}
+
+        <Box sx={{ display: "flex", gap: 1 }}>
+          {isSuperAdmin && (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#6F4E37" }}
+              startIcon={<Plus size={18} />}
+              onClick={() => navigate("/cafe/create-edit")}
+            >
+              Create Cafe
+            </Button>
+          )}
+          {selectedCafeId && (
+            <Button
+              variant="outlined"
+              onClick={() => setSelectedCafeId(null)}
+            >
+              Back to Cafes
+            </Button>
+          )}
+        </Box>
       </Box>
+
+      {/* Only show tabs when viewing the cafe list, not when drilling into customers */}
+      {!selectedCafeId && (
+        <Box sx={{ px: 3, borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
+          >
+            <Tab label="Active Cafes" value="active" />
+            <Tab label="Inactive Cafes" value="inactive" />
+          </Tabs>
+        </Box>
+      )}
 
       <TableComponent
         slug="admin"
@@ -172,13 +190,12 @@ const AdminList = () => {
         querykey={
           selectedCafeId
             ? `get-cafe-users-${selectedCafeId}`
-            : "get-users"
+            : `get-users-${activeTab}` // 👈 unique key per tab so they cache independently
         }
         getApiEndPoint={endPoint}
         params={queryParams}
         deleteApiEndPoint="deleteCafe"
         deleteAction={isSuperAdmin}
-      // enableExportTable={true}
       />
     </div>
   );
