@@ -84,6 +84,7 @@ export default function FormComponent({
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
       cafeName: "",
       phoneNumber: "",
       address: "",
@@ -115,6 +116,7 @@ export default function FormComponent({
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { data: { data: statesData } = {} } = useFetch(
     "states",
     API_ROUTES.getstates,
@@ -124,8 +126,9 @@ export default function FormComponent({
     useImageUpload(setValue);
 
   const handleFormSubmit = (data) => {
+    const { confirmPassword, ...rest } = data;
     onSubmit({
-      ...data,
+      ...rest,
       phoneNumber: Number(data.phoneNumber),
       gst: Number(data.gst),
     });
@@ -430,62 +433,112 @@ export default function FormComponent({
 
             {/* Password Field - Only in Create Mode */}
             {!isEdit && (
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <FormLabel
-                  sx={{
-                    color: "#6F4E37",
-                    fontWeight: 600,
-                    mb: 1,
-                    display: "block",
-                  }}
-                >
-                  Password *
-                </FormLabel>
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      fullWidth
-                      error={!!errors.password}
-                      size="small"
-                    >
-                      <OutlinedInput
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter Password"
-                        sx={{
-                          borderRadius: 2,
-                          bgcolor: "#F5EFE6",
-                          "&:hover": { bgcolor: "#EFE5D8" },
-                        }}
-                        startAdornment={
-                          <InputAdornment position="start">
-                            <Lock size={20} color="#6F4E37" />
-                          </InputAdornment>
-                        }
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              edge="end"
-                              onClick={() => setShowPassword(!showPassword)}
-                            >
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                      />
-                      <FormHelperText>
-                        {errors.password?.message}
-                      </FormHelperText>
-                    </FormControl>
-                  )}
-                />
-              </Grid>
+              <>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormLabel
+                    sx={{
+                      color: "#6F4E37",
+                      fontWeight: 600,
+                      mb: 1,
+                      display: "block",
+                    }}
+                  >
+                    Password *
+                  </FormLabel>
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl
+                        fullWidth
+                        error={!!errors.password}
+                        size="small"
+                      >
+                        <OutlinedInput
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter Password"
+                          sx={{
+                            borderRadius: 2,
+                            bgcolor: "#F5EFE6",
+                            "&:hover": { bgcolor: "#EFE5D8" },
+                          }}
+                          startAdornment={
+                            <InputAdornment position="start">
+                              <Lock size={20} color="#6F4E37" />
+                            </InputAdornment>
+                          }
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                edge="end"
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                                {showPassword ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                        <FormHelperText>
+                          {errors.password?.message}
+                        </FormHelperText>
+                      </FormControl>
+                    )}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormLabel
+                    sx={{ color: "#6F4E37", fontWeight: 600, mb: 1, display: "block" }}
+                  >
+                    Confirm Password *
+                  </FormLabel>
+                  <Controller
+                    name="confirmPassword"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl
+                        fullWidth
+                        error={!!errors.confirmPassword}
+                        size="small"
+                      >
+                        <OutlinedInput
+                          {...field}
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Re-enter Password"
+                          sx={{
+                            borderRadius: 2,
+                            bgcolor: "#F5EFE6",
+                            "&:hover": { bgcolor: "#EFE5D8" },
+                          }}
+                          startAdornment={
+                            <InputAdornment position="start">
+                              <Lock size={20} color="#6F4E37" />
+                            </InputAdornment>
+                          }
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                edge="end"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              >
+                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                        <FormHelperText>
+                          {errors.confirmPassword?.message}
+                        </FormHelperText>
+                      </FormControl>
+                    )}
+                  />
+                </Grid>
+
+              </>
             )}
 
             {/* Contact Information Section */}
