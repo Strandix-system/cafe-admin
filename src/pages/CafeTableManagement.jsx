@@ -17,6 +17,8 @@ import { API_ROUTES } from "../utils/api_constants";
 import { queryClient } from "../lib/queryClient";
 import { useAuth } from "../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 const CafeTableManagement = () => {
   const { layoutId: urlLayoutId } = useParams();
@@ -25,6 +27,17 @@ const CafeTableManagement = () => {
   const [totalTables, setTotalTables] = useState("");
   const [errors, setErrors] = useState({});
   const { user } = useAuth();
+  const location = useLocation();
+  
+  useEffect(() => {
+    if (location.state?.openQRDialog) {
+      setOpenDialog(true);
+
+      // clear state so refresh/back doesn’t reopen dialog
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, navigate]);
+
 
   const { data: qrCodesData, refetch } = useFetch(
     "get-qr-codes",

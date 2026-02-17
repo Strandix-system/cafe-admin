@@ -77,7 +77,9 @@ export default function LayoutForm({
   isSubmitting = false,
   isAdmin = false,
 }) {
-  const isEdit = Object?.entries(defaultValues)?.length > 0;
+  // const isEdit = Object?.entries(defaultValues)?.length > 0;
+  const isEdit = Boolean(defaultValues?._id);
+
   const {
     control,
     handleSubmit,
@@ -305,7 +307,9 @@ export default function LayoutForm({
             "&:hover": { bgcolor: "#5A3D2B" },
           }}
         >
-          {isEdit && !isAdmin ? "Update Layout" : "Create Layout"}
+          {/* {isEdit && !isAdmin ? "Update Layout" : "Create Layout"} */}
+          {isEdit ? "Update Layout" : "Create Layout"}
+
         </Button>
       </div>
       <Grid container spacing={3}>

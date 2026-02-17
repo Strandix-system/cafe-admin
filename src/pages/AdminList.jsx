@@ -16,14 +16,14 @@ const AdminList = () => {
 
   const [activeTab, setActiveTab] = useState("active");
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedCafeId, setSelectedCafeId] = useState(null);
 
   const { mutate: updateUserStatus } = usePatch(
-    selectedUserId ? API_ROUTES.updateUsers(selectedUserId) : null,
+    `${API_ROUTES.updateStatus}/${selectedUserId}`,
     {
       onSuccess: () => {
         // 🔁 refresh admin table after update
         toast.success("Status updated");
-        queryClient.invalidateQueries({ queryKey: [`get-users-${adminId}`] });
         queryClient.invalidateQueries({ queryKey: ["get-users"] });
       },
       onError: (error) => {
@@ -33,14 +33,35 @@ const AdminList = () => {
   );
 
   const handleToggleStatus = (row) => {
-    const newStatus = !row.original.isActive;
+    const currentStatus = row.original.isActive;
     setSelectedUserId(row.original._id);
     updateUserStatus({
-      isActive: newStatus,
+      isActive: !currentStatus, // ✅ always true / false
     });
   };
 
-  const columns = useMemo(
+  const customerColumns = useMemo(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Customer Name",
+      },
+      {
+        accessorKey: "phoneNumber",
+        header: "Contact",
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Created At",
+        Cell: ({ cell }) =>
+          new Date(cell.getValue()).toLocaleDateString(),
+      },
+    ],
+    []
+  );
+
+
+  const cafeColumns = useMemo(
     () => [
       {
         id: "cafeName",
@@ -50,7 +71,8 @@ const AdminList = () => {
       {
         id: "ownerName",
         header: "Owner Name",
-        accessorFn: (row) => `${row.firstName || ""} ${row.lastName || ""}`,
+        accessorFn: (row) =>
+          `${row.firstName || ""} ${row.lastName || ""}`,
       },
       {
         accessorKey: "email",
@@ -66,37 +88,24 @@ const AdminList = () => {
         Cell: ({ row }) => {
           const isActive = row.original.isActive;
           return (
-            <Box display="flex" alignItems="center" gap={1}>
-              <Chip
-                label={isActive ? "Active" : "Inactive"}
-                size="small"
-                sx={{
-                  backgroundColor: isActive ? "#D1FFBE" : "#FFDADA",
-                  color: isActive ? "#3DB309" : "#FF0000",
-                }}
-              />
-            </Box>
+            <Chip
+              label={isActive ? "Active" : "Inactive"}
+              size="small"
+            />
           );
         },
       },
     ],
-    [],
+    []
   );
 
   // 🔹 Row actions (icons)
   const actions = [
     {
-      label: "View",
-      icon: Eye,
-      onClick: (row) => {
-        navigate(`/cafe/create-edit/${row.original._id}`);
-      },
-    },
-    {
       label: "View Customer",
       icon: User,
       onClick: (row) => {
-        navigate(`/cafe/view-customers/${row.original._id}`);
+        setSelectedCafeId(row.original._id); // ✅ cafeId
       },
     },
     {
@@ -107,13 +116,21 @@ const AdminList = () => {
       },
     },
     {
-      label: activeTab === "active" ? "Deactivate" : "Activate",
+      label: "Toggle Status",
       icon: Power,
       onClick: handleToggleStatus,
     },
   ];
+  const endPoint = selectedCafeId
+    ? "user_list"
+    : "getUsers"
+
+  const queryParams = selectedCafeId
+    ? { adminId: selectedCafeId }
+    : {};
 
   return (
+
     <div className="overflow-hidden">
       <Box
         sx={{
@@ -136,18 +153,31 @@ const AdminList = () => {
             Create Cafe
           </Button>
         )}
+        {selectedCafeId && (
+          <Button
+            variant="outlined"
+            onClick={() => setSelectedCafeId(null)}
+          >
+            Back to Cafes
+          </Button>
+        )}
       </Box>
-      
+
       <TableComponent
         slug="admin"
-        columns={columns}
+        columns={selectedCafeId ? customerColumns : cafeColumns}
         actions={actions}
         actionsType="menu"
-        querykey="get-users"
-        getApiEndPoint="getUsers"
-        deleteApiEndPoint="delete"
+        querykey={
+          selectedCafeId
+            ? `get-cafe-users-${selectedCafeId}`
+            : "get-users"
+        }
+        getApiEndPoint={endPoint}
+        params={queryParams}
+        deleteApiEndPoint="deleteCafe"
         deleteAction={isSuperAdmin}
-        enableExportTable={true}
+        // enableExportTable={true}
       />
     </div>
   );

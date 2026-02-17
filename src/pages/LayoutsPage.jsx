@@ -29,7 +29,7 @@ export default function LayoutsPage() {
   );
 
   // Fetch admin's custom layouts (only for non-superAdmin)
-  const { data: adminLayoutData, isLoading: isLoadingAdmin, refetch } = useFetch(
+  const { data: adminLayoutData, isLoading: isLoadingAdmin } = useFetch(
     "getAdminLayouts",
     API_ROUTES.getLayoutByAdmin,
     { adminId: user?.id },
@@ -54,8 +54,7 @@ export default function LayoutsPage() {
     {
       onSuccess: () => {
         toast.success("Active layout set successfully");
-        queryClient.invalidateQueries({ queryKey: ["getAdminLayouts"] });
-        refetch();
+        queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
       },
       onError: (error) => {
         console.error("Error setting active layout:", error);
@@ -306,7 +305,7 @@ export default function LayoutsPage() {
         )}
       </Grid>
 
-      <Dialog
+      {hasNoQR && <Dialog
         open={openQrModal}
         disableEscapeKeyDown
         onClose={() => { }}
@@ -344,7 +343,7 @@ export default function LayoutsPage() {
             Create QR Codes
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog>}
     </div>
   );
 }

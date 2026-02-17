@@ -48,7 +48,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
   const { mutate: createCategory, isPending: createPending } = usePost(API_ROUTES.createCategory, {
     onSuccess: () => {
       toast.success("Category created successfully ✅");
-      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      queryClient.invalidateQueries({ queryKey: "get-categories", type: "all" });
       reset();
       handleClose();
     },
@@ -61,7 +61,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
   const { mutate: updateCategory, isPending: updatePending } = usePatch(`${API_ROUTES.updateCategory}/${category?._id}`, {
     onSuccess: () => {
       toast.success("Category updated successfully ✅");
-      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      queryClient.invalidateQueries({ queryKey: "get-categories" });
       reset();
       handleClose();
     },

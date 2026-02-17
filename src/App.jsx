@@ -9,6 +9,7 @@ import createCache from "@emotion/cache";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter } from 'react-router-dom';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "./index.css"
 
 const emotionCacheOptions = {
@@ -32,6 +33,7 @@ function App() {
           <AuthProvider>
             <AppRoutes />
             <Toaster position="top-right" reverseOrder={false} />
+             <ReactQueryDevtools initialIsOpen={false} />
           </AuthProvider>
         </QueryClientProvider>
       </CacheProvider>

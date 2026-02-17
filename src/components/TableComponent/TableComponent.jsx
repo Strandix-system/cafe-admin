@@ -1,20 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
     MaterialReactTable,
     useMaterialReactTable,
-} from 'material-react-table';
-import { Box, Card, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
-import { get } from 'lodash';
-import { keepPreviousData } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import RestoreIcon from '@mui/icons-material/Restore';
-import ExporterTable from './ExporterTable';
-import { Columns, DeleteIcon, Filter, FilterX, GripVertical, List, MoreVertical, Search, Trash, X } from 'lucide-react';
+} from "material-react-table";
+import { Box, Card, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+// import ConfirmationDialog from '../ConfirmationDialog';
+import { get } from "lodash";
+import { keepPreviousData } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import RestoreIcon from "@mui/icons-material/Restore";
+import ExporterTable from "./ExporterTable";
+import {
+    Columns,
+    DeleteIcon,
+    Filter,
+    FilterX,
+    GripVertical,
+    List,
+    MoreVertical,
+    Search,
+    Trash,
+    X,
+} from "lucide-react";
 import { useDelete, useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import DeleteConfirmationDialog from "../common/DeleteConfirmDialog";
-import toast from 'react-hot-toast';
-import { queryClient } from '../../lib/queryClient';
+import toast from "react-hot-toast";
+import { queryClient } from "../../lib/queryClient";
 
 const tableIcons = {
     FilterListIcon: () => <Filter size={18} />,
@@ -33,8 +45,8 @@ const tableIcons = {
 };
 
 const caseInsensitiveSortingFn = (rowA, rowB, columnId) => {
-    const a = rowA?.getValue(columnId)?.toString().toLowerCase() ?? '';
-    const b = rowB?.getValue(columnId)?.toString().toLowerCase() ?? '';
+    const a = rowA?.getValue(columnId)?.toString().toLowerCase() ?? "";
+    const b = rowB?.getValue(columnId)?.toString().toLowerCase() ?? "";
     return a?.localeCompare(b);
 };
 
@@ -72,8 +84,11 @@ const TableComponent = (props) => {
         serialNo = false,
         enableRowDrag = false,
         onRowDragEnd,
-        afterSuccessfullDeletion
+        afterSuccessfullDeletion,
     } = props;
+
+    console.log("queryKey", querykey)
+
 
     const [rowSelection, setRowSelection] = useState({});
     const [pagination, setPagination] = useState({
@@ -87,10 +102,15 @@ const TableComponent = (props) => {
         name: "",
     });
 
+  console.log(queryClient.getQueryCache().getAll().map(q => q.queryKey));
+
+
     // Handle API calls
     const { data, isLoading, isError, error, refetch, isRefetching } = useFetch(
-        getApiEndPoint ? querykey : "",
-        apiEndpointId ? `${API_ROUTES[getApiEndPoint]}/${apiEndpointId}` : API_ROUTES[getApiEndPoint],
+        querykey,
+        apiEndpointId
+            ? `${API_ROUTES[getApiEndPoint]}/${apiEndpointId}`
+            : API_ROUTES[getApiEndPoint],
         {
             ...params,
             ...(globalFilter && { search: globalFilter }),
@@ -103,30 +123,28 @@ const TableComponent = (props) => {
             enabled: Boolean(getApiEndPoint),
             placeholderData: keepPreviousData,
             refetchOnMount: "always",
-            refetchOnWindowFocus: false,
-            staleTime: 0,
+            staleTime: 0
         }
     );
 
-    const { mutate: deleteMutation, isPending: isDeletePending } = useDelete(API_ROUTES[deleteApiEndPoint], {
-        onSuccess: () => {
-
-            queryClient.refetchQueries({
-                queryKey: querykey,
-                type: "active",
-            });;
-
-            setDeleteState({ open: false, id: null, name: "" });
-            afterSuccessfullDeletion && afterSuccessfullDeletion();
-            toast.success(`${slug} has been successfully deleted.`)
-        },
-        onError: (error) => {
-            toast.error(error ?? 'Something went wrong')
-        },
-    });
+    const { mutate: deleteMutation, isPending: isDeletePending } = useDelete(
+        API_ROUTES[deleteApiEndPoint],
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: querykey
+                });
+                setDeleteState({ open: false, id: null, name: "" });
+                afterSuccessfullDeletion && afterSuccessfullDeletion();
+                toast.success(`${slug} has been successfully deleted.`);
+            },
+            onError: (error) => {
+                toast.error(error ?? "Something went wrong");
+            },
+        }
+    );
 
     const handleClickDelete = (row) => {
-        console.log(row)
         setDeleteState({
             open: true,
             id: get(row, "original._id"),
@@ -135,21 +153,15 @@ const TableComponent = (props) => {
     };
 
     const handleConfirmDelete = () => {
-        console.log(deleteState)
         deleteMutation(deleteState.id);
     };
 
-    const tableData =
-        rows ??
-        (Array.isArray(data?.result)
-            ? data.result                // ✅ Category API (flat array)
-            : get(data, "result.results", []));
-
     const table = useMaterialReactTable({
         columns,
-        // data: rows ?? get(data, "result.results", []),
-        data: tableData,
-
+        data: rows ?? get(data, "result.results", []),
+        manualFiltering: true,
+        onGlobalFilterChange: setGlobalFilter,
+        enableStickyHeader: true,
         enableSortingRemoval: false,
         sortingFns: {
             caseInsensitive: caseInsensitiveSortingFn,
@@ -159,20 +171,24 @@ const TableComponent = (props) => {
         initialState: {
             ...initialState,
             showGlobalFilter: true,
-            density: "spacious",//'comfortable' | 'compact' | 'spacious'
+            density: "spacious", //'comfortable' | 'compact' | 'spacious'
+
             columnPinning: {
-                right: ['mrt-row-actions'],
+                right: ["mrt-row-actions"],
             },
             ...(manualPagination && { pagination }),
         },
 
+        muiTableContainerProps: {
+            sx: {
+                maxHeight: "100%",
+            },
+        },
         // handle table current State
         state: {
-            ...(
-                !rows && {
-                    globalFilter: globalFilter,
-                }
-            ),
+            ...(!rows && {
+                globalFilter: globalFilter,
+            }),
             rowSelection,
             isLoading: isLoading || isDataLoading || isRefetching,
             ...(manualPagination && { pagination }),
@@ -198,31 +214,30 @@ const TableComponent = (props) => {
 
         // handle column resizing
         enableColumnResizing: true,
-        layoutMode: 'grid',// for getting rid of an extra space
-        columnResizeMode: 'onChange', //default, onChange, onEnd
+        layoutMode: "grid", // for getting rid of an extra space
+        columnResizeMode: "onChange", //default, onChange, onEnd
         defaultColumn: {
             maxSize: 400,
             minSize: 100,
             size: 200,
             grow: true,
-            sortingFn: 'caseInsensitive',
+            sortingFn: "caseInsensitive",
         },
         // handle serial number
         enableRowNumbers: serialNo,
         displayColumnDefOptions: {
-            'mrt-row-actions': {
-                header: 'Actions',
+            "mrt-row-actions": {
+                header: "Actions",
                 size: 150,
             },
-            'mrt-row-numbers': {
+            "mrt-row-numbers": {
                 muiTableHeadCellProps: {
-                    children: 'S. No.',
+                    children: "S. No.",
                 },
                 size: 50,
                 minSize: 80,
             },
         },
-
 
         // handle row selection
         // enableRowSelection: enableRowSelection,
@@ -233,35 +248,42 @@ const TableComponent = (props) => {
         onRowSelectionChange: setRowSelection,
 
         // getRowId: (row) => row?._id,
-        positionToolbarAlertBanner: 'none',
+        positionToolbarAlertBanner: "none",
 
         // handle row actions like edit/delete
         enableRowActions: (actions?.length || deleteAction) ?? false,
-        [actionsType === "icons" ? "renderRowActions" : "renderRowActionMenuItems"]: ({ row, closeMenu }) => {
-            const tableActions = deleteAction ? [
-                ...actions,
-                {
-                    label: deleteAction?.label ? deleteAction?.label : "Delete",
-                    // complete delete flow
-                    onClick: deleteAction?.onClick ? deleteAction?.onClick : () => handleClickDelete(row),
-                    isDisabled: deleteAction?.isDisabled ? deleteAction?.isDisabled : false,
-                    icon: Trash,
-                    color: '#f00'
-                }
-            ] : actions;
+        [actionsType === "icons" ? "renderRowActions" : "renderRowActionMenuItems"]:
+            ({ row, closeMenu }) => {
+                const tableActions = deleteAction
+                    ? [
+                        ...actions,
+                        {
+                            label: deleteAction?.label ? deleteAction?.label : "Delete",
+                            // complete delete flow
+                            onClick: deleteAction?.onClick
+                                ? deleteAction?.onClick
+                                : () => handleClickDelete(row),
+                            isDisabled: deleteAction?.isDisabled
+                                ? deleteAction?.isDisabled
+                                : false,
+                            icon: Trash,
+                            color: "#f00",
+                        },
+                    ]
+                    : actions;
 
-            return tableActions.map((action, i) => {
-                const isDisabled = action?.isDisabled ? action?.isDisabled(row) : false;
-                return (
-                    actionsType === "icons" ? (
+                return tableActions.map((action, i) => {
+                    const isDisabled = action?.isDisabled
+                        ? action?.isDisabled(row)
+                        : false;
+                    return actionsType === "icons" ? (
                         <Tooltip
                             title={action?.label}
                             key={`material-react-table-action-${action?.label}-${i}`}
                         >
                             <IconButton
                                 onClick={() => {
-                                    // setTimeout(action?.onClick(row));
-                                    action?.onClick(row);
+                                    setTimeout(action?.onClick(row));
                                 }}
                                 disabled={isDisabled}
                             >
@@ -278,8 +300,7 @@ const TableComponent = (props) => {
                             key={`material-react-table-action-${action?.label}-${i}`}
                             onClick={() => {
                                 closeMenu();
-                                // setTimeout(action?.onClick(row));
-                                action?.onClick(row);
+                                setTimeout(action?.onClick(row));
                             }}
                             disabled={isDisabled}
                         >
@@ -292,16 +313,22 @@ const TableComponent = (props) => {
                             )}
                             {action?.label}
                         </MenuItem>
-                    )
-                );
-
-            })
-        },
+                    );
+                });
+            },
 
         renderTopToolbarCustomActions: (props) => (
             <Box className="w-full flex justify-end">
-                {enableRefetch && <Tooltip title="Refresh"><IconButton onClick={refetch}><RestoreIcon size={24} /></IconButton></Tooltip>}
-                {enableExportTable && <ExporterTable {...{ ...props, ...exporterTableProps }} />}
+                {enableRefetch && (
+                    <Tooltip title="Refresh">
+                        <IconButton onClick={refetch}>
+                            <RestoreIcon size={24} />
+                        </IconButton>
+                    </Tooltip>
+                )}
+                {enableExportTable && (
+                    <ExporterTable {...{ ...props, ...exporterTableProps }} />
+                )}
             </Box>
         ),
 
@@ -310,102 +337,107 @@ const TableComponent = (props) => {
 
         // handle row searching
         enableGlobalFilterModes: true,
-        positionGlobalFilter: 'left',
+        positionGlobalFilter: "left",
 
-        ...(
-            !rows && {
-                manualGlobalFilter: true,
-                onGlobalFilterChange: (search) => {
-                    setGlobalFilter(search);
-                },
-            }
-        ),
+        ...(!rows && {
+            manualGlobalFilter: true,
+            onGlobalFilterChange: (search) => {
+                setGlobalFilter(search);
+            },
+        }),
 
         // handle table paginations
         enablePagination: true,
         muiPaginationProps: {
             rowsPerPageOptions: [5, 10, 20, 50, 100, 500, 1000],
             showRowsPerPage: true,
-            shape: 'rounded',
+            shape: "rounded",
         },
-        paginationDisplayMode: 'pages',
+        paginationDisplayMode: "pages",
         ...(manualPagination && { onPaginationChange: setPagination }),
         manualPagination,
         rowCount: manualPagination
             ? get(data, "result.totalResults", 0)
-            : (rows?.length ?? get(data, "result.totalResults", 0)),
+            : rows?.length ?? get(data, "result.totalResults", 0),
 
         // Update the table UI
         muiSearchTextFieldProps: {
             placeholder: `Search`,
-            sx: { minWidth: '300px' },
-            variant: 'outlined',
+            sx: { minWidth: "300px" },
+            variant: "outlined",
         },
 
         muiTableBodyProps: {
-            className: 'row-hover-shadow',
+            className: "row-hover-shadow",
             sx: {
-                '& tr > td': {
-                    borderBottom: '0.1rem solid #e4e4e4',
-                    backgroundColor: '#fff',
-                }
+                "& tr > td": {
+                    borderBottom: "0.1rem solid #e4e4e4",
+                    backgroundColor: "#fff",
+                },
             },
         },
 
         muiTableHeadProps: {
             sx: {
-                '& tr > th': {
-                    borderTop: '0.1rem solid #e4e4e4',
-                    borderBottom: '0.1rem solid #e4e4e4',
-                    backgroundColor: '#fff',
-                    paddingBottom: "10px"
+                "& tr > th": {
+                    borderTop: "0.1rem solid #e4e4e4",
+                    borderBottom: "0.1rem solid #e4e4e4",
+                    backgroundColor: "#fff",
+                    paddingBottom: "10px",
                 },
-                '& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-Content-Labels': {
+                "& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-Content-Labels":
+                {
                     width: "100%",
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center"
+                    alignItems: "center",
                 },
-                '& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-Content-Actions > button': {
+                "& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-Content-Actions > button":
+                {
                     width: "auto",
                     height: "auto",
-                    background: 'none'
+                    background: "none",
                 },
-                '& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-ResizeHandle-Wrapper': {
-                    position: 'static',
+                "& tr > th > .Mui-TableHeadCell-Content > .Mui-TableHeadCell-ResizeHandle-Wrapper":
+                {
+                    position: "static",
                     padding: 0,
-                    margin: 0
+                    margin: 0,
                 },
             },
         },
 
         enableRowOrdering: enableRowDrag,
-        muiRowDragHandleProps: enableRowDrag ? {
-            onDragEnd: (event) => {
-                const { draggingRow, hoveredRow } = table.getState();
-                if (hoveredRow && draggingRow) {
-                    const dataSource = rows ? localRows : get(data, "result.results", []);
-                    const newData = [...dataSource];
+        muiRowDragHandleProps: enableRowDrag
+            ? {
+                onDragEnd: (event) => {
+                    const { draggingRow, hoveredRow } = table.getState();
+                    if (hoveredRow && draggingRow) {
+                        const dataSource = rows
+                            ? localRows
+                            : get(data, "result.results", []);
+                        const newData = [...dataSource];
 
-                    newData.splice(
-                        hoveredRow.index,
-                        0,
-                        newData.splice(draggingRow.index, 1)[0]
-                    );
+                        newData.splice(
+                            hoveredRow.index,
+                            0,
+                            newData.splice(draggingRow.index, 1)[0]
+                        );
 
-                    if (rows) {
-                        setLocalRows(newData);
-                        if (onRowDragEnd) {
-                            onRowDragEnd(newData);
-                        }
-                    } else {
-                        if (onRowDragEnd) {
-                            onRowDragEnd(newData);
+                        if (rows) {
+                            setLocalRows(newData);
+                            if (onRowDragEnd) {
+                                onRowDragEnd(newData);
+                            }
+                        } else {
+                            if (onRowDragEnd) {
+                                onRowDragEnd(newData);
+                            }
                         }
                     }
-                }
+                },
             }
-        } : undefined,
+            : undefined,
     });
 
     // useEffect(() => {
@@ -421,36 +453,28 @@ const TableComponent = (props) => {
 
         const selectedRows = table
             .getSelectedRowModel()
-            .rows
-            .map(row => row.original);
-
-        console.log("SELECTED ROWS FROM TABLE:", selectedRows);
+            .rows.map((row) => row.original);
 
         handleRowSelection(selectedRows);
     }, [rowSelection]);
 
     if (isError) return <div>{error}</div>;
 
-    return <motion.div
-        variants={tableVariants}
-        initial="hidden"
-        animate="visible"
-    >
-        <Card className='w-full material-react-table bg-white rounded pt-8 px-8'>
-            <MaterialReactTable
-                table={table}
+    return (
+        <motion.div variants={tableVariants} initial="hidden" animate="visible">
+            <Card className="w-full material-react-table bg-white rounded">
+                <MaterialReactTable table={table} />
+            </Card>
+            <DeleteConfirmationDialog
+                open={deleteState.open}
+                onClose={() => setDeleteState({ open: false, id: null, name: "" })}
+                onConfirm={handleConfirmDelete}
+                slug={slug}
+                name={deleteState.name}
+                loading={isDeletePending}
             />
-        </Card>
-        <DeleteConfirmationDialog
-            open={deleteState.open}
-            onClose={() => setDeleteState({ open: false, id: null, name: "" })}
-            onConfirm={handleConfirmDelete}
-            slug={slug}
-            name={deleteState.name}
-            loading={isDeletePending}
-        />
-    </motion.div>
-
+        </motion.div>
+    );
 };
 
 export default TableComponent;
