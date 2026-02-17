@@ -1,4 +1,4 @@
-import TableComponent from "../TableComponent/TableComponent";
+import TableComponent from "../../components/TableComponent/TableComponent";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Plus } from "lucide-react";
@@ -49,16 +49,16 @@ const CustomerList = () => {
 
 
   const actions = [
-  {
-    label: "Edit",
-    icon: Edit,
-    onClick: (row) => {
-      setMode("edit");
-      setSelectedUser(row.original);
-      setOpen(true);
+    {
+      label: "Edit",
+      icon: Edit,
+      onClick: (row) => {
+        setMode("edit");
+        setSelectedUser(row.original);
+        setOpen(true);
+      },
     },
-  },
-]
+  ]
 
   return (
     <div className="overflow-hidden">
