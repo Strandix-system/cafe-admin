@@ -107,7 +107,8 @@ const TableComponent = (props) => {
 
     // Handle API calls
     const { data, isLoading, isError, error, refetch, isRefetching } = useFetch(
-        querykey,
+        // querykey,
+        [querykey, globalFilter, pagination.pageIndex, pagination.pageSize],
         apiEndpointId
             ? `${API_ROUTES[getApiEndPoint]}/${apiEndpointId}`
             : API_ROUTES[getApiEndPoint],
@@ -132,7 +133,7 @@ const TableComponent = (props) => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: querykey
+                    queryKey: [querykey]
                 });
                 setDeleteState({ open: false, id: null, name: "" });
                 afterSuccessfullDeletion && afterSuccessfullDeletion();

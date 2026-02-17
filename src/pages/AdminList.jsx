@@ -8,15 +8,15 @@ import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
+import { Tabs, Tab } from "@mui/material";
 
 const AdminList = () => {
   const navigate = useNavigate();
   const { user, isSuperAdmin, isAdmin } = useAuth();
   const { adminId } = useParams();
 
-  const [activeTab, setActiveTab] = useState("active");
+  const [activeTab, setActiveTab] = useState("active"); // active | inactive
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [selectedCafeId, setSelectedCafeId] = useState(null);
 
   const { mutate: updateUserStatus } = usePatch(
     `${API_ROUTES.updateStatus}/${selectedUserId}`,
@@ -24,7 +24,14 @@ const AdminList = () => {
       onSuccess: () => {
         // 🔁 refresh admin table after update
         toast.success("Status updated");
-        queryClient.invalidateQueries({ queryKey: ["get-users"] });
+        queryClient.invalidateQueries({ queryKey: ["get-users-active"] });
+        queryClient.invalidateQueries({ queryKey: ["get-users-inactive"] });
+
+        if (adminId) {
+          queryClient.invalidateQueries({
+            queryKey: [`get-cafe-users-${adminId}`],
+          });
+        }
       },
       onError: (error) => {
         console.error("Status update failed:", error);
@@ -105,7 +112,8 @@ const AdminList = () => {
       label: "View Customer",
       icon: User,
       onClick: (row) => {
-        setSelectedCafeId(row.original._id); // ✅ cafeId
+        navigate(`/cafes/${row.original._id}`); //
+        // setSelectedCafeId(row.original._id); // ✅ cafeId
       },
     },
     {
@@ -121,13 +129,16 @@ const AdminList = () => {
       onClick: handleToggleStatus,
     },
   ];
-  const endPoint = selectedCafeId
-    ? "user_list"
-    : "getUsers"
 
-  const queryParams = selectedCafeId
-    ? { adminId: selectedCafeId }
-    : {};
+  const getApiEndPoint = adminId ? "user_list" : "getUsers";
+
+  const queryParams = adminId
+    ? { adminId } // customer view
+    : { isActive: activeTab === "active" };
+
+  const queryKey = adminId
+    ? `get-cafe-users-${adminId}`
+    : `get-users-${activeTab}`;
 
   return (
 
@@ -141,43 +152,72 @@ const AdminList = () => {
         }}
       >
         <Typography variant="h6" fontWeight={600}>
-          Cafe Management
+          {/* Cafe Management */}
+          {adminId ? "Customer Management" : "Cafe Management"}
         </Typography>
-        {isSuperAdmin && (
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#6F4E37" }}
-            startIcon={<Plus size={18} />}
-            onClick={() => navigate("/cafe/create-edit")}
-          >
-            Create Cafe
-          </Button>
-        )}
-        {selectedCafeId && (
+
+        <Box display="flex" gap={2}>
+          {adminId && (
+            <Button
+              variant="outlined"
+              onClick={() => navigate("/cafes")}
+            >
+              Back to Cafes
+            </Button>
+          )}
+
+          {isSuperAdmin && !adminId && (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#6F4E37" }}
+              startIcon={<Plus size={18} />}
+              onClick={() => navigate("/cafe/create-edit")}
+            >
+              Create Cafe
+            </Button>
+          )}
+          {/* {selectedCafeId && (
           <Button
             variant="outlined"
             onClick={() => setSelectedCafeId(null)}
           >
             Back to Cafes
           </Button>
-        )}
+        )} */}
+        </Box>
       </Box>
 
+      {!adminId && (
+        <Box sx={{ px: 3, mb: 2 }}>
+          <Tabs
+            value={activeTab}
+            onChange={(_, value) => setActiveTab(value)}
+            textColor="primary"
+            indicatorColor="primary"
+            sx={{
+              "& .MuiTab-root": {
+                fontWeight: 600,
+                textTransform: "none",
+              },
+            }}
+          >
+            <Tab label="Active Cafes" value="active" />
+            <Tab label="Inactive Cafes" value="inactive" />
+          </Tabs>
+        </Box>
+      )}
+
       <TableComponent
-        slug="admin"
-        columns={selectedCafeId ? customerColumns : cafeColumns}
+        slug={adminId ? "user" : "admin"}
+        columns={adminId ? customerColumns : cafeColumns}
         actions={actions}
         actionsType="menu"
-        querykey={
-          selectedCafeId
-            ? `get-cafe-users-${selectedCafeId}`
-            : "get-users"
-        }
-        getApiEndPoint={endPoint}
+        querykey={queryKey}
+        getApiEndPoint={getApiEndPoint}
         params={queryParams}
         deleteApiEndPoint="deleteCafe"
         deleteAction={isSuperAdmin}
-        // enableExportTable={true}
+      // enableExportTable={true}
       />
     </div>
   );

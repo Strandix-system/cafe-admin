@@ -1,4 +1,4 @@
-import TableComponent from "../TableComponent/TableComponent";
+import TableComponent from "../../components/TableComponent/TableComponent";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Plus } from "lucide-react";

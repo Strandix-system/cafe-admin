@@ -18,6 +18,7 @@ export const API_ROUTES = {
     getLayoutById: "layout/get-layout",
     updateLayout: "layout/update",
     getLayoutByAdmin: "layout/admin-layout",
+    deleteLayoutbyAdmin:"layout/delete",
     setActiveLayout: "layout/update-status",
 
     getAllOrders: "order/get-all",
