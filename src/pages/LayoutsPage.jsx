@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Grid, Button, Box, Typography, Skeleton, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useFetch, usePatch } from "../utils/hooks/api_hooks";
+import { useDelete, useFetch, usePatch } from "../utils/hooks/api_hooks";
 import LayoutPreviewCard from "../components/layout/LayoutPreviewCard";
 import { API_ROUTES } from "../utils/api_constants";
 import { useAuth } from "../context/AuthContext";
@@ -20,6 +20,9 @@ export default function LayoutsPage() {
   const [selectedDefaultLayout, setSelectedDefaultLayout] = useState(null);
   const [selectedAdminLayout, setSelectedAdminLayout] = useState(null);
   const [openQrModal, setOpenQrModal] = useState(false);
+  const [deleteLayoutId, setDeleteLayoutId] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
 
   // Fetch default layouts (templates)
   const { data: defaultLayoutData, isLoading: isLoadingDefault } = useFetch(
@@ -66,6 +69,33 @@ export default function LayoutsPage() {
   const defaultLayouts = defaultLayoutData?.result?.results || [];
   const adminLayouts = adminLayoutData?.result?.results || [];
 
+  //delete my layouts
+  const { mutate: deleteLayout, isPending: isDeleting } = useDelete(
+    API_ROUTES.deleteLayoutbyAdmin, // make sure this exists
+    {
+      onSuccess: () => {
+        toast.success("Layout deleted successfully");
+       queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
+        setOpenDeleteDialog(false);
+        setDeleteLayoutId(null);
+      },
+      onError: () => {
+        toast.error("Failed to delete layout");
+      },
+    }
+  );
+
+  const handleDelete = (layoutId) => {
+    setDeleteLayoutId(layoutId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteLayoutId) return;
+    deleteLayout(deleteLayoutId);
+  };
+
+
   // Auto-select if only one default layout exists
   useEffect(() => {
     if (defaultLayouts.length === 1) {
@@ -80,8 +110,8 @@ export default function LayoutsPage() {
     }
     let url;
     if (layout.defaultLayout) {
-      if (layout.layoutTitle === "COZY") {
-        url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_COZY_QR}`;
+      if (layout.layoutTitle === "COZZY") {
+        url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_COZZY_QR}`;
         window.open(url, "_blank");
       } else if (layout.layoutTitle === "ELEGANT") {
         url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_ELEGANT_QR}`;
@@ -293,6 +323,8 @@ export default function LayoutsPage() {
                 onEdit={handleEditAdmin}
                 onPreview={handlePreview}
                 showEditButton={true}
+                onDelete={handleDelete}
+                showDeleteButton
               />
             </Grid>
           ))
@@ -344,6 +376,51 @@ export default function LayoutsPage() {
           </Button>
         </DialogActions>
       </Dialog>}
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => !isDeleting && setOpenDeleteDialog(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            maxWidth: 420,
+            p: 1,
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>
+          Delete Layout?
+        </DialogTitle>
+
+        <DialogContent>
+          <Typography variant="body1">
+            Are you sure you want to delete this layout?
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            This action cannot be undone.
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            onClick={() => setOpenDeleteDialog(false)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            color="error"
+            variant="contained"
+            onClick={handleConfirmDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   );
 }

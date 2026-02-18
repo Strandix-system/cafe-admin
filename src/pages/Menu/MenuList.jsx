@@ -105,6 +105,7 @@ const MenuList = () => {
         deleteApiEndPoint="MENU_DELETE"
         deleteAction={true}
         enableExportTable={true}
+        
       />
 
       <CreateEditMenuModal

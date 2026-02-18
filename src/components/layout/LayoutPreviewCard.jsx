@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 
 export default function LayoutPreviewCard({
   layout,
@@ -19,6 +21,8 @@ export default function LayoutPreviewCard({
   onEdit, // Only used for "My Layouts" section
   onPreview,
   showEditButton = false, // New prop to control edit button visibility
+  onDelete,
+  showDeleteButton = false,
 }) {
   return (
     <Card
@@ -202,6 +206,27 @@ export default function LayoutPreviewCard({
                 }}
               >
                 <EditIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          {showDeleteButton && onDelete && (
+            <Tooltip title="Delete Layout">
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(layout._id);
+                }}
+                sx={{
+                  bgcolor: "#ffebee",
+                  color: "#d32f2f",
+                  boxShadow: 2,
+                  "&:hover": {
+                    bgcolor: "#ffcdd2",
+                  },
+                }}
+              >
+                <DeleteIcon />
               </IconButton>
             </Tooltip>
           )}

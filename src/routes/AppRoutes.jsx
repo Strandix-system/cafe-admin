@@ -14,7 +14,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 // import CreateMenu from "../pages/menu/CreateMenu";
-import MenuList from "../pages/menu/MenuList";
+import MenuList from "../pages/Menu/MenuList";
 import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
@@ -61,8 +61,18 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       />
+        <Route
+        path="/cafes/:adminId?"
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout>
+              <AdminList />
+            </DashboardLayout>
+          </ProtectedRoutes>
+        }
+      />
 
-      <Route
+      {/* <Route
         path="/cafe/view-customers/:userId?"
         element={
           <ProtectedRoutes>
@@ -71,7 +81,7 @@ const AppRoutes = () => {
             </DashboardLayout>
           </ProtectedRoutes>
         }
-      />
+      /> */}
       {/* PROTECTED ROUTES - Layouts Management */}
       <Route
         path="/layouts"
@@ -161,6 +171,7 @@ const AppRoutes = () => {
         }
       />
 
+    
 
       {/* CATCH ALL - Redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />

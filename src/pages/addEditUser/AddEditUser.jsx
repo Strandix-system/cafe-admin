@@ -15,9 +15,11 @@ import { usePatch, usePost, usePut } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { loginSchema } from "../../utils/validation";
 import { queryClient } from '../../lib/queryClient'
+import { useAuth } from "../../context/AuthContext";
 
 const AddEditUser = ({ open, onClose, mode, data }) => {
     const isEdit = mode === "edit";
+    const { user } = useAuth();
 
     const {
         control,
@@ -51,10 +53,10 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
                 toast.success("User created successfully");
 
                 queryClient.invalidateQueries({
-                    queryKey: "get-cafe-users", // 🔥 THIS
+                    queryKey: ["get-cafe-users"], // 🔥 THIS
                 });
-                  onClose(true);
-                 refetch(); 
+                onClose(true);
+                refetch();
             },
         }
     );
@@ -65,19 +67,22 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
             onSuccess: () => {
                 toast.success("User updated successfully");
 
-                queryClient.invalidateQueries({
-                    queryKey: "get-cafe-users", // 🔥 THIS
-                });
+                queryClient.invalidateQueries({ queryKey: ["get-cafe-users"], });
                 onClose(true);
-                 refetch();                
+                refetch();
             },
         }
     );
 
     const onSubmit = (formData) => {
-        console.log("MODE:", mode);
-        console.log("FORM DATA:", formData);
-        isEdit ? updateUser(formData) : createUser(formData);
+        const payload = {
+            ...formData,
+            adminId: isEdit
+                ? data?.adminId || data?.createdBy   // edit case (keep existing)
+                : user?.id,                          // create case (logged-in admin)
+        };
+
+        isEdit ? updateUser(payload) : createUser(payload);
     };
 
     return (
