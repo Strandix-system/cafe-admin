@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Login from "../pages/Login";
+import LoginSignup from "../pages/LoginSignup";
 import ForgotPassword from "../pages/ForgotPassword";
 
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
@@ -22,40 +22,41 @@ import MyOrders from "../pages/dashboard/MyOrders";
 import Profile from "../pages/Profile/Profile";
 
 const AppRoutes = () => {
-    return (
-        <Routes>
-            {/* PUBLIC ROUTES */}
-            <Route path="/" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+  return (
+    <Routes>
+      {/* PUBLIC ROUTES */}
+      <Route path="/" element={<LoginSignup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token?" element={<ResetPassword />} />
 
-            {/* PROTECTED ROUTES */}
-            <Route
-                element={
-                    <ProtectedRoutes>
-                        <DashboardLayout />
-                    </ProtectedRoutes>
-                }
-            >
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/cafes" element={<AdminList />} />
-                <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
-                <Route path="/cafes/:adminId?" element={<AdminList />} />
-                <Route path="/layouts" element={<LayoutsPage />} />
-                <Route path="/layouts/create-edit/:layoutId?" element={<AddEditLayout />} />
-                <Route path="/categories" element={<CategoriesList />} />
-                <Route path="/table-management" element={<CafeTableManagement />} />
-                <Route path="/menu" element={<MenuList />} />
-                <Route path="/order-management" element={<OrderManagementPage />} />
-                <Route path="/order-history" element={<OrderHistoryList />} />
-                <Route path="/customer" element={<CustomerList />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/my-orders/:userId" element={<MyOrders />} />
-            </Route>
+      {/* PROTECTED ROUTES */}
+      <Route
+        element={
+          <ProtectedRoutes>
+            <DashboardLayout />
+          </ProtectedRoutes>
+        }
+      >
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/cafes" element={<AdminList />} />
+        <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
+        <Route path="/cafes/:adminId?" element={<AdminList />} />
+        <Route path="/layouts" element={<LayoutsPage />} />
+        <Route path="/layouts/create-edit/:layoutId?" element={<AddEditLayout />} />
+        <Route path="/categories" element={<CategoriesList />} />
+        <Route path="/table-management" element={<CafeTableManagement />} />
+        <Route path="/menu" element={<MenuList />} />
+        <Route path="/order-management" element={<OrderManagementPage />} />
+        <Route path="/order-history" element={<OrderHistoryList />} />
+        <Route path="/customer" element={<CustomerList />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/my-orders/:userId" element={<MyOrders />} />
+      </Route>
 
-            {/* CATCH ALL */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-    );
+      {/* CATCH ALL */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 };
 
 export default AppRoutes;
