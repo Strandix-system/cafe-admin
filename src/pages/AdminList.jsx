@@ -23,7 +23,7 @@ const AdminList = () => {
     {
       onSuccess: () => {
         toast.success("Status updated");
-        queryClient.invalidateQueries({ queryKey: "get-users" });
+        queryClient.invalidateQueries({ queryKey: `get-users-${activeTab}` });
       },
       onError: (error) => {
         console.error("Status update failed:", error);
