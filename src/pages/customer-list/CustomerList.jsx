@@ -1,13 +1,15 @@
 import TableComponent from "../../components/TableComponent/TableComponent";
 import { Box, Button, Typography } from "@mui/material";
-import { Edit, Plus } from "lucide-react";
+import { Edit, Plus, Eye } from "lucide-react";
 import { useMemo, useState } from "react";
 import AddEditUser from "../addEditUser/AddEditUser";
+import { useNavigate } from "react-router-dom";
 
 const CustomerList = () => {
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState("create");
     const [selectedUser, setSelectedUser] = useState(null);
+    const navigate = useNavigate();
 
     const columns = useMemo(
         () => [
@@ -25,6 +27,16 @@ const CustomerList = () => {
     );
 
     const actions = [
+        {
+            label: "View Orders",
+            icon: Eye,
+            onClick: (row) => {
+                const userId = row?.original?._id;
+                if (userId) {
+                    navigate(`/my-orders/${userId}`);
+                }
+            },
+        },
         {
             label: "Edit",
             icon: Edit,

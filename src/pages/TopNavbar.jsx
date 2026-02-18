@@ -11,8 +11,6 @@ import {
     Divider,
     Button,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -32,6 +30,8 @@ export default function TopNavbar() {
         "/cafe/view-customers/",
         "/categories/create",
         "/order-history",
+        "/profile",
+        "my-orders"
     ];
 
     // Check if current route should show back button
@@ -171,16 +171,17 @@ export default function TopNavbar() {
                         },
                     }}
                 >
-                    <MenuItem
-                        onClick={() => {
-                            handleMenuClose();
-                            navigate("/profile");
-                        }}
-                        sx={{ gap: 1.5, py: 1.5 }}
-                    >
-                        <PersonIcon fontSize="small" />
-                        <Typography variant="body2" onClick={() => navigate("/profile")}>My Profile</Typography>
-                    </MenuItem>
+                    {!isSuperAdmin && (
+                        <MenuItem
+                            onClick={() => {
+                                handleMenuClose();
+                                navigate("/profile");
+                            }}
+                            sx={{ gap: 1.5, py: 1.5 }}
+                        >
+                            <PersonIcon fontSize="small" />
+                            <Typography variant="body2">My Profile</Typography>
+                        </MenuItem>)}
 
                     <Divider sx={{ my: 1 }} />
 

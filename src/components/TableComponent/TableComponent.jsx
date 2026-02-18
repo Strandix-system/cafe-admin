@@ -99,9 +99,6 @@ const TableComponent = (props) => {
         name: "",
     });
 
-    console.log(queryClient.getQueryCache().getAll().map(q => q.queryKey));
-
-
     // Handle API calls
     const { data, isLoading, isError, error, refetch, isRefetching } = useFetch(
         // querykey,

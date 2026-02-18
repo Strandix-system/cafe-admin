@@ -1,27 +1,27 @@
 import { useParams } from "react-router-dom";
 import { useMemo } from "react";
 import TableComponent from "../../components/TableComponent/TableComponent";
-import { Box, Chip, Typography } from "@mui/material";
+import { Box, Chip, Typography, Paper } from "@mui/material";
 
 const MyOrders = () => {
     const { userId } = useParams();
 
     const columns = useMemo(
         () => [
-            // Table Number
             {
                 accessorKey: "tableNumber",
                 header: "Table No",
                 Cell: ({ cell }) => (
                     <Box
                         sx={{
-                            backgroundColor: "#F5F5F5",
-                            px: 1.5,
+                            backgroundColor: "#EEF2FF",
+                            color: "#3730A3",
+                            px: 2,
                             py: 0.5,
-                            borderRadius: 2,
+                            borderRadius: 3,
                             fontWeight: 600,
                             display: "inline-block",
-                            minWidth: 40,
+                            minWidth: 50,
                             textAlign: "center",
                         }}
                     >
@@ -29,8 +29,6 @@ const MyOrders = () => {
                     </Box>
                 ),
             },
-
-            // Items
             {
                 header: "Items",
                 Cell: ({ row }) => {
@@ -45,41 +43,45 @@ const MyOrders = () => {
                     }
 
                     return (
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                             {items.map((item) => (
                                 <Box
                                     key={item._id}
                                     sx={{
-                                        backgroundColor: "#FAFAFA",
-                                        px: 1.5,
-                                        py: 0.5,
-                                        borderRadius: 1,
+                                        backgroundColor: "#F9FAFB",
+                                        px: 2,
+                                        py: 1,
+                                        borderRadius: 2,
                                         fontSize: 13,
                                         display: "flex",
                                         justifyContent: "space-between",
+                                        alignItems: "center",
+                                        border: "1px solid #E5E7EB",
                                     }}
                                 >
-                                    <span>{item.name}</span>
-                                    <strong>x{item.quantity}</strong>
+                                    <Typography fontSize={13}>
+                                        {item.name}
+                                    </Typography>
+                                    <Chip
+                                        label={`x${item.quantity}`}
+                                        size="small"
+                                        sx={{ fontWeight: 600 }}
+                                    />
                                 </Box>
                             ))}
                         </Box>
                     );
                 },
             },
-
-            // Amount
             {
                 accessorKey: "totalAmount",
                 header: "Total Amount",
                 Cell: ({ cell }) => (
-                    <Typography fontWeight={600} color="#2E7D32">
-                        ₹{cell.getValue()?.toLocaleString()}
+                    <Typography fontWeight={700} color="#16A34A">
+                        ₹ {Number(cell.getValue() || 0).toLocaleString()}
                     </Typography>
                 ),
             },
-
-            // Order Status
             {
                 accessorKey: "orderStatus",
                 header: "Order Status",
@@ -103,8 +105,6 @@ const MyOrders = () => {
                     );
                 },
             },
-
-            // Payment Status
             {
                 accessorKey: "paymentStatus",
                 header: "Payment",
@@ -115,21 +115,19 @@ const MyOrders = () => {
                         <Chip label="Pending" color="warning" size="small" />
                     ),
             },
-
-            // Date
             {
                 accessorKey: "createdAt",
-                header: "Created At",
+                header: "Ordered At",
                 Cell: ({ cell }) => {
                     const date = new Date(cell.getValue());
 
                     return (
                         <Box>
-                            <Typography variant="body2" fontWeight={500}>
-                                {date.toLocaleDateString()}
+                            <Typography variant="body2" fontWeight={600}>
+                                {date.toLocaleDateString("en-IN")}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
-                                {date.toLocaleTimeString()}
+                                {date.toLocaleTimeString("en-IN")}
                             </Typography>
                         </Box>
                     );
@@ -139,15 +137,47 @@ const MyOrders = () => {
         []
     );
 
+    if (!userId) {
+        return (
+            <Box p={4}>
+                <Typography color="error">
+                    Invalid user ID
+                </Typography>
+            </Box>
+        );
+    }
+
     return (
-        <TableComponent
-            slug="Orders"
-            columns={columns}
-            params={{ userId }}
-            querykey={`myOrders-${userId}`}
-            getApiEndPoint={"myOrders"}
-            deleteAction={false}
-        />
+        <Box p={3}>
+            {/* Page Header */}
+            <Box mb={3}>
+                <Typography variant="h6" fontWeight={700}>
+                    Customer Orders
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Order history for selected user
+                </Typography>
+            </Box>
+
+            {/* Table Card Container */}
+            <Paper
+                elevation={0}
+                sx={{
+                    borderRadius: 3,
+                    overflow: "hidden",
+                    border: "1px solid #E5E7EB",
+                }}
+            >
+                <TableComponent
+                    slug="Orders"
+                    columns={columns}
+                    params={{ userId }}
+                    querykey={`myOrders-${userId}`}
+                    getApiEndPoint="myOrders"
+                    deleteAction={false}
+                />
+            </Paper>
+        </Box>
     );
 };
 
