@@ -19,6 +19,7 @@ import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 import CafeTableManagement from "../pages/CafeTableManagement";
+import ResetPassword from "../pages/ResetPassword";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
       {/* PUBLIC ROUTES */}
       <Route path="/" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token?" element={<ResetPassword />} />
 
       {/* PROTECTED ROUTES - Dashboard Stats/Overview */}
       <Route
@@ -61,7 +63,7 @@ const AppRoutes = () => {
           </ProtectedRoutes>
         }
       />
-        <Route
+      <Route
         path="/cafes/:adminId?"
         element={
           <ProtectedRoutes>
@@ -171,7 +173,8 @@ const AppRoutes = () => {
         }
       />
 
-    
+
+
 
       {/* CATCH ALL - Redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />

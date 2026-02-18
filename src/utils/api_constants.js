@@ -9,7 +9,7 @@ export const API_ROUTES = {
 
     getUserById: "admin/get-user",
     updateUsers: "admin/update",
-    updateStatus:"admin/update-status",
+    updateStatus: "admin/update-status",
 
     getStats: "admin/dashboard/stats",
 
@@ -18,7 +18,7 @@ export const API_ROUTES = {
     getLayoutById: "layout/get-layout",
     updateLayout: "layout/update",
     getLayoutByAdmin: "layout/admin-layout",
-    deleteLayoutbyAdmin:"layout/delete",
+    deleteLayoutbyAdmin: "layout/delete",
     setActiveLayout: "layout/update-status",
 
     getAllOrders: "order/get-all",
@@ -51,10 +51,14 @@ export const API_ROUTES = {
     updateMenu: "menu/update",
     menulist: "menu/my-menus",
 
-    createCustomer:"customer/create",
-    updateUser:"customer/update",
+    createCustomer: "customer/create",
+    updateUser: "customer/update",
     getCustomers: "customer/get-all",
     user_list: "customer/get-all",
 
     deleteUser: "customer/delete",
+
+    forgotPassword: "auth/forgot-password",
+    resetPassword: "auth/reset-password",
+    verifyResetToken: "auth/verify-reset-token",
 };
