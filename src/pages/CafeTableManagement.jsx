@@ -28,7 +28,7 @@ const CafeTableManagement = () => {
   const [errors, setErrors] = useState({});
   const { user } = useAuth();
   const location = useLocation();
-  
+
   useEffect(() => {
     if (location.state?.openQRDialog) {
       setOpenDialog(true);
@@ -63,7 +63,7 @@ const CafeTableManagement = () => {
           navigate("/qr-codes", { replace: true });
         }
 
-        queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] });
+        queryClient.invalidateQueries({ queryKey: "get-qr-codes" });
         refetch();
       },
       onError: (error) => {

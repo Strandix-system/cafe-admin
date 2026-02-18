@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { socket } from "../utils/socket";
 import { DollarSign, Eye } from "lucide-react";
+import { queryClient } from "../lib/queryClient";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -35,7 +36,7 @@ const OrderManagementPage = () => {
     const hasInitialized = useRef(false); // Track if we've initialized
 
     /* ---------------- INITIAL API LOAD ---------------- */
-    const { data: ordersData, isLoading, refetch } = useFetch(
+    const { data: ordersData, isLoading } = useFetch(
         "get-all-orders",
         API_ROUTES.getAllOrders,
         {},
@@ -116,12 +117,12 @@ const OrderManagementPage = () => {
         onSuccess: () => {
             toast.success("Order updated!");
             // Refetch to sync with backend
-            refetch();
+            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
         onError: () => {
             toast.error("Failed to update order");
             // Refetch to restore correct state
-            refetch();
+            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
     });
 
@@ -130,12 +131,12 @@ const OrderManagementPage = () => {
         onSuccess: () => {
             toast.success("Payment status updated to Paid!");
             // Refetch to sync with backend
-            refetch();
+            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
         onError: () => {
             toast.error("Failed to update payment status");
             // Refetch to restore correct state
-            refetch();
+            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
     });
 
@@ -288,18 +289,12 @@ const OrderManagementPage = () => {
             </Tabs>
 
             <TabPanel value={tabValue} index={0}>
-                <Typography variant="h6" color="#6F4E37" mb={2}>
-                    Pending Orders
-                </Typography>
                 {pendingOrders.length > 0
                     ? renderOrderCards(pendingOrders, true)
                     : <Typography>No pending orders.</Typography>}
             </TabPanel>
 
             <TabPanel value={tabValue} index={1}>
-                <Typography variant="h6" color="#6F4E37" mb={2}>
-                    Accepted Orders
-                </Typography>
                 {acceptedOrders.length > 0
                     ? renderOrderCards(acceptedOrders, false)
                     : <Typography>No accepted orders.</Typography>}

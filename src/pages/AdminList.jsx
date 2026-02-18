@@ -1,14 +1,13 @@
 import TableComponent from "../components/TableComponent/TableComponent"
-import { Box, Button, Switch, Chip, Typography } from "@mui/material"
+import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate, useParams } from 'react-router-dom'
-import { Edit, Eye, Power, Trash2, Plus, User } from 'lucide-react'
+import { Edit, Power, Plus, User } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
-import { Tabs, Tab } from "@mui/material";
 
 const AdminList = () => {
   const navigate = useNavigate();
@@ -22,10 +21,8 @@ const AdminList = () => {
     `${API_ROUTES.updateStatus}/${selectedUserId}`,
     {
       onSuccess: () => {
-        // 🔁 refresh admin table after update
         toast.success("Status updated");
-        queryClient.invalidateQueries({ queryKey: ["get-users-active"] });
-        queryClient.invalidateQueries({ queryKey: ["get-users-inactive"] });
+        queryClient.invalidateQueries({ queryKey: [`get-users-${activeTab}`] });
 
         if (adminId) {
           queryClient.invalidateQueries({
@@ -40,10 +37,10 @@ const AdminList = () => {
   );
 
   const handleToggleStatus = (row) => {
-    const currentStatus = row.original.isActive;
+    const currentStatus = !row.original.isActive;
     setSelectedUserId(row.original._id);
     updateUserStatus({
-      isActive: !currentStatus, // ✅ always true / false
+      isActive: currentStatus,
     });
   };
 
@@ -66,7 +63,6 @@ const AdminList = () => {
     ],
     []
   );
-
 
   const cafeColumns = useMemo(
     () => [
@@ -97,6 +93,7 @@ const AdminList = () => {
           return (
             <Chip
               label={isActive ? "Active" : "Inactive"}
+              color={isActive ? "success" : "failure"}
               size="small"
             />
           );
@@ -106,14 +103,12 @@ const AdminList = () => {
     []
   );
 
-  // 🔹 Row actions (icons)
   const actions = [
     {
       label: "View Customer",
       icon: User,
       onClick: (row) => {
-        navigate(`/cafes/${row.original._id}`); //
-        // setSelectedCafeId(row.original._id); // ✅ cafeId
+        navigate(`/cafes/${row.original._id}`);
       },
     },
     {
@@ -124,7 +119,7 @@ const AdminList = () => {
       },
     },
     {
-      label: "Toggle Status",
+      label: activeTab === "active" ? "Deactivate" : "Activate",
       icon: Power,
       onClick: handleToggleStatus,
     },
@@ -141,7 +136,6 @@ const AdminList = () => {
     : `get-users-${activeTab}`;
 
   return (
-
     <div className="overflow-hidden">
       <Box
         sx={{
@@ -176,14 +170,6 @@ const AdminList = () => {
               Create Cafe
             </Button>
           )}
-          {/* {selectedCafeId && (
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedCafeId(null)}
-          >
-            Back to Cafes
-          </Button>
-        )} */}
         </Box>
       </Box>
 
@@ -205,7 +191,8 @@ const AdminList = () => {
             <Tab label="Inactive Cafes" value="inactive" />
           </Tabs>
         </Box>
-      )}
+      )
+      }
 
       <TableComponent
         slug={adminId ? "user" : "admin"}
@@ -219,7 +206,7 @@ const AdminList = () => {
         deleteAction={isSuperAdmin}
       // enableExportTable={true}
       />
-    </div>
+    </div >
   );
 };
 

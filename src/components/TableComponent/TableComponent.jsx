@@ -87,9 +87,6 @@ const TableComponent = (props) => {
         afterSuccessfullDeletion,
     } = props;
 
-    console.log("queryKey", querykey)
-
-
     const [rowSelection, setRowSelection] = useState({});
     const [pagination, setPagination] = useState({
         pageIndex: 0,
@@ -102,7 +99,7 @@ const TableComponent = (props) => {
         name: "",
     });
 
-  console.log(queryClient.getQueryCache().getAll().map(q => q.queryKey));
+    console.log(queryClient.getQueryCache().getAll().map(q => q.queryKey));
 
 
     // Handle API calls

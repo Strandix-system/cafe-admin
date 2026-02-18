@@ -24,7 +24,7 @@ export default function AddEditAdmin() {
         `${API_ROUTES.updateUsers}/${userId}`,
         {
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["get-users"] });
+                queryClient.invalidateQueries({ queryKey: "get-users" });
                 toast.success("User updated successfully");
                 navigate("/cafes");
             },
@@ -38,7 +38,7 @@ export default function AddEditAdmin() {
         API_ROUTES.createAdmins,
         {
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["get-users"],  type: "all", });
+                queryClient.invalidateQueries({ queryKey: "get-users", type: "all", });
                 toast.success("Admin created successfully");
                 navigate("/cafes");
             },

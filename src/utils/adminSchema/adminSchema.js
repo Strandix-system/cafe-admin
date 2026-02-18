@@ -19,6 +19,14 @@ export const adminSchema = yup.object().shape({
         .required("Password is required"),
     otherwise: (schema) => schema.notRequired().optional(),
   }),
+  confirmPassword: yup.string().when("$isEdit", {
+    is: false,
+    then: (schema) =>
+      schema
+        .required("Please confirm your password")
+        .oneOf([yup.ref("password")], "Passwords do not match"),
+    otherwise: (schema) => schema.notRequired().optional(),
+  }),
   cafeName: yup.string().trim().required("Cafe name is required"),
   phoneNumber: yup
     .string()

@@ -49,16 +49,16 @@ const CustomerList = () => {
 
 
   const actions = [
-  {
-    label: "Edit",
-    icon: Edit,
-    onClick: (row) => {
-      setMode("edit");
-      setSelectedUser(row.original);
-      setOpen(true);
+    {
+      label: "Edit",
+      icon: Edit,
+      onClick: (row) => {
+        setMode("edit");
+        setSelectedUser(row.original);
+        setOpen(true);
+      },
     },
-  },
-]
+  ]
 
   return (
     <div className="overflow-hidden">
