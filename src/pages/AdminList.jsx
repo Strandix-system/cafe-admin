@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
-import { Tabs, Tab } from "@mui/material";
 
 const AdminList = () => {
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ const AdminList = () => {
     {
       onSuccess: () => {
         toast.success("Status updated");
-        queryClient.invalidateQueries({ queryKey: `get-users-${activeTab}` });
+        queryClient.invalidateQueries({ queryKey: [`get-users-${activeTab}`] });
 
         if (adminId) {
           queryClient.invalidateQueries({
@@ -43,11 +42,6 @@ const AdminList = () => {
     updateUserStatus({
       isActive: currentStatus,
     });
-  };
-
-  const handleTabChange = (_, newValue) => {
-    setActiveTab(newValue);
-    setSelectedCafeId(null); // reset drill-down when switching tabs
   };
 
   const customerColumns = useMemo(
