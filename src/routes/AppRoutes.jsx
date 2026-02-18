@@ -13,170 +13,49 @@ import CategoriesList from "../pages/CategoriesList";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
-// import CreateMenu from "../pages/menu/CreateMenu";
 import MenuList from "../pages/Menu/MenuList";
 import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 import CafeTableManagement from "../pages/CafeTableManagement";
+import MyOrders from "../pages/dashboard/MyOrders";
+import Profile from "../pages/profile/profile";
 
 const AppRoutes = () => {
-  return (
-    <Routes>
-      {/* PUBLIC ROUTES */}
-      <Route path="/" element={<Login />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+    return (
+        <Routes>
+            {/* PUBLIC ROUTES */}
+            <Route path="/" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* PROTECTED ROUTES - Dashboard Stats/Overview */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
+            {/* PROTECTED ROUTES */}
+            <Route
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout />
+                    </ProtectedRoutes>
+                }
+            >
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/cafes" element={<AdminList />} />
+                <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
+                <Route path="/cafes/:adminId?" element={<AdminList />} />
+                <Route path="/layouts" element={<LayoutsPage />} />
+                <Route path="/layouts/create-edit/:layoutId?" element={<AddEditLayout />} />
+                <Route path="/categories" element={<CategoriesList />} />
+                <Route path="/table-management" element={<CafeTableManagement />} />
+                <Route path="/menu" element={<MenuList />} />
+                <Route path="/order-management" element={<OrderManagementPage />} />
+                <Route path="/order-history" element={<OrderHistoryList />} />
+                <Route path="/customer" element={<CustomerList />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/my-orders/:userId" element={<MyOrders />} />
+            </Route>
 
-      {/* PROTECTED ROUTES - Admin Management (Super Admin Only) */}
-      <Route
-        path="/cafes"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <AdminList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/cafe/create-edit/:userId?"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <AddEditAdmin />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-        <Route
-        path="/cafes/:adminId?"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <AdminList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      {/* <Route
-        path="/cafe/view-customers/:userId?"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CustomerList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      /> */}
-      {/* PROTECTED ROUTES - Layouts Management */}
-      <Route
-        path="/layouts"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <LayoutsPage />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/layouts/create-edit/:layoutId?"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <AddEditLayout />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      {/* PROTECTED ROUTES - Categories Management */}
-      <Route
-        path="/categories"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CategoriesList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-      <Route
-        path="/table-management"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CafeTableManagement />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/menu"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <MenuList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/ordermanagement"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <OrderManagementPage />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/order-history"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <OrderHistoryList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/customer"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <CustomerList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      />
-
-    
-
-      {/* CATCH ALL - Redirect to home */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
+            {/* CATCH ALL */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+    );
 };
 
 export default AppRoutes;

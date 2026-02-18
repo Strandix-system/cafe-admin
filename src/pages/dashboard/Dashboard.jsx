@@ -20,7 +20,6 @@ export default function Dashboard() {
         }
     );
     const statsData = data?.data ?? [];
-
     const stats = isSuperAdmin
         ? getSuperAdminStats(statsData)
         : getAdminStats(statsData);
