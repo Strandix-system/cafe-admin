@@ -1,40 +1,53 @@
-import { useState, useMemo } from "react";
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Typography } from "@mui/material";
-import { Plus, Download, QrCode } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+} from "@mui/material";
+import { Download, QrCode } from "lucide-react";
 import TableComponent from "../components/TableComponent/TableComponent";
+import InputField from "../components/common/InputField";
 import toast from "react-hot-toast";
 import { useFetch, usePost } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
 import { queryClient } from "../lib/queryClient";
 import { useAuth } from "../context/AuthContext";
+import { useParams, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 const CafeTableManagement = () => {
+  const { layoutId: urlLayoutId } = useParams();
+  const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
-  const [totalTables, settotalTables] = useState("");
+  const [totalTables, setTotalTables] = useState("");
   const [errors, setErrors] = useState({});
   const { user } = useAuth();
+  const location = useLocation();
 
-  const { data: qrCodesData } = useFetch(
+  useEffect(() => {
+    if (location.state?.openQRDialog) {
+      setOpenDialog(true);
+
+      // clear state so refresh/back doesn’t reopen dialog
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, navigate]);
+
+
+  const { data: qrCodesData, refetch } = useFetch(
     "get-qr-codes",
     API_ROUTES.getQRCodes,
-    queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] }),
     { adminId: user?.id },
-    { 
+    {
       enabled: !!user?.id,
-      // Transform the data to match TableComponent's expected format
-      select: (data) => {
-        if (!data?.result) return { result: { qrs: [], totalResults: 0 } };
-        
-        return {
-          result: {
-            results: data.result, // Put the array in results
-            totalResults: data.result.length // Add totalResults count
-          }
-        };
-      }
     }
   );
-  console.log("Fetched QR Codes Data:", qrCodesData);
+
   // Create QR codes mutation
   const { mutate: createQRCodes, isPending: isCreating } = usePost(
     API_ROUTES.createQRCodes,
@@ -42,16 +55,20 @@ const CafeTableManagement = () => {
       onSuccess: () => {
         toast.success("QR codes generated successfully!");
         setOpenDialog(false);
-        settotalTables("");
+        setTotalTables("");
         setErrors({});
-        queryClient.invalidateQueries({ queryKey: ["get-qr-codes"] });
+
+        // Clear URL param if it exists
+        if (urlLayoutId) {
+          navigate("/qr-codes", { replace: true });
+        }
+
+        queryClient.invalidateQueries({ queryKey: "get-qr-codes" });
+        refetch();
       },
       onError: (error) => {
-        console.error("Full error object:", error);
-        console.error("Error message:", error?.message);
-        console.error("Error response:", error?.response);
         toast.error(error?.message || "Failed to generate QR codes");
-      }
+      },
     }
   );
 
@@ -79,7 +96,10 @@ const CafeTableManagement = () => {
                 style={{ width: 60, height: 60, objectFit: "contain" }}
               />
             ) : (
-              <Typography variant="caption" sx={{ color: "#999", fontStyle: "italic" }}>
+              <Typography
+                variant="caption"
+                sx={{ color: "#999", fontStyle: "italic" }}
+              >
                 No QR Code
               </Typography>
             )}
@@ -112,42 +132,60 @@ const CafeTableManagement = () => {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          toast.success(`QR code for Table ${row.original.tableNumber} downloaded!`);
+          toast.success(
+            `QR code for Table ${row.original.tableNumber} downloaded!`
+          );
         }
       },
       color: "#6F4E37",
     },
   ];
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-    settotalTables("");
-    setErrors({});
-  };
+  const maxExistingTableNumber = useMemo(() => {
+    if (qrCodesData?.result?.totalResults === 0) return 0;
+    return qrCodesData?.result?.totalResults;
+  }, [qrCodesData]);
 
   const validateForm = () => {
     const newErrors = {};
-    const range = parseInt(totalTables);
+    const selectedTotal = Number(totalTables);
 
     if (!totalTables) {
-      newErrors.totalTables = "Please enter the number of tables";
-    } else if (isNaN(range) || range < 1) {
-      newErrors.totalTables = "Please enter a valid number greater than 0";
-    } else if (range > 500) {
-      newErrors.totalTables = "Maximum 500 tables can be created at once";
+      newErrors.totalTables = "Please select number of tables";
+    } else if (isNaN(selectedTotal)) {
+      newErrors.totalTables = "Invalid number";
+    } else if (selectedTotal <= maxExistingTableNumber) {
+      newErrors.totalTables = `Tables 1-${maxExistingTableNumber} already have QR codes. Please select a number greater than ${maxExistingTableNumber}.`;
+    } else if (selectedTotal > 50) {
+      newErrors.totalTables = "Maximum 50 tables allowed";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = () => {
     if (validateForm()) {
-      const range = parseInt(totalTables);
       createQRCodes({
-        totalTables: range,
+        totalTables: Number(totalTables),
         adminId: user?.id,
       });
+    }
+  };
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setTotalTables("");
+    setErrors({});
+
+    // Clear URL param if it exists
+    if (urlLayoutId) {
+      navigate("/qr-codes", { replace: true });
     }
   };
 
@@ -167,7 +205,6 @@ const CafeTableManagement = () => {
         <Button
           variant="contained"
           sx={{ backgroundColor: "#6F4E37" }}
-          startIcon={<Plus size={18} />}
           onClick={handleOpenDialog}
         >
           Generate QR Codes
@@ -178,19 +215,18 @@ const CafeTableManagement = () => {
         slug="QR Code"
         columns={columns}
         actions={actions}
+        params={{ adminId: user?.id }}
         actionsType="icons"
         querykey="get-qr-codes"
         getApiEndPoint="getQRCodes"
         enableExportTable={true}
         serialNo={true}
-        params={{ adminId: user?.id }}
-        data={qrCodesData}
       />
 
       {/* Generate QR Codes Dialog */}
-      <Dialog 
-        open={openDialog} 
-        onClose={() => !isCreating && setOpenDialog(false)}
+      <Dialog
+        open={openDialog}
+        onClose={() => !isCreating && handleCloseDialog()}
         maxWidth="sm"
         fullWidth
       >
@@ -199,37 +235,95 @@ const CafeTableManagement = () => {
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
-            <Typography variant="body2" sx={{ mb: 2, color: "#666" }}>
-              Enter the number of tables for which you want to generate QR codes.
-              Table numbering will start from 1.
-            </Typography>
-            <TextField
-              fullWidth
-              label="Number of Tables"
-              type="number"
-              value={totalTables}
-              onChange={(e) => {
-                settotalTables(e.target.value);
-                setErrors({});
-              }}
-              error={!!errors.totalTables}
-              helperText={errors.totalTables}
-              placeholder="e.g., 10"
-              InputProps={{
-                inputProps: { min: 1, max: 500 }
-              }}
-              disabled={isCreating}
-            />
-            {totalTables && !errors.totalTables && (
-              <Typography variant="caption" sx={{ mt: 1, display: "block", color: "#6F4E37" }}>
-                This will generate QR codes for tables 1 to {totalTables}
-              </Typography>
+            {maxExistingTableNumber > 0 && (
+              <Box
+                sx={{
+                  p: 2,
+                  mb: 3,
+                  bgcolor: "#FFF4E6",
+                  borderRadius: 2,
+                  border: "1px solid #FFB74D",
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "#E65100",
+                    fontWeight: 600,
+                    display: "block",
+                    mb: 0.5,
+                  }}
+                >
+                  Existing QR Codes
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#E65100" }}>
+                  Tables 1-{maxExistingTableNumber} already have QR codes for
+                  your cafe
+                </Typography>
+              </Box>
             )}
+
+            {/* Number of Tables Dropdown */}
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ mb: 1.5, color: "#666", fontWeight: 500 }}
+              >
+                Number of Tables
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ mb: 2, display: "block", color: "#888" }}
+              >
+                {maxExistingTableNumber > 0
+                  ? `Select a number greater than ${maxExistingTableNumber} to continue generating QR codes.`
+                  : "Table numbering will start from 1."}
+              </Typography>
+              <InputField
+                select
+                field={{
+                  value: totalTables,
+                  onChange: (e) => {
+                    setTotalTables(e.target.value);
+                    setErrors((prev) => ({ ...prev, totalTables: undefined }));
+                  },
+                }}
+                error={errors.totalTables}
+                helperText={errors.totalTables}
+                disabled={isCreating}
+                SelectProps={{ native: true }}
+              >
+                <option value="">Select number of tables</option>
+
+                {Array.from({ length: 50 }, (_, i) => {
+                  const num = i + 1;
+                  const isDisabled = num <= maxExistingTableNumber;
+
+                  return (
+                    <option key={num} value={num} disabled={isDisabled}>
+                      {num} {isDisabled ? "(Already created)" : ""}
+                    </option>
+                  );
+                })}
+              </InputField>
+
+              {totalTables && !errors.totalTables && (
+                <Typography
+                  variant="caption"
+                  sx={{ mt: 1, display: "block", color: "#6F4E37" }}
+                >
+                  This will generate QR codes for tables{" "}
+                  {maxExistingTableNumber > 0
+                    ? `${maxExistingTableNumber + 1}-${totalTables}`
+                    : `1-${totalTables}`}
+                </Typography>
+              )}
+            </Box>
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
-          <Button 
-            onClick={() => setOpenDialog(false)} 
+          <Button
+            onClick={handleCloseDialog}
             disabled={isCreating}
             sx={{ color: "#666" }}
           >
@@ -239,7 +333,7 @@ const CafeTableManagement = () => {
             onClick={handleSubmit}
             variant="contained"
             sx={{ backgroundColor: "#6F4E37" }}
-            disabled={isCreating}
+            disabled={isCreating || !totalTables}
           >
             {isCreating ? "Generating..." : "Generate"}
           </Button>

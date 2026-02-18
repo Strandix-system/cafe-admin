@@ -5,7 +5,6 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { useNavigate } from "react-router-dom";
 import { api_enums } from "../enums/api";
 import { useFetch } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
@@ -15,7 +14,6 @@ import Loader from "../components/common/Loader";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
@@ -48,13 +46,13 @@ export function AuthProvider({ children }) {
       setAuthLoading(false);
     };
     init();
-  }, [token, refetch, navigate]);
+  }, [token, refetch]);
 
   const logout = useCallback(() => {
     localStorage.removeItem(api_enums.JWT_ACCESS_TOKEN);
     setUser(null);
     setIsAuthenticated(false);
-  }, [navigate]);
+  }, []);
 
   const login = useCallback(
     async (token) => {
@@ -79,7 +77,7 @@ export function AuthProvider({ children }) {
     [logout],
   );
 
-  if (authLoading) return <><Loader variant="fullscreen"/></>;
+  if (authLoading) return <><Loader variant="fullscreen" /></>;
 
   return (
     <AuthContext.Provider

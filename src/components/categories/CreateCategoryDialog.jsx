@@ -48,7 +48,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
   const { mutate: createCategory, isPending: createPending } = usePost(API_ROUTES.createCategory, {
     onSuccess: () => {
       toast.success("Category created successfully ✅");
-      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["get-categories"], type: "all" });
       reset();
       handleClose();
     },

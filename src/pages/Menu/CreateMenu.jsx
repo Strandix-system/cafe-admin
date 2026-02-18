@@ -34,7 +34,7 @@ export default function CreateMenu() {
   const [categories, setCategories] = useState([]);
   const [pageLoading, setPageLoading] = useState(false);
 
-  const { data: { result: { results: categoriesData } } = {} } = useFetch("get-categories", API_ROUTES.getCategories, {}, {
+  const { data: { result: { results: categoriesData } = {} } = {} } = useFetch("get-categories", API_ROUTES.getCategories, {}, {
     enabled: true
   });
 

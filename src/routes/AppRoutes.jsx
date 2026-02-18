@@ -6,25 +6,20 @@ import ForgotPassword from "../pages/ForgotPassword";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import LayoutsPage from "../pages/LayoutsPage";
-// import CreateLayoutPage from "../pages/CreateLayoutPage";
+
 import AdminList from "../pages/AdminList";
 import CategoriesList from "../pages/CategoriesList";
 
 import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
-import CreateMenu from "../pages/Menu/CreateMenu";
+// import CreateMenu from "../pages/menu/CreateMenu";
 import MenuList from "../pages/Menu/MenuList";
-import EditMenuModal from "../pages/Menu/EditMenuModal";
-import User from "../pages/Menu/User";
+import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
-// import { MenuList } from "@mui/material";
 import CafeTableManagement from "../pages/CafeTableManagement";
-import UserList from "../pages/UserList";
 import MyOrders from "../pages/dashboard/MyOrders";
-// import UserProfile from "../pages/dashboard/UserProfile";
-import Profile from "../pages/Profile/Profile";
 
 const AppRoutes = () => {
     return (
@@ -67,17 +62,17 @@ const AppRoutes = () => {
                     </ProtectedRoutes>
                 }
             />
-
             <Route
-                path="/cafe/view-customers/:userId?"
+                path="/cafes/:adminId?"
                 element={
                     <ProtectedRoutes>
                         <DashboardLayout>
-                            <UserList />
+                            <AdminList />
                         </DashboardLayout>
                     </ProtectedRoutes>
                 }
             />
+
             {/* PROTECTED ROUTES - Layouts Management */}
             <Route
                 path="/layouts"
@@ -135,28 +130,6 @@ const AppRoutes = () => {
             />
 
             <Route
-                path="/create-menu"
-                element={
-                    <ProtectedRoutes>
-                        <DashboardLayout>
-                            <CreateMenu />
-                        </DashboardLayout>
-                    </ProtectedRoutes>
-                }
-            />
-
-            <Route
-                path="/create-menu/:menuId"
-                element={
-                    <ProtectedRoutes>
-                        <DashboardLayout>
-                            <CreateMenu />
-                        </DashboardLayout>
-                    </ProtectedRoutes>
-                }
-            />
-
-            <Route
                 path="/ordermanagement"
                 element={
                     <ProtectedRoutes>
@@ -179,52 +152,11 @@ const AppRoutes = () => {
             />
 
             <Route
-                path="/customers"
+                path="/customer"
                 element={
                     <ProtectedRoutes>
                         <DashboardLayout>
-                            <UserList />
-                        </DashboardLayout>
-                    </ProtectedRoutes>
-                }
-            />
-            {/* <Route
-        path="/cafe/orders/:userId"
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout>
-              <UserList />
-            </DashboardLayout>
-          </ProtectedRoutes>
-        }
-      /> */}
-
-            <Route
-                path="/user"
-                element={
-                    <ProtectedRoutes>
-                        <DashboardLayout>
-                            <User />
-                        </DashboardLayout>
-                    </ProtectedRoutes>
-                }
-            />
-            <Route
-                path="/cafe/my-orders/:userId"
-                element={
-                    <ProtectedRoutes>
-                        <DashboardLayout>
-                            <MyOrders />
-                        </DashboardLayout>
-                    </ProtectedRoutes>
-                }
-            />
-            <Route
-                path="/profile"
-                element={
-                    <ProtectedRoutes>
-                        <DashboardLayout>
-                            <Profile />
+                            <CustomerList />
                         </DashboardLayout>
                     </ProtectedRoutes>
                 }

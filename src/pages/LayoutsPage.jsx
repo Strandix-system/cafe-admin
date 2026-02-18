@@ -1,14 +1,28 @@
 import { useEffect, useState } from "react";
 import { Grid, Button, Box, Typography, Skeleton, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useFetch } from "../utils/hooks/api_hooks";
+import { useDelete, useFetch, usePatch } from "../utils/hooks/api_hooks";
 import LayoutPreviewCard from "../components/layout/LayoutPreviewCard";
 import { API_ROUTES } from "../utils/api_constants";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import { queryClient } from "../lib/queryClient";
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
+} from "@mui/material";
 
 export default function LayoutsPage() {
   const navigate = useNavigate();
-  const { isAdmin, isSuperAdmin, adminId } = useAuth();
+  const { isAdmin, isSuperAdmin, user } = useAuth();
+  const [selectedDefaultLayout, setSelectedDefaultLayout] = useState(null);
+  const [selectedAdminLayout, setSelectedAdminLayout] = useState(null);
+  const [openQrModal, setOpenQrModal] = useState(false);
+  const [deleteLayoutId, setDeleteLayoutId] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
 
   // Fetch default layouts (templates)
   const { data: defaultLayoutData, isLoading: isLoadingDefault } = useFetch(
@@ -21,15 +35,66 @@ export default function LayoutsPage() {
   const { data: adminLayoutData, isLoading: isLoadingAdmin } = useFetch(
     "getAdminLayouts",
     API_ROUTES.getLayoutByAdmin,
-    { adminId },
+    { adminId: user?.id },
     { enabled: isAdmin && !isSuperAdmin },
+  );
+
+  const { data: qrCodesData } = useFetch(
+    "get-qr-codes",
+    API_ROUTES.getQRCodes,
+    { adminId: user?.id },
+    {
+      enabled: !!user?.id,
+    }
+  );
+
+  const hasNoQR = qrCodesData?.result?.totalResults === 0 && adminLayoutData?.result?.totalResults === 1;
+
+  const cafeQrId = adminLayoutData?.result?.cafeQr?._id;
+
+  const { mutate: setActiveLayout, isPending: isSettingActive } = usePatch(
+    `${API_ROUTES.setActiveLayout}`,
+    {
+      onSuccess: () => {
+        toast.success("Active layout set successfully");
+        queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
+      },
+      onError: (error) => {
+        console.error("Error setting active layout:", error);
+        toast.error("Failed to set active layout");
+      },
+    }
   );
 
   const defaultLayouts = defaultLayoutData?.result?.results || [];
   const adminLayouts = adminLayoutData?.result?.results || [];
 
-  const [selectedDefaultLayout, setSelectedDefaultLayout] = useState(null);
-  const [selectedAdminLayout, setSelectedAdminLayout] = useState(null);
+  //delete my layouts
+  const { mutate: deleteLayout, isPending: isDeleting } = useDelete(
+    API_ROUTES.deleteLayoutbyAdmin, // make sure this exists
+    {
+      onSuccess: () => {
+        toast.success("Layout deleted successfully");
+       queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
+        setOpenDeleteDialog(false);
+        setDeleteLayoutId(null);
+      },
+      onError: () => {
+        toast.error("Failed to delete layout");
+      },
+    }
+  );
+
+  const handleDelete = (layoutId) => {
+    setDeleteLayoutId(layoutId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteLayoutId) return;
+    deleteLayout(deleteLayoutId);
+  };
+
 
   // Auto-select if only one default layout exists
   useEffect(() => {
@@ -38,26 +103,30 @@ export default function LayoutsPage() {
     }
   }, [defaultLayouts]);
 
-  // Auto-select if only one admin layout exists
-  useEffect(() => {
-    if (adminLayouts.length === 1 && !isSuperAdmin) {
-      setSelectedAdminLayout(adminLayouts[0]._id);
-    }
-  }, [adminLayouts, isSuperAdmin]);
-
   const handlePreview = (layout) => {
     if (!layout?._id) {
       console.error("No valid layout ID for preview");
       return;
     }
-    const url = `${import.meta.env.VITE_PORTFOLIO_URL}/${layout?._id}`;
+    let url;
+    if (layout.defaultLayout) {
+      if (layout.layoutTitle === "COZZY") {
+        url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_COZZY_QR}`;
+        window.open(url, "_blank");
+      } else if (layout.layoutTitle === "ELEGANT") {
+        url = `${import.meta.env.VITE_PORTFOLIO_URL}/${import.meta.env.VITE_ELEGANT_QR}`;
+        window.open(url, "_blank");
+      }
+      return;
+    }
+    url = `${import.meta.env.VITE_PORTFOLIO_URL}/${cafeQrId}`;
     window.open(url, "_blank");
   };
 
-  const handleEditAdmin = () => {
-    if (selectedAdminLayout) {
+  const handleEditAdmin = (layoutId) => {
+    if (layoutId) {
       // For admin: edit their own layout
-      navigate(`/layouts/create-edit/${selectedAdminLayout}`);
+      navigate(`/layouts/create-edit/${layoutId}`);
     }
   };
 
@@ -67,6 +136,23 @@ export default function LayoutsPage() {
       navigate(`/layouts/create-edit/${selectedDefaultLayout}`);
     }
   };
+
+  const handleSetActive = (layoutId) => {
+    if (hasNoQR) {
+      setOpenQrModal(true);
+      return;
+    }
+    setActiveLayout({
+      layoutId,
+      active: true,
+    });
+  };
+
+  useEffect(() => {
+    if (hasNoQR) {
+      setOpenQrModal(true);
+    }
+  }, [hasNoQR]);
 
   // SuperAdmin view
   if (isSuperAdmin) {
@@ -110,9 +196,13 @@ export default function LayoutsPage() {
               <Grid item key={layout._id}>
                 <LayoutPreviewCard
                   layout={layout}
-                  selectedId={selectedDefaultLayout}
+                  isActive={false}
+                  isSelected={selectedDefaultLayout === layout._id}
                   onSelect={setSelectedDefaultLayout}
+                  onSetActive={() => { }}
+                  onEdit={() => { }}
                   onPreview={handlePreview}
+                  showEditButton={false}
                 />
               </Grid>
             ))
@@ -170,9 +260,13 @@ export default function LayoutsPage() {
             <Grid item key={layout._id}>
               <LayoutPreviewCard
                 layout={layout}
-                selectedId={selectedDefaultLayout}
+                isActive={false}
+                isSelected={selectedDefaultLayout === layout._id}
                 onSelect={setSelectedDefaultLayout}
+                onSetActive={() => { }}
+                onEdit={() => { }}
                 onPreview={handlePreview}
+                showEditButton={false}
               />
             </Grid>
           ))
@@ -197,18 +291,14 @@ export default function LayoutsPage() {
         <Typography variant="h5" fontWeight={700}>
           My Layouts
         </Typography>
-
-        <Button
-          variant="contained"
-          onClick={handleEditAdmin}
-          disabled={!selectedAdminLayout}
-          sx={{ backgroundColor: "#6F4E37" }}
-        >
-          Edit
-        </Button>
       </Box>
 
-      <Grid container spacing={3} px={3}>
+      <Grid
+        container
+        spacing={3}
+        px={3}
+        sx={{ opacity: hasNoQR ? 0.5 : 1, pointerEvents: hasNoQR ? "none" : "auto" }}
+      >
         {isLoadingAdmin ? (
           Array.from(new Array(6)).map((_, index) => (
             <Grid item key={index}>
@@ -226,9 +316,15 @@ export default function LayoutsPage() {
             <Grid item key={layout._id}>
               <LayoutPreviewCard
                 layout={layout}
-                selectedId={selectedAdminLayout}
+                isActive={layout?.active}
+                isSelected={selectedAdminLayout === layout._id}
                 onSelect={setSelectedAdminLayout}
+                onSetActive={handleSetActive}
+                onEdit={handleEditAdmin}
                 onPreview={handlePreview}
+                showEditButton={true}
+                onDelete={handleDelete}
+                showDeleteButton
               />
             </Grid>
           ))
@@ -240,6 +336,91 @@ export default function LayoutsPage() {
           </Box>
         )}
       </Grid>
+
+      {hasNoQR && <Dialog
+        open={openQrModal}
+        disableEscapeKeyDown
+        onClose={() => { }}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            maxWidth: 420,
+            p: 1,
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>
+          QR Code Required
+        </DialogTitle>
+
+        <DialogContent>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            You haven’t created any QR codes for your cafe tables yet.
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary">
+            Without QR codes, none of the created layouts will work.
+            Please create QR codes first to activate and use layouts
+            properly.
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ backgroundColor: "#6F4E37" }}
+            onClick={() => navigate("/table-management")}
+          >
+            Create QR Codes
+          </Button>
+        </DialogActions>
+      </Dialog>}
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => !isDeleting && setOpenDeleteDialog(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            maxWidth: 420,
+            p: 1,
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>
+          Delete Layout?
+        </DialogTitle>
+
+        <DialogContent>
+          <Typography variant="body1">
+            Are you sure you want to delete this layout?
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            This action cannot be undone.
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            onClick={() => setOpenDeleteDialog(false)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            color="error"
+            variant="contained"
+            onClick={handleConfirmDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   );
 }

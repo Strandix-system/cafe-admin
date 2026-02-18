@@ -4,6 +4,8 @@ import FormComponent from "../../components/forms/FormComponent";
 import { useFetch, usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import Loader from "../../components/common/Loader";
+import { formatTime } from "../../utils/utils";
+import { queryClient } from "../../lib/queryClient";
 
 export default function AddEditAdmin() {
     const { userId } = useParams();
@@ -22,9 +24,9 @@ export default function AddEditAdmin() {
         `${API_ROUTES.updateUsers}/${userId}`,
         {
             onSuccess: () => {
-                queryClient.invalidateQueries("get-users");
+                queryClient.invalidateQueries({ queryKey: "get-users" });
                 toast.success("User updated successfully");
-                navigate("/users");
+                navigate("/cafes");
             },
             onError: (error) => {
                 toast.error(error.message);
@@ -36,8 +38,9 @@ export default function AddEditAdmin() {
         API_ROUTES.createAdmins,
         {
             onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: "get-users", type: "all", });
                 toast.success("Admin created successfully");
-                navigate("/users");
+                navigate("/cafes");
             },
             onError: (err) => {
                 toast.error(err?.response?.data?.message || "Failed to create cafe");
@@ -46,17 +49,38 @@ export default function AddEditAdmin() {
     );
 
     const onSubmit = (data) => {
-        if (userId) {
-            updateMutate(data);
-        } else {
-            const formData = new FormData();
+        delete data.__v;
+        delete data._id;
+        delete data.createdAt;
+        delete data.updatedAt;
 
-            Object.entries(data).forEach(([key, value]) => {
-                if (value !== null && value !== undefined) {
+        const formattedData = {
+            ...data,
+            hours: {
+                weekdays: `${formatTime(data.hours.weekdays.open)} - ${formatTime(
+                    data.hours.weekdays.close
+                )}`,
+                weekends: `${formatTime(data.hours.weekends.open)} - ${formatTime(
+                    data.hours.weekends.close
+                )}`,
+            },
+        };
+
+        const formData = new FormData();
+
+        Object.entries(formattedData).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+                if (typeof value === "object" && !(value instanceof File)) {
+                    formData.append(key, JSON.stringify(value));
+                } else {
                     formData.append(key, value);
                 }
-            });
+            }
+        });
 
+        if (userId) {
+            updateMutate(formData);
+        } else {
             createMutate(formData);
         }
     };

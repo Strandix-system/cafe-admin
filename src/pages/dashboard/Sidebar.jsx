@@ -2,13 +2,12 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, Divider, Stack, IconButton, useMediaQuery, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { sideBarItems } from "../../configs/sideBarItems";
 
 export default function Sidebar() {
-  const { isSuperAdmin, logout } = useAuth();
+  const { isSuperAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -34,14 +33,8 @@ export default function Sidebar() {
     ? sideBarItems.superAdmin
     : sideBarItems.admin;
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
-
   const handleMenuClick = (path) => {
     navigate(path);
-    // Auto-close sidebar on mobile after navigation
     if (!isMediumScreen) {
       setSidebarOpen(false);
     }
@@ -63,7 +56,6 @@ export default function Sidebar() {
       sx={{
         width: sidebarOpen ? 260 : 80,
         transition: "width 0.3s ease",
-        // Optional: Make it overlay on small screens instead of pushing content
         ...((!isMediumScreen && sidebarOpen) && {
           position: 'fixed',
           zIndex: theme.zIndex.drawer,
