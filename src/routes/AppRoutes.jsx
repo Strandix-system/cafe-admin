@@ -19,7 +19,7 @@ import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 import CafeTableManagement from "../pages/CafeTableManagement";
 import MyOrders from "../pages/dashboard/MyOrders";
-import Profile from "../pages/Profile/profile";
+import Profile from "../pages/Profile/Profile";
 
 const AppRoutes = () => {
     return (
