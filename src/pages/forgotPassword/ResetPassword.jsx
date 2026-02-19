@@ -1,11 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import {
-    TextField,
     Button,
     Box,
     Typography,
     Paper,
-    InputAdornment,
     IconButton,
     CircularProgress,
     LinearProgress,
@@ -22,9 +20,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import toast from "react-hot-toast";
-import cafe1 from "../assets/cafe1.jpg";
-import { usePost } from "../utils/hooks/api_hooks";
-import { API_ROUTES } from "../utils/api_constants";
+import cafe1 from "../../assets/cafe1.jpg";
+import InputField from "../../components/common/InputField";
+import { usePost } from "../../utils/hooks/api_hooks";
+import { API_ROUTES } from "../../utils/api_constants";
 
 const passwordSchema = yup.object({
     password: yup
@@ -113,7 +112,7 @@ const ResetPassword = () => {
             },
             onError: (error) => {
                 // If token is invalid, middleware will reject with 401/403
-                toast.error(error?.response?.data?.message || "Failed to reset password. Please try again.");
+                toast.error(error || "Failed to reset password. Please try again.");
             },
         }
     );
@@ -177,30 +176,21 @@ const ResetPassword = () => {
                         </Box>
 
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <TextField
-                                fullWidth
-                                label="New Password"
-                                type={showPassword ? "text" : "password"}
-                                margin="normal"
-                                {...register("password")}
-                                error={!!errors.password}
-                                helperText={errors.password?.message}
-                                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2, backgroundColor: "#F5EFE6" } }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Lock fontSize="small" />
-                                        </InputAdornment>
-                                    ),
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
+                            <Box sx={{ mt: 2, mb: 2 }}>
+                                <InputField
+                                    field={register("password")}
+                                    label="New Password"
+                                    type={showPassword ? "text" : "password"}
+                                    error={errors.password}
+                                    helperText={errors.password?.message}
+                                    startIcon={<Lock fontSize="small" />}
+                                    endIcon={
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    }
+                                />
+                            </Box>
 
                             {password && (
                                 <Box sx={{ mt: 1, mb: 2 }}>
@@ -225,31 +215,21 @@ const ResetPassword = () => {
                                 </Box>
                             )}
 
-                            <TextField
-                                fullWidth
-                                label="Confirm Password"
-                                type={showConfirmPassword ? "text" : "password"}
-                                margin="normal"
-                                {...register("confirmPassword")}
-                                error={!!errors.confirmPassword}
-                                helperText={errors.confirmPassword?.message}
-                                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2, backgroundColor: "#F5EFE6" } }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Lock fontSize="small" />
-                                        </InputAdornment>
-                                    ),
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
-                                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-
+                            <Box sx={{ mt: 2, mb: 2 }}>
+                                <InputField
+                                    field={register("confirmPassword")}
+                                    label="Confirm Password"
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    error={errors.confirmPassword}
+                                    helperText={errors.confirmPassword?.message}
+                                    startIcon={<Lock fontSize="small" />}
+                                    endIcon={
+                                        <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    }
+                                />
+                            </Box>
                             <Button
                                 fullWidth
                                 type="submit"

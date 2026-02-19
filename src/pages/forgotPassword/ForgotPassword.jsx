@@ -1,11 +1,9 @@
 import { useState } from "react";
 import {
-  TextField,
   Button,
   Box,
   Typography,
   Paper,
-  InputAdornment,
   CircularProgress,
   Link,
   Alert,
@@ -16,9 +14,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import toast from "react-hot-toast";
-import cafe1 from "../assets/cafe1.jpg";
-import { usePost } from "../utils/hooks/api_hooks";
-import { API_ROUTES } from "../utils/api_constants";
+import cafe1 from "../../assets/cafe1.jpg";
+import InputField from "../../components/common/InputField";
+import { usePost } from "../../utils/hooks/api_hooks";
+import { API_ROUTES } from "../../utils/api_constants";
 
 const emailSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -27,11 +26,11 @@ const emailSchema = yup.object({
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [emailSent, setEmailSent] = useState(false);
-  const [submittedEmail, setSubmittedEmail] = useState("");
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(emailSchema),
@@ -39,6 +38,8 @@ const ForgotPassword = () => {
       email: "",
     },
   });
+
+  const values = watch();
 
   const { mutate: sendResetLink, isPending } = usePost(
     API_ROUTES.forgotPassword,
@@ -57,12 +58,11 @@ const ForgotPassword = () => {
   );
 
   const onSubmit = (data) => {
-    setSubmittedEmail(data.email);
     sendResetLink(data);
   };
 
   const handleResend = () => {
-    sendResetLink({ email: submittedEmail });
+    sendResetLink({ email: values?.email });
   };
 
   return (
@@ -115,30 +115,18 @@ const ForgotPassword = () => {
 
             {/* Email Form */}
             <form onSubmit={handleSubmit(onSubmit)}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                margin="normal"
-                {...register("email")}
-                error={!!errors.email}
-                helperText={
-                  errors.email?.message ||
-                  "Enter the email associated with your account"
-                }
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    backgroundColor: "#F5EFE6",
-                  },
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Email fontSize="small" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <Box sx={{ mt: 2, mb: 2 }}>
+                <InputField
+                  field={register("email")}
+                  label="Email Address"
+                  error={errors.email}
+                  helperText={
+                    errors.email?.message ||
+                    "Enter the email associated with your account"
+                  }
+                  startIcon={<Email fontSize="small" />}
+                />
+              </Box>
 
               <Button
                 fullWidth
@@ -203,7 +191,7 @@ const ForgotPassword = () => {
             >
               We've sent a password reset link to
               <br />
-              <strong>{submittedEmail}</strong>
+              <strong>{values?.email}</strong>
             </Typography>
 
             <Alert

@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "../pages/Login";
-import ForgotPassword from "../pages/ForgotPassword";
+import ForgotPassword from "../pages/forgotPassword/ForgotPassword";
 
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -20,7 +20,7 @@ import OrderHistoryList from "../pages/OrderHistoryList";
 import CafeTableManagement from "../pages/CafeTableManagement";
 import MyOrders from "../pages/dashboard/MyOrders";
 import Profile from "../pages/Profile/Profile";
-import ResetPassword from "../pages/ResetPassword";
+import ResetPassword from "../pages/forgotPassword/ResetPassword";
 
 const AppRoutes = () => {
   return (
