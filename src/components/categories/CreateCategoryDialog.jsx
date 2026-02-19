@@ -16,6 +16,7 @@ import { usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 import { useEffect, useState } from "react";
+import CommonButton from "../../components/common/CommonButton";
 
 // ✅ Yup Schema
 const schema = yup.object({
@@ -120,11 +121,14 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} variant="outlined" sx={{ color: "#6F4E37" }}>
+        {/* <Button onClick={handleClose} variant="outlined" sx={{ color: "#6F4E37" }}>
           Cancel
-        </Button>
+        </Button> */}
+        <CommonButton variant="outlined" onClick={handleClose}>
+          Cancel
+        </CommonButton>
 
-        <Button
+        {/* <Button
           variant="contained"
           onClick={handleSubmit(onSubmit)}
           disabled={createPending || updatePending || !isValid}
@@ -137,7 +141,10 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
             : isEdit
               ? "Update"
               : "Create"}
-        </Button>
+        </Button> */}
+        <CommonButton variant="contained" onClick={handleSubmit(onSubmit)} loading={createPending || updatePending} disabled={!isValid}>
+          {isEdit ? "Update" : "Create"}
+        </CommonButton>
       </DialogActions>
     </Dialog>
   );

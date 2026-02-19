@@ -16,6 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import CommonButton from "../components/common/CommonButton";
 
 export default function TopNavbar() {
     const { user, logout, isSuperAdmin } = useAuth();
@@ -84,7 +85,7 @@ export default function TopNavbar() {
         >
             {/* Left Side - Back Button (conditional) + Page Title */}
             <Box display="flex" alignItems="center" gap={2}>
-                {shouldShowBackButton && (
+                {/* {shouldShowBackButton && (
                     <Button
                         onClick={handleBack}
                         startIcon={<ArrowBackIcon />}
@@ -99,6 +100,21 @@ export default function TopNavbar() {
                     >
                         Back
                     </Button>
+                )} */}
+                {shouldShowBackButton && (
+                    <CommonButton
+                        variant="text"
+                        onClick={handleBack}
+                        startIcon={<ArrowBackIcon />}
+                        sx={{
+                            color: "#6F4E37",
+                            "&:hover": {
+                                backgroundColor: "#F5EFE6",
+                            },
+                        }}
+                    >
+                        Back
+                    </CommonButton>
                 )}
 
             </Box>
