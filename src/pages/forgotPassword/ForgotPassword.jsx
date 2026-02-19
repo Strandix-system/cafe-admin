@@ -18,7 +18,7 @@ import cafe1 from "../../assets/cafe1.jpg";
 import InputField from "../../components/common/InputField";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import CommonButton from "../../components/common/commonButton";
+import CommonButton from "../../components/common/CommonButton";
 
 const emailSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),

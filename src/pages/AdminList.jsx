@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
-import CommonButton from "../components/common/CommonButton";
+import CommonButton from "../components/common/commonButton";
 
 const AdminList = () => {
   const navigate = useNavigate();
