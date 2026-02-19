@@ -7,7 +7,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import CommonButton from "../../components/common/CommonButton";
+import CommonButton from "./CommonButton";
 
 
 const DeleteConfirmationDialog = ({

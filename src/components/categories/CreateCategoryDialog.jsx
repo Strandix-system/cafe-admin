@@ -16,7 +16,7 @@ import { usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 import { useEffect, useState } from "react";
-import CommonButton from "../../components/common/CommonButton";
+import CommonButton from "../common/CommonButton";
 
 // ✅ Yup Schema
 const schema = yup.object({
