@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Login from "../pages/Login";
+import LoginSignup from "../pages/LoginSignup";
 import ForgotPassword from "../pages/forgotPassword/ForgotPassword";
 
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
@@ -28,7 +28,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* PUBLIC ROUTES */}
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<LoginSignup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
 

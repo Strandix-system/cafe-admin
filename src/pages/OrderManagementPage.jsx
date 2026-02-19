@@ -127,16 +127,16 @@ const OrderManagementPage = () => {
     });
 
     /* ---------------- UPDATE PAYMENT STATUS API ---------------- */
-    const { mutate: updatePaymentStatus } = usePatch(API_ROUTES.updateOrder, {
+    const { mutate: updatePaymentStatus } = usePatch(API_ROUTES.updatePaymentStatus, {
         onSuccess: () => {
             toast.success("Payment status updated to Paid!");
             // Refetch to sync with backend
-            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
+            queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },
         onError: () => {
             toast.error("Failed to update payment status");
             // Refetch to restore correct state
-            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
+            queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },
     });
 
@@ -308,7 +308,7 @@ const OrderManagementPage = () => {
                     <TableComponent
                         slug="orders"
                         columns={historyColumns}
-                        actions={[]}
+                        actions={historyActions}
                         params={{
                             populate: "userId",
                         }}
