@@ -18,6 +18,7 @@ import cafe1 from "../../assets/cafe1.jpg";
 import InputField from "../../components/common/InputField";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
+import CommonButton from "../../components/common/commonButton";
 
 const emailSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -128,7 +129,7 @@ const ForgotPassword = () => {
                 />
               </Box>
 
-              <Button
+              {/* <Button
                 fullWidth
                 type="submit"
                 variant="contained"
@@ -152,7 +153,17 @@ const ForgotPassword = () => {
                 ) : (
                   "Send Reset Link"
                 )}
-              </Button>
+              </Button> */}
+              <CommonButton
+                type="submit"
+                fullWidth
+                loading={isPending}
+                disabled={!isValid}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Send Reset Link
+              </CommonButton>
+
             </form>
           </>
         ) : (
@@ -231,7 +242,7 @@ const ForgotPassword = () => {
         )}
 
         {/* Single Back to Login button for both states */}
-        <Button
+        {/* <Button
           fullWidth
           variant="outlined"
           onClick={() => navigate("/login")}
@@ -252,7 +263,16 @@ const ForgotPassword = () => {
         >
           <ArrowBack fontSize="small" sx={{ mr: 1 }} />
           Back to Login
-        </Button>
+        </Button> */}
+        <CommonButton
+          fullWidth
+          variant="outlined"
+          onClick={() => navigate("/login")}
+          sx={{ mt: 2, py: 1.2, fontSize: "0.95rem" }}
+        >
+          <ArrowBack fontSize="small" style={{ marginRight: 8 }} />
+          Back to Login
+        </CommonButton>
       </Paper>
     </Box>
   );

@@ -19,6 +19,9 @@ import InputField from "../common/InputField";
 import ImageUploadSection from "../common/ImageUploadSection";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import { m } from "framer-motion";
+import CommonTextField from "../common/CommonTextField";
+import CommonImageField from "../common/CommonImageField";
+import CommonButton from "../common/CommonButton";
 
 const layoutSchema = yup.object({
     layoutTitle: yup.string().required("Layout title is required"),
@@ -165,119 +168,35 @@ export default function LayoutForm({
         );
     };
 
-    // Replace renderTextField function
-    const renderTextField = (
-        name,
-        label,
-        icon,
-        placeholder,
-        multiline = false,
-        gridSize = { xs: 12 },
-        disabled = false,
-    ) => (
-        <Grid size={gridSize}>
-            <FormLabel
-                sx={{
-                    color: "#6F4E37",
-                    fontWeight: 600,
-                    mb: 1,
-                    display: "block",
-                }}
-            >
-                {label}
-            </FormLabel>
-            <Controller
-                name={name}
-                control={control}
-                render={({ field }) => (
-                    <InputField
-                        field={field}
-                        error={
-                            errors[name.split(".").reduce((obj, key) => obj?.[key], errors)]
-                        }
-                        startIcon={icon}
-                        placeholder={placeholder}
-                        multiline={multiline}
-                        rows={multiline ? 4 : undefined}
-                    />
-                )}
-            />
-        </Grid>
-    );
-
-    // Replace renderImageField function
-    const renderImageField = (
-        fieldName,
-        label,
-        inputId,
-        gridSize = { xs: 12 },
-    ) => (
-        <Grid size={gridSize}>
-            <FormLabel
-                sx={{
-                    color: "#6F4E37",
-                    fontWeight: 600,
-                    mb: 1,
-                    display: "block",
-                }}
-            >
-                {label}
-            </FormLabel>
-            <Controller
-                name={fieldName}
-                control={control}
-                render={({ field }) => (
-                    <>
-                        <ImageUploadSection
-                            label=""
-                            field={field}
-                            preview={previews[fieldName]}
-                            setPreview={(preview) => setPreview(fieldName, preview)}
-                            handleImageChange={(file) => handleImageChange(file, fieldName)}
-                            handleReplaceImage={() => handleReplaceImage(fieldName)}
-                            inputId={inputId}
-                            isEdit={isEdit}
-                        />
-                        {errors[fieldName] && (
-                            <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
-                                {errors[fieldName]?.message}
-                            </Box>
-                        )}
-                    </>
-                )}
-            />
-        </Grid>
-    );
-
     // Replace renderTimeField function
-    const renderTimeField = (name, label, gridSize = { xs: 12 }) => (
-        <Grid size={gridSize}>
-            <FormLabel
-                sx={{
-                    color: "#6F4E37",
-                    fontWeight: 600,
-                    mb: 1,
-                    display: "block",
-                }}
-            >
-                {label}
-            </FormLabel>
-            <Controller
-                name={name}
-                control={control}
-                render={({ field }) => (
-                    <>
-                        <div className="flex gap-4 mt-2">{renderTimePickers(field)}</div>
-                        {errors.hours?.[name.split(".")[1]] && (
-                            <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
-                                {errors.hours[name.split(".")[1]].message}
-                            </Box>
-                        )}
-                    </>
-                )}
-            />
-        </Grid>
-    );
+    // const renderTimeField = (name, label, gridSize = { xs: 12 }) => (
+    //     <Grid size={gridSize}>
+    //         <FormLabel
+    //             sx={{
+    //                 color: "#6F4E37",
+    //                 fontWeight: 600,
+    //                 mb: 1,
+    //                 display: "block",
+    //             }}
+    //         >
+    //             {label}
+    //         </FormLabel>
+    //         <Controller
+    //             name={name}
+    //             control={control}
+    //             render={({ field }) => (
+    //                 <>
+    //                     <div className="flex gap-4 mt-2">{renderTimePickers(field)}</div>
+    //                     {errors.hours?.[name.split(".")[1]] && (
+    //                         <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
+    //                             {errors.hours[name.split(".")[1]].message}
+    //                         </Box>
+    //                     )}
+    //                 </>
+    //             )}
+    //         />
+    //     </Grid>
+    // );
 
     if (isLoading) {
         return (
@@ -298,7 +217,7 @@ export default function LayoutForm({
             <div className="flex gap-3 items-center justify-between w-full mb-6">
                 <h2 className="text-2xl font-bold">Customize Layout</h2>
 
-                <Button
+                {/* <Button
                     type="submit"
                     variant="contained"
                     disabled={isLoading || !isValid || isSubmitting}
@@ -308,64 +227,98 @@ export default function LayoutForm({
                     }}
                 >
                     {/* {isEdit && !isAdmin ? "Update Layout" : "Create Layout"} */}
-                    {isEdit ? "Update Layout" : "Create Layout"}
+                {/* {isEdit ? "Update Layout" : "Create Layout"} */}
+                {/* </Button>  */}
 
-                </Button>
+                <CommonButton
+                    type="submit"
+                    variant="contained"
+                    disabled={isLoading || !isValid || isSubmitting}
+                >
+                    {isEdit ? "Update Layout" : "Create Layout"}
+                </CommonButton>
             </div>
+            
             <Grid container spacing={3}>
                 {/* ROW 1: Two Images Side by Side */}
-                {renderImageField("homeImage", "Home Image", "home-image-upload", {
-                    xs: 12,
-                    md: 6,
-                })}
-                {renderImageField("aboutImage", "About Image", "about-image-upload", {
-                    xs: 12,
-                    md: 6,
-                })}
 
-                {/* ROW 2: Layout Title & Menu Title */}
-                {renderTextField(
-                    "layoutTitle",
-                    "Layout Title",
-                    <Title sx={{ color: "#6F4E37" }} />,
-                    "Enter layout title",
-                    false,
-                    { xs: 12, md: 6 },
-                )}
-                {renderTextField(
-                    "menuTitle",
-                    "Menu Title",
-                    <Restaurant sx={{ color: "#6F4E37" }} />,
-                    "Enter menu title",
-                    false,
-                    { xs: 12, md: 6 },
-                )}
+                <CommonImageField
+                    name="homeImage"
+                    label="Home Image"
+                    inputId="home-image--upload"
+                    control={control}
+                    errors={errors}
+                    preview={previews.homeImage}
+                    setPreview={setPreview}
+                    isEdit={isEdit}
+                    gridSize={{ xs: 12, md: 6 }}
+                />
+
+                <CommonImageField
+                    name="aboutImage"
+                    label="About Image"
+                    inputId="about-image-upload"
+                    control={control}
+                    errors={errors}
+                    preview={previews.aboutImage}
+                    setPreview={setPreview}
+                    isEdit={isEdit}
+                    gridSize={{ xs: 12, md: 6 }}
+                />
+
+                <CommonTextField
+                    name="layoutTitle"
+                    label="Layout Title"
+                    icon={<Title sx={{ color: "#6F4E37" }} />}
+                    placeholder="Enter layout title"
+                    gridSize={{ xs: 12, md: 6 }}
+                    control={control}
+                    errors={errors}
+                />
+
+                <CommonTextField
+                    name="menuTitle"
+                    label="Menu Title"
+                    icon={<Restaurant sx={{ color: "#6F4E37" }} />}
+                    placeholder="Enter menu title"
+                    gridSize={{ xs: 12, md: 6 }}
+                    control={control}
+                    errors={errors}
+                />
 
                 {/* ROW 3: About Title */}
-                {renderTextField(
-                    "aboutTitle",
-                    "About Title",
-                    <Title sx={{ color: "#6F4E37" }} />,
-                    "Enter about title",
-                )}
+
+                <CommonTextField
+                    name="aboutTitle"
+                    label="About Title"
+                    icon={<Title sx={{ color: "#6F4E37" }} />}
+                    placeholder="Enter about title"
+                    control={control}
+                    errors={errors}
+                />
 
                 {/* ROW 4: Descriptions */}
-                {renderTextField(
-                    "aboutDescription",
-                    "About Description",
-                    <Description sx={{ color: "#6F4E37" }} />,
-                    "Enter about description",
-                    true,
-                    { xs: 12, md: 6 },
-                )}
-                {renderTextField(
-                    "cafeDescription",
-                    "Cafe Description",
-                    <Description sx={{ color: "#6F4E37" }} />,
-                    "Enter cafe description",
-                    true,
-                    { xs: 12, md: 6 },
-                )}
+                <CommonTextField
+                    name="aboutDescription"
+                    label="About Description"
+                    icon={<Description sx={{ color: "#6F4E37" }} />}
+                    placeholder="Enter about description"
+                    multiline={true}
+                    gridSize={{ xs: 12 }}
+                    control={control}
+                    errors={errors}
+                />
+
+                <CommonTextField
+                    name="cafeDescription"
+                    label="Cafe Description"
+                    icon={<Description sx={{ color: "#6F4E37" }} />}
+                    placeholder="Enter cafe description"
+                    multiline={true}
+                    gridSize={{ xs: 12 }}
+                    control={control}
+                    errors={errors}
+                />
 
             </Grid>
         </form>

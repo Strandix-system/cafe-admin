@@ -7,6 +7,8 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import CommonButton from "../../components/common/CommonButton";
+
 
 const DeleteConfirmationDialog = ({
   open,
@@ -28,7 +30,7 @@ const DeleteConfirmationDialog = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} variant="outlined" disabled={loading}>
+        {/* <Button onClick={onClose} variant="outlined" disabled={loading}>
           Cancel
         </Button>
         <Button
@@ -38,7 +40,23 @@ const DeleteConfirmationDialog = ({
           disabled={loading}
         >
           {loading ? "Deleting..." : "Delete"}
-        </Button>
+        </Button> */}
+        <CommonButton
+          variant="outlined"
+          onClick={onClose}
+          disabled={loading}
+        >
+          Cancel
+        </CommonButton>
+
+        <CommonButton
+          onClick={onConfirm}
+          loading={loading}
+          bgColor="#d32f2f"        // MUI error red
+          hoverColor="#b71c1c"
+        >
+          Delete
+        </CommonButton>
       </DialogActions>
     </Dialog>
   );

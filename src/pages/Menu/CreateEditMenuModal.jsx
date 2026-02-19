@@ -21,6 +21,10 @@ import { queryClient } from "../../lib/queryClient";
 
 import InputField from "../../components/common/InputField";
 import ImageUploadSection from "../../components/common/ImageUploadSection";
+import CommonTextField from "../../components/common/CommonTextField";
+import CommonImageField from "../../components/common/CommonImageField";
+import { useImageUpload } from "../../utils/hooks/useImageUpload";
+import CommonButton from "../../components/common/CommonButton";
 
 
 const menuSchema = yup.object({
@@ -62,6 +66,8 @@ export default function CreateEditMenuModal({ open, onClose, menuId }) {
   });
 
   const [preview, setPreview] = useState(null);
+  // const { previews, setPreview } = useImageUpload(setValue);
+
 
   const { data: { result: { results: categories = [] } = {} } = {}, } = useFetch("categories", API_ROUTES.getCategories);
 
@@ -73,21 +79,21 @@ export default function CreateEditMenuModal({ open, onClose, menuId }) {
   );
 
   useEffect(() => {
-  if (!open) return;
+    if (!open) return;
 
-  // ✅ CREATE MODE → FULL RESET
-  if (!menuId) {
-    reset({
-      itemName: "",
-      category: "",
-      price: "",
-      discountPrice: "",
-      description: "",
-      image: null,
-    });
-    setPreview(null);
-  }
-}, [open, menuId, reset]);
+    // ✅ CREATE MODE → FULL RESET
+    if (!menuId) {
+      reset({
+        itemName: "",
+        category: "",
+        price: "",
+        discountPrice: "",
+        description: "",
+        image: null,
+      });
+      setPreview(null);
+    }
+  }, [open, menuId, reset]);
 
 
   useEffect(() => {
@@ -105,14 +111,14 @@ export default function CreateEditMenuModal({ open, onClose, menuId }) {
     });
 
     const matchedCategory = categories.find(
-    (cat) => cat.name === menuRes.result.category
-  );
+      (cat) => cat.name === menuRes.result.category
+    );
 
-  if (matchedCategory) {
-    setValue("category", matchedCategory._id, {
-      shouldValidate: true,
-    });
-  }
+    if (matchedCategory) {
+      setValue("category", matchedCategory._id, {
+        shouldValidate: true,
+      });
+    }
 
     setPreview(menuRes.result.image);
   }, [menuRes, isEdit, reset]);
@@ -157,80 +163,13 @@ export default function CreateEditMenuModal({ open, onClose, menuId }) {
   };
 
   const handleClose = () => {
-    
+
     reset();
     setPreview(null);
     onClose();
   };
 
   const loading = createMenu.isPending || updateMenu.isPending;
-
-  const renderTextField = (
-    name,
-    label,
-    placeholder,
-    gridSize = { xs: 12 },
-    multiline = false,
-    type = "text"
-  ) => (
-    <Grid size={gridSize}>
-      <FormLabel sx={{ fontWeight: 600, mb: 1, display: "block" }}>
-        {label}
-      </FormLabel>
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <InputField
-            field={field}
-            placeholder={placeholder}
-            type={type}
-            multiline={multiline}
-            rows={multiline ? 3 : undefined}
-            error={errors[name]}
-            helperText={errors[name]?.message}
-          />
-        )}
-      />
-    </Grid>
-  );
-
-  const renderImageField = (name, label, inputId) => (
-    <Grid size={{ xs: 12 }}>
-      <FormLabel sx={{ fontWeight: 600, mb: 1, display: "block" }}>
-        {label}
-      </FormLabel>
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <>
-            <ImageUploadSection
-              label=""
-              field={field}
-              preview={preview}
-              setPreview={setPreview}
-              inputId={inputId}
-              isEdit={isEdit}
-              handleImageChange={(file) => {
-                field.onChange(file);
-                setPreview(URL.createObjectURL(file));
-              }}
-              handleReplaceImage={() => {
-                field.onChange(null);
-                setPreview(null);
-              }}
-            />
-            {errors[name] && (
-              <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
-                {errors[name]?.message}
-              </Box>
-            )}
-          </>
-        )}
-      />
-    </Grid>
-  );
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -241,12 +180,14 @@ export default function CreateEditMenuModal({ open, onClose, menuId }) {
       <DialogContent dividers>
         <form id="menu-form" onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
-            {renderTextField(
-              "itemName",
-              "Item Name",
-              "Enter item name",
-              { xs: 12, md: 6 }
-            )}
+            <CommonTextField
+              name="itemName"
+              label="Item Name"
+              placeholder="Enter item name"
+              gridSize={{ xs: 12, md: 6 }}
+              control={control}
+              errors={errors}
+            />
 
             <Grid size={{ xs: 12, md: 6 }}>
               <FormLabel sx={{ fontWeight: 600, mb: 1, display: "block" }}>
@@ -273,48 +214,79 @@ export default function CreateEditMenuModal({ open, onClose, menuId }) {
               />
             </Grid>
 
-            {renderTextField(
-              "price",
-              "Price",
-              "Enter price",
-              { xs: 12, md: 6 },
-              false,
-              "number"
-            )}
+            <CommonTextField
+              name="price"
+              label="Price"
+              placeholder="Enter price"
+              gridSize={{ xs: 12, md: 6 }}
+              type="number"
+              control={control}
+              errors={errors}
+            />
 
-            {renderTextField(
-              "discountPrice",
-              "Discount Price",
-              "Optional",
-              { xs: 12, md: 6 },
-              false,
-              "number"
-            )}
+            <CommonTextField
+              name="discountPrice"
+              label="Discount Price"
+              placeholder="Optional"
+              gridSize={{ xs: 12, md: 6 }}
+              type="number"
+              control={control}
+              errors={errors}
+            />
 
-            {renderTextField(
-              "description",
-              "Description",
-              "Enter description",
-              { xs: 12 },
-              true
-            )}
+            <CommonTextField
+              name="description"
+              label="Description"
+              placeholder="Enter description"
+              gridSize={{ xs: 12 }}
+              multiline={true}
+              control={control}
+              errors={errors}
+            />
 
-            {renderImageField("image", "Item Image", "menu-image-upload")}
+            <CommonImageField
+              name="image"
+              label="Item Image"
+              inputId="menu-image-upload"
+              control={control}
+              errors={errors}
+              preview={preview}
+              setPreview={setPreview}
+              isEdit={isEdit}
+              gridSize={{ xs: 12, sm: 6 }}
+            />
           </Grid>
         </form>
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} sx={{ color: "#6F4E37" }}>Cancel</Button>
+        {/* <Button onClick={handleClose} sx={{ color: "#6F4E37" }}>Cancel</Button>
         <Button
           type="submit"
           form="menu-form"
           variant="contained"
-           sx={{ backgroundColor: "#6F4E37" }}
+          sx={{ backgroundColor: "#6F4E37" }}
           disabled={!isValid || loading}
         >
           {loading ? "Saving..." : isEdit ? "Update" : "Create"}
-        </Button>
+        </Button> */}
+        <CommonButton
+          variant="outlined"
+          onClick={handleClose}
+          disabled={loading}
+        >
+          Cancel
+        </CommonButton>
+
+        <CommonButton
+          type="submit"
+          form="menu-form"
+          variant="contained"
+          loading={loading}
+          disabled={!isValid}
+        >
+          {isEdit ? "Update" : "Create"}
+        </CommonButton>
       </DialogActions>
     </Dialog>
   );

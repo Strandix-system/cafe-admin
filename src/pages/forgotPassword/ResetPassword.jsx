@@ -24,6 +24,7 @@ import cafe1 from "../../assets/cafe1.jpg";
 import InputField from "../../components/common/InputField";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
+import CommonButton from "../../components/common/commonButton";
 
 const passwordSchema = yup.object({
     password: yup
@@ -140,7 +141,7 @@ const ResetPassword = () => {
                     <Typography variant="body2" sx={{ color: "#5D4037", mb: 3 }}>
                         This password reset link is invalid or missing.
                     </Typography>
-                    <Button
+                    {/* <Button
                         fullWidth
                         variant="contained"
                         onClick={() => navigate("/forgot-password")}
@@ -155,7 +156,10 @@ const ResetPassword = () => {
                         }}
                     >
                         Request New Link
-                    </Button>
+                    </Button> */}
+                    <CommonButton fullWidth onClick={() => navigate("/forgot-password")}>
+                        Request New Link
+                    </CommonButton>
                 </Paper>
             </Box>
         );
@@ -230,7 +234,7 @@ const ResetPassword = () => {
                                     }
                                 />
                             </Box>
-                            <Button
+                            {/* <Button
                                 fullWidth
                                 type="submit"
                                 variant="contained"
@@ -248,7 +252,17 @@ const ResetPassword = () => {
                                 }}
                             >
                                 {isPending ? <CircularProgress size={26} color="inherit" /> : "Reset Password"}
-                            </Button>
+                            </Button> */}
+                            <CommonButton
+                                type="submit"
+                                fullWidth
+                                loading={isPending}
+                                disabled={!isValid}
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Reset Password
+                            </CommonButton>
+
                         </form>
                     </>
                 ) : (
@@ -262,7 +276,7 @@ const ResetPassword = () => {
                             <br />
                             You can now log in with your new password.
                         </Typography>
-                        <Button
+                        {/* <Button
                             fullWidth
                             variant="contained"
                             onClick={() => navigate("/login")}
@@ -277,7 +291,10 @@ const ResetPassword = () => {
                             }}
                         >
                             Go to Login
-                        </Button>
+                        </Button> */}
+                        <CommonButton fullWidth onClick={() => navigate("/login")}>
+                            Go to Login
+                        </CommonButton>
                     </>
                 )}
             </Paper>

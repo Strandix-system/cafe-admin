@@ -14,6 +14,7 @@ import {
     TaskAlt,
     StickyNote2,
 } from "@mui/icons-material";
+import CommonButton from "../common/CommonButton";
 
 const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
     const handleAction = () => {
@@ -60,7 +61,7 @@ const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
                     >
                         Table {order.tableNumber}
                     </Typography>
-                    <Button
+                    {/* <Button
                         variant="contained"
                         size="small"
                         startIcon={isPending ? <CheckCircle /> : <TaskAlt />}
@@ -81,7 +82,26 @@ const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
                         onClick={handleAction}
                     >
                         {isPending ? "Accept" : "Complete"}
-                    </Button>
+                    </Button> */}
+                    <CommonButton
+                        variant="contained"
+                        size="small"
+                        startIcon={isPending ? <CheckCircle /> : <TaskAlt />}
+                        onClick={handleAction}
+                        bgColor={isPending ? "#4CAF50" : "#2196F3"}
+                        hoverColor={isPending ? "#45a049" : "#1976D2"}
+                        textColor="#fff"
+                        sx={{
+                            px: 1.5,
+                            py: 0.5,
+                            borderRadius: 1.5,
+                            fontSize: "0.813rem",
+                            minWidth: "auto",
+                        }}
+                    >
+                        {isPending ? "Accept" : "Complete"}
+                    </CommonButton>
+
                 </Box>
 
                 {/* Items List with Status Chip */}
