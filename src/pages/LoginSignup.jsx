@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import cafe1 from "../assets/cafe1.jpg";
 import * as yup from "yup";
-
+import InputField from "../components/common/InputField";
 import { useAuth } from "../context/AuthContext";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
