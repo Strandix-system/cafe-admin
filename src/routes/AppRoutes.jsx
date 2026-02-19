@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginSignup from "../pages/LoginSignup";
-import ForgotPassword from "../pages/ForgotPassword";
+import ForgotPassword from "../pages/forgotPassword/ForgotPassword";
 
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -19,7 +19,10 @@ import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 import CafeTableManagement from "../pages/CafeTableManagement";
 import MyOrders from "../pages/dashboard/MyOrders";
-import Profile from "../pages/Profile/Profile";
+import ProfileLayout from "../pages/Profile/ProfileLayout";
+import ProfileUpdate from "../pages/Profile/ProfileUpdate";
+import { ChangePassword } from "../pages/Profile/ChangePassword";
+import ResetPassword from "../pages/forgotPassword/ResetPassword";
 
 const AppRoutes = () => {
   return (
@@ -27,7 +30,7 @@ const AppRoutes = () => {
       {/* PUBLIC ROUTES */}
       <Route path="/" element={<LoginSignup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token?" element={<ResetPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* PROTECTED ROUTES */}
       <Route
@@ -49,8 +52,11 @@ const AppRoutes = () => {
         <Route path="/order-management" element={<OrderManagementPage />} />
         <Route path="/order-history" element={<OrderHistoryList />} />
         <Route path="/customer" element={<CustomerList />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/my-orders/:userId" element={<MyOrders />} />
+        <Route path="/profile" element={<ProfileLayout />}>
+          <Route index element={<ProfileUpdate />} />
+          <Route path="change-password" element={<ChangePassword />} />
+        </Route>
       </Route>
 
       {/* CATCH ALL */}

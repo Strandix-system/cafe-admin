@@ -5,6 +5,7 @@ const InputField = ({
   error,
   helperText,
   startIcon,
+  endIcon,
   disabled = false,
   ...props
 }) => {
@@ -26,6 +27,9 @@ const InputField = ({
       InputProps={{
         startAdornment: startIcon ? (
           <InputAdornment position="start">{startIcon}</InputAdornment>
+        ) : null,
+        endAdornment: endIcon ? (  // Add this
+          <InputAdornment position="end">{endIcon}</InputAdornment>
         ) : null,
       }}
       {...props}

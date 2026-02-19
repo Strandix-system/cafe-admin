@@ -31,7 +31,7 @@ export default function TopNavbar() {
         "/categories/create",
         "/order-history",
         "/profile",
-        "my-orders"
+        "/my-orders"
     ];
 
     // Check if current route should show back button

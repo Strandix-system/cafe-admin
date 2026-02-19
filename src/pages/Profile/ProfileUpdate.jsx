@@ -7,11 +7,11 @@ import FormComponent from "../../components/forms/FormComponent";
 import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
 
-export default function Profile() {
+export default function ProfileUpdate() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const { mutate: updateMutate, isPending: updatePending } = usePatch(
+    const { mutate: updateMutate, isPending } = usePatch(
         `${API_ROUTES.updateUsers}/${user?.id}`,
         {
             onSuccess: () => {
@@ -19,10 +19,8 @@ export default function Profile() {
                 toast.success("Profile updated successfully");
                 navigate("/dashboard");
             },
-            onError: (error) => {
-                toast.error(error.message);
-            },
-        },
+            onError: (error) => toast.error(error.message),
+        }
     );
 
     const onSubmit = (data) => {
@@ -35,17 +33,12 @@ export default function Profile() {
         const formattedData = {
             ...data,
             hours: {
-                weekdays: `${formatTime(data.hours.weekdays.open)} - ${formatTime(
-                    data.hours.weekdays.close
-                )}`,
-                weekends: `${formatTime(data.hours.weekends.open)} - ${formatTime(
-                    data.hours.weekends.close
-                )}`,
+                weekdays: `${formatTime(data.hours.weekdays.open)} - ${formatTime(data.hours.weekdays.close)}`,
+                weekends: `${formatTime(data.hours.weekends.open)} - ${formatTime(data.hours.weekends.close)}`,
             },
         };
 
         const formData = new FormData();
-
         Object.entries(formattedData).forEach(([key, value]) => {
             if (value !== null && value !== undefined) {
                 if (typeof value === "object" && !(value instanceof File)) {
@@ -62,7 +55,7 @@ export default function Profile() {
     return (
         <FormComponent
             onSubmit={onSubmit}
-            isSubmitting={updatePending}
+            isSubmitting={isPending}
             defaultValues={user || {}}
         />
     );

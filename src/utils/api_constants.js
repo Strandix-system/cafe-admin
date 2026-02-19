@@ -59,4 +59,8 @@ export const API_ROUTES = {
 
     user_list: "customer/get-all",
     deleteUser: "customer/delete",
+
+    forgotPassword: "auth/forgot-password",
+    resetPassword: "auth/reset-password",
+    changePassword: "auth/change-password",
 };
