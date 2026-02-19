@@ -118,7 +118,7 @@ const LoginSignup = () => { // Renamed component to Auth for clarity
     if (tabValue === 0) {
       loginMutate(data);
     } else {
-      signupMutate(data);
+      navigate("/plans", { state: data });
     }
   };
 
@@ -183,117 +183,59 @@ const LoginSignup = () => { // Renamed component to Auth for clarity
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {tabValue === 1 && ( // Signup fields
-            <TextField
-              fullWidth
-              label="Full Name"
-              margin="normal"
-              {...signupForm.register("name")}
-              error={!!signupForm.formState.errors.name}
-              helperText={signupForm.formState.errors.name?.message}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                  backgroundColor: "#F5EFE6",
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Person fontSize="small" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <Box sx={{ mt: 2, mb: 2 }}>
+              <InputField
+                field={signupForm.register("name")}
+                label="Full Name"
+                error={signupForm.formState.errors.name}
+                helperText={signupForm.formState.errors.name?.message}
+                startIcon={<Person fontSize="small" />}
+              />
+            </Box>
           )}
 
-          <TextField
-            fullWidth
-            label="Email Address"
-            margin="normal"
-            {...register("email")}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                backgroundColor: "#F5EFE6",
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Email fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <InputField
+              field={register("email")}
+              label="Email Address"
+              error={errors.email}
+              helperText={errors.email?.message}
+              startIcon={<Email fontSize="small" />}
+            />
+          </Box>
 
-          <TextField
-            fullWidth
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            margin="normal"
-            {...register("password")}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                backgroundColor: "#F5EFE6",
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock fontSize="small" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <InputField
+              field={register("password")}
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              error={errors.password}
+              helperText={errors.password?.message}
+              startIcon={<Lock fontSize="small" />}
+              endIcon={
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              }
+            />
+          </Box>
 
           {tabValue === 1 && ( // Confirm password for signup
-            <TextField
-              fullWidth
-              label="Confirm Password"
-              type={showConfirmPassword ? "text" : "password"}
-              margin="normal"
-              {...signupForm.register("confirmPassword")}
-              error={!!signupForm.formState.errors.confirmPassword}
-              helperText={signupForm.formState.errors.confirmPassword?.message}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                  backgroundColor: "#F5EFE6",
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock fontSize="small" />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      edge="end"
-                    >
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <Box sx={{ mt: 2, mb: 2 }}>
+              <InputField
+                field={signupForm.register("confirmPassword")}
+                label="Confirm Password"
+                type={showConfirmPassword ? "text" : "password"}
+                error={signupForm.formState.errors.confirmPassword}
+                helperText={signupForm.formState.errors.confirmPassword?.message}
+                startIcon={<Lock fontSize="small" />}
+                endIcon={
+                  <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                }
+              />
+            </Box>
           )}
 
           {tabValue === 0 && ( // Remember me and forgot password only for login
