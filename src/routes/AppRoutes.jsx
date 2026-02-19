@@ -19,7 +19,9 @@ import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
 import CafeTableManagement from "../pages/CafeTableManagement";
 import MyOrders from "../pages/dashboard/MyOrders";
-import Profile from "../pages/Profile/Profile";
+import ProfileLayout from "../pages/Profile/ProfileLayout";
+import ProfileUpdate from "../pages/Profile/ProfileUpdate";
+import { ChangePassword } from "../pages/Profile/ChangePassword";
 
 const AppRoutes = () => {
     return (
@@ -48,8 +50,11 @@ const AppRoutes = () => {
                 <Route path="/order-management" element={<OrderManagementPage />} />
                 <Route path="/order-history" element={<OrderHistoryList />} />
                 <Route path="/customer" element={<CustomerList />} />
-                <Route path="/profile" element={<Profile />} />
                 <Route path="/my-orders/:userId" element={<MyOrders />} />
+                <Route path="/profile" element={<ProfileLayout />}>
+                    <Route index element={<ProfileUpdate />} />
+                    <Route path="change-password" element={<ChangePassword />} />
+                </Route>
             </Route>
 
             {/* CATCH ALL */}
