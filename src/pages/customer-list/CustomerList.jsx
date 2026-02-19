@@ -4,6 +4,7 @@ import { Edit, Plus, Eye } from "lucide-react";
 import { useMemo, useState } from "react";
 import AddEditUser from "../addEditUser/AddEditUser";
 import { useNavigate } from "react-router-dom";
+import CommonButton from "../../components/common/CommonButton";
 
 const CustomerList = () => {
     const [open, setOpen] = useState(false);
