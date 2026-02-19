@@ -18,7 +18,7 @@ import { queryClient } from "../lib/queryClient";
 import { useAuth } from "../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import CommonButton from "../components/common/CommonButton";
+import CommonButton from "../components/common/commonButton";
 
 
 const CafeTableManagement = () => {

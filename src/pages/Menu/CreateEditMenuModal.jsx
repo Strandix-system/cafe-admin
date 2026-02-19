@@ -24,7 +24,7 @@ import ImageUploadSection from "../../components/common/ImageUploadSection";
 import CommonTextField from "../../components/common/CommonTextField";
 import CommonImageField from "../../components/common/CommonImageField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
-import CommonButton from "../../components/common/CommonButton";
+import CommonButton from "../../components/common/commonButton";
 
 
 const menuSchema = yup.object({

@@ -14,7 +14,7 @@ import {
     TaskAlt,
     StickyNote2,
 } from "@mui/icons-material";
-import CommonButton from "../common/CommonButton";
+import CommonButton from "../common/commonButton";
 
 const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
     const handleAction = () => {

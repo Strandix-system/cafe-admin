@@ -5,7 +5,7 @@ import { Edit, Trash2, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import CreateCategoryDialog from "../components/categories/CreateCategoryDialog";
-import CommonButton from "../components/common/CommonButton";
+import CommonButton from "../components/common/commonButton";
 
 const CategoriesList = () => {
   // console.log("✅ CategoriesList component mounted" );

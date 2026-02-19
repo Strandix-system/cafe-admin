@@ -16,7 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import CommonButton from "../components/common/CommonButton";
+import CommonButton from "../components/common/commonButton";
 
 export default function TopNavbar() {
     const { user, logout, isSuperAdmin } = useAuth();

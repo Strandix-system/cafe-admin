@@ -21,7 +21,7 @@ import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import { m } from "framer-motion";
 import CommonTextField from "../common/CommonTextField";
 import CommonImageField from "../common/CommonImageField";
-import CommonButton from "../common/CommonButton";
+import CommonButton from "../common/commonButton";
 
 const layoutSchema = yup.object({
     layoutTitle: yup.string().required("Layout title is required"),
@@ -238,7 +238,7 @@ export default function LayoutForm({
                     {isEdit ? "Update Layout" : "Create Layout"}
                 </CommonButton>
             </div>
-            
+
             <Grid container spacing={3}>
                 {/* ROW 1: Two Images Side by Side */}
 
