@@ -61,4 +61,5 @@ export const API_ROUTES = {
 
     forgotPassword: "auth/forgot-password",
     resetPassword: "auth/reset-password",
+    changePassword: "auth/change-password",
 };
