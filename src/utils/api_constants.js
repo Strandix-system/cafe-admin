@@ -24,6 +24,7 @@ export const API_ROUTES = {
 
     getAllOrders: "order/get-all",
     updateOrder: "order/status",
+    updatePaymentStatus: "order/payment-status",
 
     deleteCafe: "/admin/delete",
     superAdminStats: "/admin/get-users",
