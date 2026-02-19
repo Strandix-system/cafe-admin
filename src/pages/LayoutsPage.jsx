@@ -13,7 +13,7 @@ import {
   DialogActions,
   DialogTitle,
 } from "@mui/material";
-import CommonButton from "../components/common/CommonButton";
+import CommonButton from "../components/common/commonButton";
 
 export default function LayoutsPage() {
   const navigate = useNavigate();

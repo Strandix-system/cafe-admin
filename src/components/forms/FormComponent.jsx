@@ -49,7 +49,7 @@ import { parseHoursFromBackend } from "../../utils/utils";
 import CommonTextField from "../common/CommonTextField";
 import CommonImageField from "../common/CommonImageField";
 import CommonTimeField from "../common/CommonTimeField";
-import CommonButton from "../common/CommonButton";
+import CommonButton from "../common/commonButton";
 
 // Enable custom parse format plugin
 dayjs.extend(customParseFormat);

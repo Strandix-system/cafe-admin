@@ -18,7 +18,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { toast } from "react-hot-toast";
 import InputField from "../../components/common/InputField";
 import { useNavigate } from "react-router-dom";
-import CommonButton from "../../components/common/CommonButton";
+import CommonButton from "../../components/common/commonButton";
 
 const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
