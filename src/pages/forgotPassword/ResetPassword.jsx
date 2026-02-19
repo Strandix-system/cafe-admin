@@ -24,7 +24,7 @@ import cafe1 from "../../assets/cafe1.jpg";
 import InputField from "../../components/common/InputField";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import CommonButton from "../../components/common/CommonButton";
+import CommonButton from "../../components/common/commonButton";
 
 const passwordSchema = yup.object({
     password: yup
