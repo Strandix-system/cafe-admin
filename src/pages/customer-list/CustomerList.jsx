@@ -63,7 +63,7 @@ const CustomerList = () => {
                     User Management
                 </Typography>
 
-                <Button
+                {/* <Button
                     variant="contained"
                     sx={{
                         backgroundColor: "#6F4E37",
@@ -77,7 +77,18 @@ const CustomerList = () => {
                     }}
                 >
                     Create User
-                </Button>
+                </Button> */}
+                <CommonButton
+                    variant="contained"
+                    startIcon={<Plus size={18} />}
+                    onClick={() => {
+                        setMode("create");
+                        setSelectedUser(null);
+                        setOpen(true);
+                    }}
+                >
+                    Create User
+                </CommonButton>
             </Box>
 
             {/* Table */}

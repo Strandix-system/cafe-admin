@@ -26,6 +26,7 @@ import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { api_enums } from "../enums/api";
+import CommonButton from "../components/common/CommonButton"
 
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -212,7 +213,7 @@ const Login = () => {
             </Link>
           </Box>
 
-          <Button
+          {/* <Button
             fullWidth
             type="submit"
             variant="contained"
@@ -236,7 +237,16 @@ const Login = () => {
             ) : (
               "Log In ☕"
             )}
-          </Button>
+          </Button> */}
+          <CommonButton
+            fullWidth
+            type="submit"
+            variant="contained"
+            disabled={!isValid}
+            loading={isPending}
+          >
+            Log In ☕
+          </CommonButton>
         </form>
       </Paper>
 

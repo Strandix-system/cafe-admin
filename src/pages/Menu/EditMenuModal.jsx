@@ -92,10 +92,20 @@ const EditMenuModal = ({ open, onClose, menuId, onSuccess }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        {/* <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit}>
           Update
-        </Button>
+        </Button> */}
+        <CommonButton  variant="outlined" onClick={onClose} >
+    Cancel
+  </CommonButton>
+
+  <CommonButton
+    variant="contained"
+    onClick={handleSubmit}
+  >
+    Update
+  </CommonButton>
       </DialogActions>
     </Dialog>
   );

@@ -18,6 +18,7 @@ import { queryClient } from "../lib/queryClient";
 import { useAuth } from "../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import CommonButton from "../components/common/CommonButton";
 
 
 const CafeTableManagement = () => {
@@ -202,13 +203,19 @@ const CafeTableManagement = () => {
         <Typography variant="h5" sx={{ color: "#6F4E37", fontWeight: 600 }}>
           Table Management
         </Typography>
-        <Button
+        {/* <Button
           variant="contained"
           sx={{ backgroundColor: "#6F4E37" }}
           onClick={handleOpenDialog}
         >
           Generate QR Codes
-        </Button>
+        </Button> */}
+        <CommonButton
+          variant="contained"
+          onClick={handleOpenDialog}
+        >
+          Generate QR Codes
+        </CommonButton>
       </Box>
 
       <TableComponent
@@ -322,21 +329,39 @@ const CafeTableManagement = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
-          <Button
+          {/* <Button
             onClick={handleCloseDialog}
             disabled={isCreating}
             sx={{ color: "#666" }}
           >
             Cancel
-          </Button>
-          <Button
+          </Button> */}
+          <CommonButton
+            variant="text"
+            onClick={handleCloseDialog}
+            disabled={isCreating}
+            sx={{ color: "#666" }}
+          >
+            Cancel
+          </CommonButton>
+
+          {/* <Button
             onClick={handleSubmit}
             variant="contained"
             sx={{ backgroundColor: "#6F4E37" }}
             disabled={isCreating || !totalTables}
           >
             {isCreating ? "Generating..." : "Generate"}
-          </Button>
+          </Button> */}
+          <CommonButton
+            variant="contained"
+            onClick={handleSubmit}
+            loading={isCreating}
+            disabled={!totalTables}
+          >
+            Generate
+          </CommonButton>
+
         </DialogActions>
       </Dialog>
     </div>

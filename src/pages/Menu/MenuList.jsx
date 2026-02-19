@@ -81,7 +81,7 @@ const MenuList = () => {
           Menu Management
         </Typography>
 
-        <Button
+        {/* <Button
           variant="contained"
           sx={{ backgroundColor: "#6F4E37" }}
           startIcon={<Plus size={18} />}
@@ -91,7 +91,18 @@ const MenuList = () => {
           }}
         >
           Create Menu
-        </Button>
+        </Button> */}
+
+        <CommonButton
+          variant="contained"
+          startIcon={<Plus size={18} />}
+          onClick={() => {
+            setMenuId(null); // create mode
+            setOpen(true);
+          }}
+        >
+          Create Menu
+        </CommonButton>
       </Box>
 
       {/* Table */}
@@ -105,7 +116,7 @@ const MenuList = () => {
         deleteApiEndPoint="MENU_DELETE"
         deleteAction={true}
         enableExportTable={true}
-        
+
       />
 
       <CreateEditMenuModal
