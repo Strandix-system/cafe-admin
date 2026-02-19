@@ -53,6 +53,7 @@ export default function AddEditAdmin() {
         delete data._id;
         delete data.createdAt;
         delete data.updatedAt;
+        delete data.id;
 
         const formattedData = {
             ...data,
@@ -90,7 +91,6 @@ export default function AddEditAdmin() {
     return (
         <FormComponent
             onSubmit={onSubmit}
-            isLoading={isLoading}
             isSubmitting={updatePending || createPending}
             {...(data?.result ? { defaultValues: data.result } : {})}
         />

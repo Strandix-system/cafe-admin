@@ -54,8 +54,9 @@ export const API_ROUTES = {
     createCustomer: "customer/create",
     updateUser: "customer/update",
     getCustomers: "customer/get-all",
-    user_list: "customer/get-all",
+    myOrders: "order/my-orders",
 
+    user_list: "customer/get-all",
     deleteUser: "customer/delete",
 
     forgotPassword: "auth/forgot-password",
