@@ -68,7 +68,7 @@ const CafeTableManagement = () => {
         refetch();
       },
       onError: (error) => {
-        toast.error(error?.message || "Failed to generate QR codes");
+        toast.error(error || "Failed to generate QR codes");
       },
     }
   );

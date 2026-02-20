@@ -14,6 +14,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 import MenuList from "../pages/Menu/MenuList";
+import Plan from "../pages/plan/Plan";
 import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";
@@ -29,6 +30,7 @@ const AppRoutes = () => {
     <Routes>
       {/* PUBLIC ROUTES */}
       <Route path="/" element={<LoginSignup />} />
+      <Route path="/plans" element={<Plan />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
 
