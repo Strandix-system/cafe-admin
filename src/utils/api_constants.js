@@ -2,7 +2,8 @@ import { create, get, update } from "lodash";
 
 export const API_ROUTES = {
     login: "auth/login",
-    signup: "auth/signup",
+    createOrder: "signup/create-order",
+    verifySignup: "signup/verify-payment",
     getMe: "auth/me",
     getUsers: "/admin/get-users",
 

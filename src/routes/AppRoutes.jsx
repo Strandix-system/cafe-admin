@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import LoginSignup from "../pages/LoginSignup";
+import LoginSignup from "../pages/login/LoginSignup";
 import ForgotPassword from "../pages/forgotPassword/ForgotPassword";
 
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
@@ -14,7 +14,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
 import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
 import MenuList from "../pages/Menu/MenuList";
-import Plan from "../pages/plan/Plan";
+import Plan from "../pages/login/Plan";
 import CustomerList from "../pages/customer-list/CustomerList";
 import OrderManagementPage from "../pages/OrderManagementPage";
 import OrderHistoryList from "../pages/OrderHistoryList";

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import LoginSignup from './pages/LoginSignup'
+import LoginSignup from '../src/pages/login/LoginSignup'
 import AppRoutes from './routes/AppRoutes'
 import { queryClient } from './lib/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';

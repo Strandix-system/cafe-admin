@@ -55,7 +55,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
     },
     onError: (error) => {
       console.error("Create category failed:", error);
-      toast.error(error?.message || "Failed to create category");
+      toast.error(error || "Failed to create category");
     }
   });
 
@@ -68,7 +68,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
     },
     onError: (error) => {
       console.error("Update category failed:", error);
-      toast.error(error?.message || "Failed to update category");
+      toast.error(error || "Failed to update category");
     }
   }
   );

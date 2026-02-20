@@ -64,6 +64,7 @@ export function AuthProvider({ children }) {
         if (res?.data?.result) {
           setUser(res.data.result);
           setIsAuthenticated(true);
+          navigate("/dashboard");
         } else {
           logout();
         }
