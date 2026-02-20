@@ -119,8 +119,8 @@ const OrderManagementPage = () => {
             // Refetch to sync with backend
             queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
-        onError: () => {
-            toast.error("Failed to update order");
+        onError: (error) => {
+            toast.error(error || "Failed to update order");
             // Refetch to restore correct state
             queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
@@ -133,8 +133,8 @@ const OrderManagementPage = () => {
             // Refetch to sync with backend
             queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },
-        onError: () => {
-            toast.error("Failed to update payment status");
+        onError: (error) => {
+            toast.error(error || "Failed to update payment status");
             // Refetch to restore correct state
             queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },

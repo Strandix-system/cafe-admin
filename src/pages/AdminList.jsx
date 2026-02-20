@@ -32,6 +32,7 @@ const AdminList = () => {
         }
       },
       onError: (error) => {
+        toast.error(error || "Failed to update status");
         console.error("Status update failed:", error);
       },
     },

@@ -22,12 +22,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import cafe1 from "../assets/cafe1.jpg";
 import * as yup from "yup";
-
+import InputField from "../components/common/InputField";
 import { useAuth } from "../context/AuthContext";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePost } from "../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { api_enums } from "../enums/api";
+import CommonButton from "../components/common/commonButton";
 
 const loginSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -94,31 +95,37 @@ const LoginSignup = () => { // Renamed component to Auth for clarity
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Login Failed! Please try again.",
+        error || "Login Failed! Please try again.",
       );
       console.log(error);
     },
   });
 
-  const { mutate: signupMutate, isPending: signupPending } = usePost(API_ROUTES.signup, {
-    onSuccess: (res) => {
-      signupForm.reset();
-      toast.success("Account created successfully! Please log in.");
-      setTabValue(0); // Switch to login tab
-    },
-    onError: (error) => {
-      toast.error(
-        error?.response?.data?.message || "Signup Failed! Please try again.",
-      );
-      console.log(error);
-    },
-  });
+  const { mutate: initiateSignupMutate, isPending: signupPending } = usePost(
+    API_ROUTES.initiateSignup, // New endpoint
+    {
+      onSuccess: (res) => {
+        const tempToken = res.result.tempToken;
+        toast.success("Redirecting to plans...");
+        navigate(`/plans/${tempToken}`);
+      },
+      onError: (error) => {
+        toast.error(
+          error || "Signup failed. Please try again."
+        );
+      },
+    }
+  );
 
   const onSubmit = (data) => {
     if (tabValue === 0) {
       loginMutate(data);
     } else {
-      navigate("/plans", { state: data });
+      initiateSignupMutate({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
     }
   };
 
@@ -272,37 +279,15 @@ const LoginSignup = () => { // Renamed component to Auth for clarity
             </Box>
           )}
 
-          <Button
+          <CommonButton
             fullWidth
             type="submit"
-            variant="contained"
+            loading={tabValue === 0 ? loginPending : signupPending}
             disabled={!isValid}
-            sx={{
-              mt: 3,
-              mb: 2,
-              py: 1.5,
-              borderRadius: 3,
-              textTransform: "none",
-              fontSize: "1rem",
-              fontWeight: 600,
-              backgroundColor: "#6F4E37",
-              "&:hover": {
-                backgroundColor: "#5D4037",
-              },
-            }}
+            sx={{ mt: 3, mb: 2 }}
           >
-            {tabValue === 0 ? (
-              loginPending ? (
-                <CircularProgress size={26} color="inherit" />
-              ) : (
-                "Log In ☕"
-              )
-            ) : signupPending ? (
-              <CircularProgress size={26} color="inherit" />
-            ) : (
-              "Sign Up ☕"
-            )}
-          </Button>
+            {tabValue === 0 ? "Log In ☕" : "Sign Up ☕"}
+          </CommonButton>
         </form>
       </Paper>
 

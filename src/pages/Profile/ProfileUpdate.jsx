@@ -19,7 +19,7 @@ export default function ProfileUpdate() {
                 toast.success("Profile updated successfully");
                 navigate("/dashboard");
             },
-            onError: (error) => toast.error(error.message),
+            onError: (error) => toast.error(error || "Failed to update profile"),
         }
     );
 

@@ -36,7 +36,7 @@ export default function AddEditLayout() {
         navigate("/layouts");
       },
       onError: (err) => {
-        toast.error(err?.message || "Failed to update layout");
+        toast.error(error || "Failed to update layout");
       },
     }
   );
@@ -55,8 +55,8 @@ export default function AddEditLayout() {
         });
         navigate("/layouts")
       },
-      onError: (err) => {
-        toast.error(err?.message || "Failed to create layout");
+      onError: (error) => {
+        toast.error(error || "Failed to create layout");
       },
     }
   );
@@ -64,52 +64,52 @@ export default function AddEditLayout() {
   const isAdminEditing =
     layoutData?.defaultLayout === false && isAdmin && layoutId;
 
- const preparePayload = (formValue, additionalFields = {}) => {
-  const payload = { ...formValue, ...additionalFields };
+  const preparePayload = (formValue, additionalFields = {}) => {
+    const payload = { ...formValue, ...additionalFields };
 
-  const hasFiles =
-    formValue.homeImage instanceof File ||
-    formValue.aboutImage instanceof File;
+    const hasFiles =
+      formValue.homeImage instanceof File ||
+      formValue.aboutImage instanceof File;
 
-  if (!hasFiles) return payload;
+    if (!hasFiles) return payload;
 
-  const formData = new FormData();
+    const formData = new FormData();
 
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value === undefined) return;
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value === undefined) return;
 
-    if (key === "adminId") {
-      formData.append("adminId", String(value?._id || value));
-      return;
-    }
-
-    if (key === "defaultLayoutId") {
-      if (value) {
-        formData.append("defaultLayoutId", String(value));
+      if (key === "adminId") {
+        formData.append("adminId", String(value?._id || value));
+        return;
       }
-      return;
-    }
 
-    // Files
-    if (value instanceof File) {
+      if (key === "defaultLayoutId") {
+        if (value) {
+          formData.append("defaultLayoutId", String(value));
+        }
+        return;
+      }
+
+      // Files
+      if (value instanceof File) {
+        formData.append(key, value);
+        return;
+      }
+
+      // Objects (hours, socialLinks etc.)
+      if (typeof value === "object" && value !== null) {
+        formData.append(key, JSON.stringify(value));
+        return;
+      }
+
+      // Primitives
       formData.append(key, value);
-      return;
-    }
+    });
 
-    // Objects (hours, socialLinks etc.)
-    if (typeof value === "object" && value !== null) {
-      formData.append(key, JSON.stringify(value));
-      return;
-    }
+    return formData;
+  };
 
-    // Primitives
-    formData.append(key, value);
-  });
 
-  return formData;
-};
-
-  
   const onSubmit = (formValue) => {
     // Admin editing their own layout
     if (isAdminEditing) {

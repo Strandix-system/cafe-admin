@@ -59,7 +59,10 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
                 onClose(true);
                 refetch();
             },
-        }
+            onError: (error) => {
+                toast.error(error || "Failed to create user");
+            }
+        },
     );
 
     const { mutate: updateUser, isPending: updating } = usePatch(
@@ -72,7 +75,10 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
                 onClose(true);
                 refetch();
             },
-        }
+            onError: (error) => {
+                toast.error(error || "Failed to update user");
+            }
+        },
     );
 
     const onSubmit = (formData) => {

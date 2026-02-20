@@ -51,7 +51,7 @@ const ForgotPassword = () => {
       },
       onError: (error) => {
         toast.error(
-          error?.response?.data?.message ||
+          error ||
           "Failed to send reset link. Please try again."
         );
       },

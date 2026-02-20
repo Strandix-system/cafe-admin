@@ -62,7 +62,7 @@ export default function LayoutsPage() {
       },
       onError: (error) => {
         console.error("Error setting active layout:", error);
-        toast.error("Failed to set active layout");
+        toast.error(error || "Failed to set active layout");
       },
     }
   );
@@ -80,8 +80,8 @@ export default function LayoutsPage() {
         setOpenDeleteDialog(false);
         setDeleteLayoutId(null);
       },
-      onError: () => {
-        toast.error("Failed to delete layout");
+      onError: (error) => {
+        toast.error(error || "Failed to delete layout");
       },
     }
   );

@@ -29,7 +29,7 @@ export default function AddEditAdmin() {
                 navigate("/cafes");
             },
             onError: (error) => {
-                toast.error(error.message);
+                toast.error(error || "Failed to update user");
             },
         },
     );
@@ -42,8 +42,8 @@ export default function AddEditAdmin() {
                 toast.success("Admin created successfully");
                 navigate("/cafes");
             },
-            onError: (err) => {
-                toast.error(err?.response?.data?.message || "Failed to create cafe");
+            onError: (error) => {
+                toast.error(error || "Failed to create admin");
             },
         },
     );
