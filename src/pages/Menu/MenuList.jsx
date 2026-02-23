@@ -82,18 +82,6 @@ const MenuList = () => {
           Menu Management
         </Typography>
 
-        {/* <Button
-          variant="contained"
-          sx={{ backgroundColor: "#6F4E37" }}
-          startIcon={<Plus size={18} />}
-          onClick={() => {
-            setMenuId(null); // create mode
-            setOpen(true);
-          }}
-        >
-          Create Menu
-        </Button> */}
-
         <CommonButton
           variant="contained"
           startIcon={<Plus size={18} />}
@@ -106,20 +94,6 @@ const MenuList = () => {
         </CommonButton>
       </Box>
 
-      {/* Table */}
-      <TableComponent
-        slug="menu"
-        columns={columns}
-        actions={actions}
-        actionsType="icons"
-        querykey="menu-list"
-        getApiEndPoint="menulist"
-        deleteApiEndPoint="MENU_DELETE"
-        deleteAction={true}
-        enableExportTable={true}
-
-      />
-
       <CreateEditMenuModal
         open={open}
         menuId={menuId}
@@ -128,6 +102,23 @@ const MenuList = () => {
           setMenuId(null);
         }}
       />
+      {/* Table */}
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+        <TableComponent
+          slug="menu"
+          columns={columns}
+          actions={actions}
+          actionsType="icons"
+          querykey="menu-list"
+          getApiEndPoint="menulist"
+          deleteApiEndPoint="MENU_DELETE"
+          deleteAction={true}
+          enableExportTable={true}
+
+
+        />
+      </Box>
+
 
     </div>
   );

@@ -218,17 +218,19 @@ const CafeTableManagement = () => {
         </CommonButton>
       </Box>
 
-      <TableComponent
-        slug="QR Code"
-        columns={columns}
-        actions={actions}
-        params={{ adminId: user?.id }}
-        actionsType="icons"
-        querykey="get-qr-codes"
-        getApiEndPoint="getQRCodes"
-        enableExportTable={true}
-        serialNo={true}
-      />
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+        <TableComponent
+          slug="QR Code"
+          columns={columns}
+          actions={actions}
+          params={{ adminId: user?.id }}
+          actionsType="icons"
+          querykey="get-qr-codes"
+          getApiEndPoint="getQRCodes"
+          enableExportTable={true}
+          serialNo={true}
+        />
+      </Box>
 
       {/* Generate QR Codes Dialog */}
       <Dialog

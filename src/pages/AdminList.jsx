@@ -210,18 +210,21 @@ const AdminList = () => {
       )
       }
 
-      <TableComponent
-        slug={adminId ? "user" : "admin"}
-        columns={adminId ? customerColumns : cafeColumns}
-        actions={actions}
-        actionsType="menu"
-        querykey={queryKey}
-        getApiEndPoint={getApiEndPoint}
-        params={queryParams}
-        deleteApiEndPoint="deleteCafe"
-        deleteAction={isSuperAdmin}
-      // enableExportTable={true}
-      />
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+
+        <TableComponent
+          slug={adminId ? "user" : "admin"}
+          columns={adminId ? customerColumns : cafeColumns}
+          actions={actions}
+          actionsType="menu"
+          querykey={queryKey}
+          getApiEndPoint={getApiEndPoint}
+          params={queryParams}
+          deleteApiEndPoint="deleteCafe"
+          deleteAction={isSuperAdmin}
+        // enableExportTable={true}
+        />
+      </Box>
     </div >
   );
 };

@@ -79,17 +79,20 @@ const CategoriesList = () => {
         </CommonButton>
       </Box>
 
-      <TableComponent
-        slug="category"
-        columns={columns}
-        actions={actions}
-        actionsType="icons"
-        querykey="get-categories"
-        getApiEndPoint="getCategories"
-        deleteApiEndPoint="deleteCategory"
-        deleteAction={isSuperAdmin}
-        enableExportTable={true}
-      />
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+
+        <TableComponent
+          slug="category"
+          columns={columns}
+          actions={actions}
+          actionsType="icons"
+          querykey="get-categories"
+          getApiEndPoint="getCategories"
+          deleteApiEndPoint="deleteCategory"
+          deleteAction={isSuperAdmin}
+          enableExportTable={true}
+        />
+      </Box>
 
       <CreateCategoryDialog
         open={openDialog}

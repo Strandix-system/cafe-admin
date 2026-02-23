@@ -64,21 +64,6 @@ const CustomerList = () => {
                     User Management
                 </Typography>
 
-                {/* <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: "#6F4E37",
-                        "&:hover": { backgroundColor: "#5A3E2B" }
-                    }}
-                    startIcon={<Plus size={18} />}
-                    onClick={() => {
-                        setMode("create");
-                        setSelectedUser(null);
-                        setOpen(true);
-                    }}
-                >
-                    Create User
-                </Button> */}
                 <CommonButton
                     variant="contained"
                     startIcon={<Plus size={18} />}
@@ -93,19 +78,20 @@ const CustomerList = () => {
             </Box>
 
             {/* Table */}
-            <TableComponent
-                slug="user"
-                columns={columns}
-                actions={actions}
-                querykey="get-cafe-users"
-                getApiEndPoint="user_list"
-                deleteApiEndPoint="deleteUser"
-                deleteAction={true}
-                enableExportTable={true}
-                manualPagination={true}
-                serialNo={true}
-            />
-
+            <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+                <TableComponent
+                    slug="user"
+                    columns={columns}
+                    actions={actions}
+                    querykey="get-cafe-users"
+                    getApiEndPoint="user_list"
+                    deleteApiEndPoint="deleteUser"
+                    deleteAction={true}
+                    enableExportTable={true}
+                    manualPagination={true}
+                    serialNo={true}
+                />
+            </Box>
 
             <AddEditUser open={open}
                 mode={mode}
