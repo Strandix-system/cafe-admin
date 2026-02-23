@@ -23,46 +23,49 @@ import ProfileLayout from "../pages/Profile/ProfileLayout";
 import ProfileUpdate from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import ResetPassword from "../pages/forgotPassword/ResetPassword";
+import AdminRequest from "../pages/Admin/AdminRequest";
 
 const AppRoutes = () => {
-  return (
-    <Routes>
-      {/* PUBLIC ROUTES */}
-      <Route path="/" element={<Login />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+    return (
+        <Routes>
+            {/* PUBLIC ROUTES */}
+            <Route path="/" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-      {/* PROTECTED ROUTES */}
-      <Route
-        element={
-          <ProtectedRoutes>
-            <DashboardLayout />
-          </ProtectedRoutes>
-        }
-      >
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/cafes" element={<AdminList />} />
-        <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
-        <Route path="/cafes/:adminId?" element={<AdminList />} />
-        <Route path="/layouts" element={<LayoutsPage />} />
-        <Route path="/layouts/create-edit/:layoutId?" element={<AddEditLayout />} />
-        <Route path="/categories" element={<CategoriesList />} />
-        <Route path="/table-management" element={<CafeTableManagement />} />
-        <Route path="/menu" element={<MenuList />} />
-        <Route path="/order-management" element={<OrderManagementPage />} />
-        <Route path="/order-history" element={<OrderHistoryList />} />
-        <Route path="/customer" element={<CustomerList />} />
-        <Route path="/my-orders/:userId" element={<MyOrders />} />
-        <Route path="/profile" element={<ProfileLayout />}>
-          <Route index element={<ProfileUpdate />} />
-          <Route path="change-password" element={<ChangePassword />} />
-        </Route>
-      </Route>
+            {/* PROTECTED ROUTES */}
+            <Route
+                element={
+                    <ProtectedRoutes>
+                        <DashboardLayout />
+                    </ProtectedRoutes>
+                }
+            >
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/cafes" element={<AdminList />} />
+                <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
+                <Route path="/cafes/:adminId?" element={<AdminList />} />
+                <Route path="/layouts" element={<LayoutsPage />} />
+                <Route path="/layouts/create-edit/:layoutId?" element={<AddEditLayout />} />
+                <Route path="/categories" element={<CategoriesList />} />
+                <Route path="/table-management" element={<CafeTableManagement />} />
+                <Route path="/menu" element={<MenuList />} />
+                <Route path="/order-management" element={<OrderManagementPage />} />
+                <Route path="/order-history" element={<OrderHistoryList />} />
+                <Route path="/customer" element={<CustomerList />} />
+                <Route path="/my-orders/:userId" element={<MyOrders />} />
+                <Route path="/profile" element={<ProfileLayout />}>
+                </Route>
+                <Route path="/admin-request" element={<AdminRequest />}>
+                    <Route index element={<ProfileUpdate />} />
+                    <Route path="change-password" element={<ChangePassword />} />
+                </Route>
+            </Route>
 
-      {/* CATCH ALL */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
+            {/* CATCH ALL */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+    );
 };
 
 export default AppRoutes;

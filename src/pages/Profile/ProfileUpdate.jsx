@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 export default function ProfileUpdate() {
     const { user } = useAuth();
     const navigate = useNavigate();
-
+    const isSuperAdmin = user?.role === "superadmin";
     const { mutate: updateMutate, isPending } = usePatch(
         `${API_ROUTES.updateUsers}/${user?.id}`,
         {
@@ -37,6 +37,30 @@ export default function ProfileUpdate() {
                 weekends: `${formatTime(data.hours.weekends.open)} - ${formatTime(data.hours.weekends.close)}`,
             },
         };
+        {
+            role === "superadmin" ? (
+                <>
+                    {/* Email */}
+                    <TextField
+                        label="Email"
+                        value={defaultValues?.email || ""}
+                        disabled
+                        fullWidth
+                    />
+
+                    {/* Profile Image */}
+                    <InputField name="profileImage" type="file" />
+
+                    {/* Social Links */}
+                    <InputField name="socialLinks.instagram" label="Instagram" />
+                    <InputField name="socialLinks.facebook" label="Facebook" />
+                    <InputField name="socialLinks.twitter" label="Twitter" />
+                </>
+            ) : (
+                <>
+                </>
+            )
+        }
 
         const formData = new FormData();
         Object.entries(formattedData).forEach(([key, value]) => {
@@ -57,6 +81,7 @@ export default function ProfileUpdate() {
             onSubmit={onSubmit}
             isSubmitting={isPending}
             defaultValues={user || {}}
+            role={user?.role}
         />
     );
 }
