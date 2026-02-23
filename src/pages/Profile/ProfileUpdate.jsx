@@ -8,13 +8,14 @@ import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfileUpdate() {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const navigate = useNavigate();
 
     const { mutate: updateMutate, isPending } = usePatch(
         `${API_ROUTES.updateUsers}/${user?.id}`,
         {
-            onSuccess: () => {
+            onSuccess: async () => {
+                await refreshUser();
                 queryClient.invalidateQueries({ queryKey: "get-me" });
                 toast.success("Profile updated successfully");
                 navigate("/dashboard");
