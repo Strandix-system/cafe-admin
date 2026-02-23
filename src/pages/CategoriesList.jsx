@@ -5,6 +5,7 @@ import { Edit, Trash2, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import CreateCategoryDialog from "../components/categories/CreateCategoryDialog";
+import CommonButton from "../components/common/commonButton";
 
 const CategoriesList = () => {
     // console.log("✅ CategoriesList component mounted" );
@@ -55,9 +56,19 @@ const CategoriesList = () => {
                     justifyContent: "flex-end",
                 }}
             >
-                <Button
+                {/* <Button
+          variant="contained"
+          sx={{ backgroundColor: "#6F4E37" }}
+          startIcon={<Plus size={18} />}
+          onClick={() => {
+            setSelectedCategory(null);
+            setOpenDialog(true);
+          }}
+        >
+          Create Category
+        </Button> */}
+                <CommonButton
                     variant="contained"
-                    sx={{ backgroundColor: "#6F4E37" }}
                     startIcon={<Plus size={18} />}
                     onClick={() => {
                         setSelectedCategory(null);
@@ -65,7 +76,7 @@ const CategoriesList = () => {
                     }}
                 >
                     Create Category
-                </Button>
+                </CommonButton>
             </Box>
 
             <TableComponent

@@ -18,6 +18,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { toast } from "react-hot-toast";
 import InputField from "../../components/common/InputField";
 import { useNavigate } from "react-router-dom";
+import CommonButton from "../../components/common/commonButton";
 
 const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
@@ -136,7 +137,7 @@ export const ChangePassword = () => {
                             {renderTextField("newPassword", "New Password", null, "Enter New Password", null, { xs: 12 }, "password")}
                             {renderTextField("confirmPassword", "Confirm Password", null, "Confirm New Password", null, { xs: 12 }, "password")}
                         </Grid>
-
+                        {/* 
                         <Button
                             fullWidth
                             variant="contained"
@@ -149,7 +150,16 @@ export const ChangePassword = () => {
                             ) : (
                                 "Update Password"
                             )}
-                        </Button>
+                        </Button> */}
+                        <CommonButton
+                            fullWidth
+                            variant="contained"
+                            type="submit"
+                            loading={isPending}
+                            sx={{ mt: 3, py: 1.2 }}
+                        >
+                            Update Password
+                        </CommonButton>
                     </form>
                 </CardContent>
             </Card>

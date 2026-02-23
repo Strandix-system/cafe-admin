@@ -46,6 +46,10 @@ import InputField from "../common/InputField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { parseHoursFromBackend } from "../../utils/utils";
+import CommonTextField from "../common/CommonTextField";
+import CommonImageField from "../common/CommonImageField";
+import CommonTimeField from "../common/CommonTimeField";
+import CommonButton from "../common/commonButton";
 
 // Enable custom parse format plugin
 dayjs.extend(customParseFormat);
@@ -163,163 +167,6 @@ export default function FormComponent({
         }
     }, [defaultValues, reset, isEdit, setPreview, setValue]);
 
-    // Render helper functions
-    const renderTextField = (
-        name,
-        label,
-        icon,
-        placeholder,
-        disabled = false,
-        gridSize = { xs: 12, sm: 6 },
-        type = "text",
-    ) => (
-        <Grid size={gridSize}>
-            <FormLabel
-                sx={{
-                    color: "#6F4E37",
-                    fontWeight: 600,
-                    mb: 1,
-                    display: "block",
-                }}
-            >
-                {label}
-            </FormLabel>
-            <Controller
-                name={name}
-                control={control}
-                render={({ field }) => (
-                    <InputField
-                        field={field}
-                        error={
-                            name.includes(".")
-                                ? name
-                                    .split(".")
-                                    .reduce((obj, key) => obj?.[key], errors)
-                                : errors[name]
-                        }
-                        helperText={
-                            name.includes(".")
-                                ? name
-                                    .split(".")
-                                    .reduce((obj, key) => obj?.[key], errors)?.message
-                                : errors[name]?.message
-                        }
-                        placeholder={placeholder}
-                        disabled={disabled}
-                        startIcon={icon}
-                        type={type}
-                    />
-                )}
-            />
-        </Grid>
-    );
-
-    const renderImageField = (
-        fieldName,
-        label,
-        inputId,
-        gridSize = { xs: 12, sm: 6 },
-    ) => (
-        <Grid size={gridSize}>
-            <Controller
-                name={fieldName}
-                control={control}
-                render={({ field }) => (
-                    <ImageUploadSection
-                        label={label}
-                        field={field}
-                        preview={previews[fieldName]}
-                        setPreview={(preview) => setPreview(fieldName, preview)}
-                        handleImageChange={(file) => handleImageChange(file, fieldName)}
-                        handleRemoveImage={() => handleRemoveImage(fieldName)}
-                        handleReplaceImage={() => handleReplaceImage(fieldName)}
-                        inputId={inputId}
-                        isEdit={isEdit}
-                    />
-                )}
-            />
-            {errors[fieldName] && (
-                <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
-                    {errors[fieldName]?.message}
-                </Box>
-            )}
-        </Grid>
-    );
-
-    const renderTimeField = (
-        openName,
-        closeName,
-        label,
-        gridSize = { xs: 12, md: 6 },
-    ) => (
-        <Grid size={gridSize}>
-            <FormLabel
-                sx={{
-                    color: "#6F4E37",
-                    fontWeight: 600,
-                    mb: 1,
-                    display: "block",
-                }}
-            >
-                {label}
-            </FormLabel>
-            <Box sx={{ display: "flex", gap: 2 }}>
-                <Controller
-                    name={openName}
-                    control={control}
-                    render={({ field }) => (
-                        <TimePicker
-                            {...field}
-                            label="Open"
-                            value={field.value ? dayjs(field.value) : null}
-                            onChange={(newValue) => {
-                                field.onChange(newValue ? newValue.toISOString() : null);
-                            }}
-                            slotProps={{
-                                ...TIME_PICKER_STYLES,
-                                textField: {
-                                    ...TIME_PICKER_STYLES.textField,
-                                    error: !!openName
-                                        .split(".")
-                                        .reduce((obj, key) => obj?.[key], errors),
-                                    helperText: openName
-                                        .split(".")
-                                        .reduce((obj, key) => obj?.[key], errors)?.message,
-                                },
-                            }}
-                        />
-                    )}
-                />
-                <Controller
-                    name={closeName}
-                    control={control}
-                    render={({ field }) => (
-                        <TimePicker
-                            {...field}
-                            label="Close"
-                            value={field.value ? dayjs(field.value) : null}
-                            onChange={(newValue) => {
-                                field.onChange(newValue ? newValue.toISOString() : null);
-                            }}
-                            slotProps={{
-                                ...TIME_PICKER_STYLES,
-                                textField: {
-                                    ...TIME_PICKER_STYLES.textField,
-                                    error: !!closeName
-                                        .split(".")
-                                        .reduce((obj, key) => obj?.[key], errors),
-                                    helperText: closeName
-                                        .split(".")
-                                        .reduce((obj, key) => obj?.[key], errors)?.message,
-                                },
-                            }}
-                        />
-                    )}
-                />
-            </Box>
-        </Grid>
-    );
-
     return (
         <Box sx={{ width: "100%", height: "100%", bgcolor: "#FAF7F2" }}>
             <Paper
@@ -352,7 +199,7 @@ export default function FormComponent({
                         </Box>
                     </Box>
 
-                    <Button
+                    {/* <Button
                         type="submit"
                         form="admin-form"
                         variant="contained"
@@ -372,7 +219,24 @@ export default function FormComponent({
                         }}
                     >
                         {isEdit ? "Update" : "Create"}
-                    </Button>
+                    </Button> */}
+                    <CommonButton
+                        type="submit"
+                        form="admin-form"
+                        disabled={!isValid || isSubmitting}
+                        bgColor="white"
+                        hoverColor="#F5EFE6"
+                        textColor="#6F4E37"
+                        sx={{
+                            px: 4,
+                            "&:disabled": {
+                                bgcolor: "#E0E0E0",
+                                color: "#9E9E9E",
+                            },
+                        }}
+                    >
+                        {isEdit ? "Update" : "Create"}
+                    </CommonButton>
                 </Box>
 
                 <Box
@@ -383,40 +247,70 @@ export default function FormComponent({
                 >
                     <Grid container spacing={4}>
                         {/* File Uploads */}
-                        {renderImageField("logo", "Cafe Logo", "logo-upload")}
-                        {renderImageField(
-                            "profileImage",
-                            "Profile Image",
-                            "profile-upload",
-                        )}
+
+                        <CommonImageField
+                            name="logo"
+                            label="Cafe Logo"
+                            inputId="logo-upload"
+                            control={control}
+                            errors={errors}
+                            preview={previews.logo}
+                            setPreview={setPreview}
+                            isEdit={isEdit}
+                            gridSize={{ xs: 12, sm: 6 }}
+                        />
+
+                        <CommonImageField
+                            name="profileImage"
+                            label="Profile Image"
+                            inputId="profile-upload"
+                            control={control}
+                            errors={errors}
+                            preview={previews.profileImage}
+                            setPreview={setPreview}
+                            isEdit={isEdit}
+                            gridSize={{ xs: 12, sm: 6 }}
+                        />
+
 
                         {/* Basic Information */}
-                        {renderTextField(
-                            "firstName",
-                            "First Name *",
-                            <Users size={20} color="#6F4E37" />,
-                            "Enter First Name",
-                        )}
-                        {renderTextField(
-                            "lastName",
-                            "Last Name *",
-                            <Users size={20} color="#6F4E37" />,
-                            "Enter Last Name",
-                        )}
-                        {renderTextField(
-                            "email",
-                            "Email *",
-                            <Email sx={{ color: "#6F4E37", fontSize: 20 }} />,
-                            "Enter Email",
-                            isEdit,
-                        )}
-                        {renderTextField(
-                            "cafeName",
-                            "Cafe Name *",
-                            <Building2 size={20} color="#6F4E37" />,
-                            "Enter Cafe Name",
-                            isEdit,
-                        )}
+                        <CommonTextField
+                            name="firstName"
+                            label="First Name *"
+                            icon={<Users size={20} color="#6F4E37" />}
+                            placeholder="Enter First Name"
+                            control={control}
+                            errors={errors}
+                        />
+
+                        <CommonTextField
+                            name="lastName"
+                            label="Last Name *"
+                            icon={<Users size={20} color="#6F4E37" />}
+                            placeholder="Enter Last Name"
+                            control={control}
+                            errors={errors}
+                        />
+
+                        <CommonTextField
+                            name="email"
+                            label="Email *"
+                            icon={<Email sx={{ color: "#6F4E37", fontSize: 20 }} />}
+                            placeholder="Enter Email"
+                            disabled={isEdit}
+                            control={control}
+                            errors={errors}
+                        />
+
+                        <CommonTextField
+                            name="cafeName"
+                            label="Cafe Name *"
+                            icon={<Building2 size={20} color="#6F4E37" />}
+                            placeholder="Enter Cafe Name"
+                            control={control}
+                            errors={errors}
+                            disabled={isEdit}
+                        />
 
                         {/* Password Field - Only in Create Mode */}
                         {!isEdit && (
@@ -543,24 +437,32 @@ export default function FormComponent({
                             </Box>
                         </Grid>
 
-                        {renderTextField(
-                            "phoneNumber",
-                            "Phone Number *",
-                            <Contact size={20} color="#6F4E37" />,
-                            "Enter Phone Number",
-                        )}
-                        {renderTextField(
-                            "address",
-                            "Address *",
-                            <MapPin size={20} color="#6F4E37" />,
-                            "Enter Address",
-                        )}
-                        {renderTextField(
-                            "city",
-                            "City *",
-                            null,
-                            "Enter City",
-                        )}
+                        <CommonTextField
+                            name="phoneNumber"
+                            label="Phone Number *"
+                            icon={<Contact size={20} color="#6F4E37" />}
+                            placeholder="Enter Phone Number"
+                            control={control}
+                            errors={errors}
+                        />
+
+                        <CommonTextField
+                            name="address"
+                            label="Address *"
+                            icon={<MapPin size={20} color="#6F4E37" />}
+                            placeholder="Enter Address"
+                            control={control}
+                            errors={errors}
+                        />
+
+
+                        <CommonTextField
+                            name="city"
+                            label="City *"
+                            placeholder="Enter City"
+                            control={control}
+                            errors={errors}
+                        />
 
                         {/* State Dropdown */}
                         <Grid size={{ xs: 12, sm: 6 }}>
@@ -613,21 +515,24 @@ export default function FormComponent({
                             />
                         </Grid>
 
-                        {renderTextField(
-                            "pincode",
-                            "Pincode *",
-                            null,
-                            "Enter Pincode",
-                        )}
-                        {renderTextField(
-                            "gst",
-                            "GST Percentage *",
-                            null,
-                            "Enter GST Percentage",
-                            false,
-                            { xs: 12, sm: 6 },
-                            "number",
-                        )}
+                        <CommonTextField
+                            name="pincode"
+                            label="Pincode *"
+                            placeholder="Enter Pincode"
+                            control={control}
+                            errors={errors}
+                        />
+
+                        <CommonTextField
+                            name="gst"
+                            label="GST Percentage *"
+                            placeholder="Enter GST Percentage"
+                            disabled={false}
+                            gridSize={{ xs: 12, sm: 6 }}
+                            type="number"
+                            control={control}
+                            errors={errors}
+                        />
 
                         {/* Operating Hours Section */}
                         <Grid size={{ xs: 12 }}>
@@ -645,16 +550,32 @@ export default function FormComponent({
                         </Grid>
 
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            {renderTimeField(
+                            {/* {renderTimeField(
                                 "hours.weekdays.open",
                                 "hours.weekdays.close",
                                 "Weekdays Hours",
-                            )}
-                            {renderTimeField(
+                            )} */}
+                            <CommonTimeField
+                                label="Weekdays Hours"
+                                openName="hours.weekdays.open"
+                                closeName="hours.weekdays.close"
+                                control={control}
+                                errors={errors}
+                                TIME_PICKER_STYLES={TIME_PICKER_STYLES}
+                            />
+                            {/* {renderTimeField(
                                 "hours.weekends.open",
                                 "hours.weekends.close",
                                 "Weekends Hours",
-                            )}
+                            )} */}
+                            <CommonTimeField
+                                label="Weekends Hours"
+                                openName="hours.weekends.open"
+                                closeName="hours.weekends.close"
+                                control={control}
+                                errors={errors}
+                                TIME_PICKER_STYLES={TIME_PICKER_STYLES}
+                            />
                         </LocalizationProvider>
 
                         {/* Social Media Links Section */}
@@ -672,30 +593,42 @@ export default function FormComponent({
                             </Box>
                         </Grid>
 
-                        {renderTextField(
-                            "socialLinks.instagram",
-                            "Instagram Link",
-                            <Instagram sx={{ color: "#6F4E37" }} />,
-                            "https://instagram.com/yourcafe",
-                            false,
-                            { xs: 12, md: 4 },
-                        )}
-                        {renderTextField(
-                            "socialLinks.facebook",
-                            "Facebook Link",
-                            <Facebook sx={{ color: "#6F4E37" }} />,
-                            "https://facebook.com/yourcafe",
-                            false,
-                            { xs: 12, md: 4 },
-                        )}
-                        {renderTextField(
-                            "socialLinks.twitter",
-                            "Twitter Link",
-                            <Twitter sx={{ color: "#6F4E37" }} />,
-                            "https://twitter.com/yourcafe",
-                            false,
-                            { xs: 12, md: 4 },
-                        )}
+
+                        <CommonTextField
+                            name="socialLinks.instagram"
+                            label="Instagram Link"
+                            icon={<Instagram sx={{ color: "#6F4E37" }} />}
+                            placeholder="https://instagram.com/yourcafe"
+                            disabled={false}
+                            gridSize={{ xs: 12, md: 4 }}
+                            type="url"
+                            control={control}
+                            errors={errors}
+                        />
+
+                        <CommonTextField
+                            name="socialLinks.facebook"
+                            label="Facebook Link"
+                            icon={<Facebook sx={{ color: "#6F4E37" }} />}
+                            placeholder="https://facebook.com/yourcafe"
+                            disabled={false}
+                            gridSize={{ xs: 12, md: 4 }}
+                            type="url"
+                            control={control}
+                            errors={errors}
+                        />
+
+                        <CommonTextField
+                            name="socialLinks.twitter"
+                            label="Twitter Link"
+                            icon={<Twitter sx={{ color: "#6F4E37" }} />}
+                            placeholder="https://twitter.com/yourcafe"
+                            disabled={false}
+                            gridSize={{ xs: 12, md: 4 }}
+                            type="url"
+                            control={control}
+                            errors={errors}
+                        />
                     </Grid>
                 </Box>
             </Paper>

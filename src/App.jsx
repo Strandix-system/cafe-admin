@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Login from './pages/Login'
+import LoginSignup from './pages/LoginSignup'
 import AppRoutes from './routes/AppRoutes'
 import { queryClient } from './lib/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -32,13 +32,11 @@ function App() {
         <>
             <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
                 <QueryClientProvider client={queryClient}>
-                    {/* <ThemeModeProvider> */}
                     <AuthProvider>
                         <AppRoutes />
                         <Toaster position="top-right" reverseOrder={false} />
                         <ReactQueryDevtools initialIsOpen={false} />
                     </AuthProvider>
-                    {/* </ThemeModeProvider> */}
                 </QueryClientProvider>
             </CacheProvider>
         </>

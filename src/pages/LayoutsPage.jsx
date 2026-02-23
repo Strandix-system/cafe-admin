@@ -13,6 +13,7 @@ import {
   DialogActions,
   DialogTitle,
 } from "@mui/material";
+import CommonButton from "../components/common/commonButton";
 
 export default function LayoutsPage() {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ export default function LayoutsPage() {
     {
       onSuccess: () => {
         toast.success("Layout deleted successfully");
-       queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
+        queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
         setOpenDeleteDialog(false);
         setDeleteLayoutId(null);
       },
@@ -168,14 +169,21 @@ export default function LayoutsPage() {
             Default Layouts
           </Typography>
 
-          <Button
+          {/* <Button
             variant="contained"
             onClick={handleCustomizeDefault}
             disabled={!selectedDefaultLayout}
             sx={{ backgroundColor: "#6F4E37" }}
           >
             Customize
-          </Button>
+          </Button> */}
+          <CommonButton
+            variant="contained"
+            onClick={handleCustomizeDefault}
+            disabled={!selectedDefaultLayout}
+          >
+            Customize
+          </CommonButton>
         </Box>
 
         <Grid container spacing={3} px={3}>
@@ -232,14 +240,22 @@ export default function LayoutsPage() {
           Default Layouts
         </Typography>
 
-        <Button
+        {/* <Button
           variant="contained"
           onClick={handleCustomizeDefault}
           disabled={!selectedDefaultLayout}
           sx={{ backgroundColor: "#6F4E37" }}
         >
           Customize
-        </Button>
+        </Button> */}
+        <CommonButton
+          variant="contained"
+          onClick={handleCustomizeDefault}
+          disabled={!selectedDefaultLayout}
+        >
+          Customize
+        </CommonButton>
+
       </Box>
 
       <Grid container spacing={3} px={3} mb={5}>
@@ -366,14 +382,21 @@ export default function LayoutsPage() {
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button
+          {/* <Button
             fullWidth
             variant="contained"
             sx={{ backgroundColor: "#6F4E37" }}
             onClick={() => navigate("/table-management")}
           >
             Create QR Codes
-          </Button>
+          </Button> */}
+          <CommonButton
+            fullWidth
+            variant="contained"
+            onClick={() => navigate("/table-management")}
+          >
+            Create QR Codes
+          </CommonButton>
         </DialogActions>
       </Dialog>}
 
@@ -403,21 +426,36 @@ export default function LayoutsPage() {
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button
+          {/* <Button
             onClick={() => setOpenDeleteDialog(false)}
             disabled={isDeleting}
           >
             Cancel
-          </Button>
+          </Button> */}
+          <CommonButton
+            variant="outlined"
+            onClick={() => setOpenDeleteDialog(false)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </CommonButton>
 
-          <Button
+          {/* <Button
             color="error"
             variant="contained"
             onClick={handleConfirmDelete}
             disabled={isDeleting}
           >
             {isDeleting ? "Deleting..." : "Delete"}
-          </Button>
+          </Button> */}
+          <CommonButton
+            variant="contained"
+            color="error"
+            loading={isDeleting}
+            onClick={handleConfirmDelete}
+          >
+            Delete
+          </CommonButton>
         </DialogActions>
       </Dialog>
 

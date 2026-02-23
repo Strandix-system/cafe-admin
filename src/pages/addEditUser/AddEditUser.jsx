@@ -16,6 +16,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { loginSchema } from "../../utils/validation";
 import { queryClient } from '../../lib/queryClient'
 import { useAuth } from "../../context/AuthContext";
+import CommonButton from "../../components/common/commonButton";
 
 const AddEditUser = ({ open, onClose, mode, data }) => {
     const isEdit = mode === "edit";
@@ -129,14 +130,29 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
                 </DialogContent>
 
                 <DialogActions sx={{ px: 3, pb: 2 }}>
-                    <Button onClick={() => onClose(false)}>Cancel</Button>
+                    {/* <Button onClick={() => onClose(false)}>Cancel</Button>
                     <Button
                         variant="contained"
                         type="submit"
                         disabled={creating || updating}
                     >
                         {isEdit ? "Update" : "Create"}
-                    </Button>
+                    </Button> */}
+                    <CommonButton
+                        variant="outlined"
+                        onClick={() => onClose(false)}
+                        disabled={creating || updating}
+                    >
+                        Cancel
+                    </CommonButton>
+
+                    <CommonButton
+                        type="submit"
+                        variant="contained"
+                        loading={creating || updating}
+                    >
+                        {isEdit ? "Update" : "Create"}
+                    </CommonButton>
                 </DialogActions>
             </form>
         </Dialog>

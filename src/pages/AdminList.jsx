@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
+import CommonButton from "../components/common/commonButton";
 
 const AdminList = () => {
   const navigate = useNavigate();
@@ -152,23 +153,37 @@ const AdminList = () => {
 
         <Box display="flex" gap={2}>
           {adminId && (
-            <Button
+            // <Button
+            //   variant="outlined"
+            //   onClick={() => navigate("/cafes")}
+            // >
+            //   Back to Cafes
+            // </Button>
+            <CommonButton
               variant="outlined"
               onClick={() => navigate("/cafes")}
             >
               Back to Cafes
-            </Button>
+            </CommonButton>
           )}
 
           {isSuperAdmin && !adminId && (
-            <Button
+            // <Button
+            //   variant="contained"
+            //   sx={{ backgroundColor: "#6F4E37" }}
+            //   startIcon={<Plus size={18} />}
+            //   onClick={() => navigate("/cafe/create-edit")}
+            // >
+            //   Create Cafe
+            // </Button>
+
+            <CommonButton
               variant="contained"
-              sx={{ backgroundColor: "#6F4E37" }}
               startIcon={<Plus size={18} />}
               onClick={() => navigate("/cafe/create-edit")}
             >
               Create Cafe
-            </Button>
+            </CommonButton>
           )}
         </Box>
       </Box>

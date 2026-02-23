@@ -4,6 +4,7 @@ import { Edit, Plus, Eye } from "lucide-react";
 import { useMemo, useState } from "react";
 import AddEditUser from "../addEditUser/AddEditUser";
 import { useNavigate } from "react-router-dom";
+import CommonButton from "../../components/common/commonButton";
 
 const CustomerList = () => {
     const [open, setOpen] = useState(false);
@@ -63,7 +64,7 @@ const CustomerList = () => {
                     User Management
                 </Typography>
 
-                <Button
+                {/* <Button
                     variant="contained"
                     sx={{
                         backgroundColor: "#6F4E37",
@@ -77,7 +78,18 @@ const CustomerList = () => {
                     }}
                 >
                     Create User
-                </Button>
+                </Button> */}
+                <CommonButton
+                    variant="contained"
+                    startIcon={<Plus size={18} />}
+                    onClick={() => {
+                        setMode("create");
+                        setSelectedUser(null);
+                        setOpen(true);
+                    }}
+                >
+                    Create User
+                </CommonButton>
             </Box>
 
             {/* Table */}
