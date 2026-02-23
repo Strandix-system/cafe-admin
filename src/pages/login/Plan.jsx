@@ -104,12 +104,14 @@ const Plans = () => {
 
         // Create admin user with payment details
         verifySignup({
-            name: signupData.name,
+            firstName: signupData.firstName,
+            lastName: signupData.lastName,
             email: signupData.email,
-            contact: signupData.contact,
-            paymentId: response.razorpay_payment_id,
-            orderId: response.razorpay_order_id,
-            signature: response.razorpay_signature,
+            password: signupData.password,
+            phoneNumber: signupData.phoneNumber,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
         });
     };
 

@@ -10,7 +10,8 @@ import toast from "react-hot-toast";
 import CommonButton from "../../components/common/commonButton";
 
 const signupSchema = yup.object({
-    name: yup.string().required("Name is required"),
+    firstName: yup.string().trim().required("First name is required"),
+    lastName: yup.string().trim().required("Last name is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
     phoneNumber: yup
         .string()
@@ -39,7 +40,8 @@ const SignupForm = () => {
     } = useForm({
         resolver: yupResolver(signupSchema),
         defaultValues: {
-            name: "",
+            firstName: "",
+            lastName: "",
             email: "",
             phoneNumber: "",
             password: "",
@@ -51,7 +53,8 @@ const SignupForm = () => {
         localStorage.setItem(
             "signupData",
             JSON.stringify({
-                name: data.name,
+                firstName: data.firstName,
+                lastName: data.lastName,
                 email: data.email,
                 phoneNumber: data.phoneNumber,
                 password: data.password,
@@ -65,12 +68,20 @@ const SignupForm = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ mt: 2, mb: 2 }}>
+            <Box sx={{ mt: 2, mb: 2, display: "flex", gap: 2 }}>
                 <InputField
-                    field={register("name")}
-                    label="Full Name"
-                    error={errors.name}
-                    helperText={errors.name?.message}
+                    field={register("firstName")}
+                    label="First Name"
+                    error={errors.firstName}
+                    helperText={errors.firstName?.message}
+                    startIcon={<Person fontSize="small" />}
+                />
+
+                <InputField
+                    field={register("lastName")}
+                    label="Last Name"
+                    error={errors.lastName}
+                    helperText={errors.lastName?.message}
                     startIcon={<Person fontSize="small" />}
                 />
             </Box>
