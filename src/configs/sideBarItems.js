@@ -41,7 +41,7 @@ export const sideBarItems = {
         {
             key: "admin-request",
             label: "Admin request",
-            icon: CategoryIcon,
+            icon: SupervisedUserCircleIcon,
             path: "/admin-request",
             tab: "admin-request",
         },

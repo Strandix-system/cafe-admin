@@ -1,15 +1,36 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Trash2, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import TableComponent from "../../components/TableComponent/TableComponent";
 import { API_ROUTES } from "../../utils/api_constants";
+import { usePatch, usePost } from "../../utils/hooks/api_hooks";
+import toast from "react-hot-toast";
+import { queryClient } from "../../lib/queryClient";
 
 
 const AdminRequest = () => {
+
+
     const navigate = useNavigate();
     const { isSuperAdmin } = useAuth();
+
+    const [selectedRequestId, setSelectedRequestId] = useState(null);
+
+
+    const { mutate: updateRequestStatus } = usePost(
+        API_ROUTES.updateAdminRequestStatus,
+        {
+            onSuccess: () => {
+                toast.success("Status updated successfully");
+                queryClient.invalidateQueries({ queryKey: ["admin-request"] });
+            },
+            onError: () => {
+                toast.error("Failed to update status");
+            },
+        }
+    );
 
     const columns = useMemo(
         () => [
@@ -46,43 +67,35 @@ const AdminRequest = () => {
         []
     );
 
+    // const handleStatusChange = (row, status) => {
+    //     updateRequestStatus({
+    //         id: row.original._id,
+    //         data: { status },
+    //     });
+    // };
+    const handleStatusChange = (row, status) => {
+        console.log("Updating ID:", row.original._id);
+        updateRequestStatus({
+            id: row.original._id,
+            data: { status },
+        });
+    };
+
     const actions = [
         {
-            label: "Actions",
-            icon: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 1,
-                        justifyContent: "center",
-                        whiteSpace: "nowrap",
-                    }}
-                >
-                    <Button
-                        size="small"
-                        variant="contained"
-                        color="success"
-                        onClick={() =>
-                            handleStatusChange(row.original._id, "accepted")
-                        }
-                    >
-                        Accept
-                    </Button>
-
-                    <Button
-                        size="small"
-                        variant="outlined"
-                        color="error"
-                        onClick={() =>
-                            handleStatusChange(row.original._id, "rejected")
-                        }
-                    >
-                        Reject
-                    </Button>
-                </Box>
-            ),
+            label: "Accept",
+            onClick: (row) => handleStatusChange(row, "accepted"),
+        },
+        {
+            label: "Reject",
+            onClick: (row) => handleStatusChange(row, "rejected"),
+        },
+        {
+            label: "Mark as Requested",
+            onClick: (row) => handleStatusChange(row, "requested"),
         },
     ];
+
 
     const handleClose = () => {
         setOpenDialog(false);
@@ -91,6 +104,9 @@ const AdminRequest = () => {
 
     return (
         <div>
+            <Typography variant="h5" fontWeight={700}>
+                Admin Requests
+            </Typography>
             <Box
                 sx={{
                     p: 3,
@@ -104,7 +120,7 @@ const AdminRequest = () => {
                 slug="adminRequest"
                 columns={columns}
                 actions={actions}
-                actionsType="icons"
+                actionsType="menu"
                 querykey="admin-request"
                 getApiEndPoint="adminRequest"
                 // deleteApiEndPoint="deleteCategory"
