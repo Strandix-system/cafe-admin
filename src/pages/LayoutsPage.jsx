@@ -120,7 +120,7 @@ export default function LayoutsPage() {
       }
       return;
     }
-    url = `${import.meta.env.VITE_PORTFOLIO_URL}/${cafeQrId}`;
+    url = `${import.meta.env.VITE_PORTFOLIO_URL}/${cafeQrId}/?previewLayoutId=${layout._id}`;
     window.open(url, "_blank");
   };
 
