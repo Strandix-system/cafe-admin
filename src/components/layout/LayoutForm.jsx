@@ -236,6 +236,7 @@ export default function LayoutForm({
                     disabled={isLoading || !isValid || isSubmitting}
                 >
                     {isEdit ? "Update Layout" : "Create Layout"}
+                    {isSubmitting && <Loader variant="buttonLoader" />}
                 </CommonButton>
             </div>
 
