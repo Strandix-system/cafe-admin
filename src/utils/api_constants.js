@@ -23,6 +23,7 @@ export const API_ROUTES = {
     setActiveLayout: "layout/update-status",
 
     getAllOrders: "order/get-all",
+    getBillById: "order/bill",
     updateOrder: "order/status",
     updatePaymentStatus: "order/payment-status",
 
