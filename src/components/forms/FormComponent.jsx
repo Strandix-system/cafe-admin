@@ -309,7 +309,7 @@ export default function FormComponent({
                             placeholder="Enter Cafe Name"
                             control={control}
                             errors={errors}
-                            disabled={isEdit}
+                            disabled={isEdit && !!defaultValues.cafeName}
                         />
 
                         {/* Password Field - Only in Create Mode */}

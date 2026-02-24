@@ -12,11 +12,11 @@ import CommonButton from "../../components/common/commonButton";
 import { AlertTriangle } from "lucide-react";
 
 export default function CompleteProfileDialog() {
-    const { isProfileComplete } = useAuth();
+    const { isProfileComplete, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    if (isProfileComplete || location.pathname.startsWith("/profile")) return null;
+    if (isSuperAdmin || isProfileComplete || location.pathname.startsWith("/profile")) return null;
 
     return (
         <Dialog

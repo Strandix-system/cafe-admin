@@ -107,10 +107,9 @@ export function AuthProvider({ children }) {
       userData.gst,
       userData.logo,
       userData.profileImage,
-      userData.hours?.weekdays?.open,
-      userData.hours?.weekdays?.close,
-      userData.hours?.weekends?.open,
-      userData.hours?.weekends?.close,
+      userData.hours?.weekdays,
+      userData.hours?.weekends,
+
     ];
     return required.every((val) => val !== null && val !== undefined && val !== "");
   };
