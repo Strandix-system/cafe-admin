@@ -35,8 +35,8 @@ export default function AddEditLayout() {
         toast.success("Layout updated successfully");
         navigate("/layouts");
       },
-      onError: (err) => {
-        toast.error(error || "Failed to update layout");
+      onError: (error) => {
+        toast.error(error );
       },
     }
   );
@@ -56,7 +56,7 @@ export default function AddEditLayout() {
         navigate("/layouts")
       },
       onError: (error) => {
-        toast.error(error || "Failed to create layout");
+        toast.error(error);
       },
     }
   );

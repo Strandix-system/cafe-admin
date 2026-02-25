@@ -7,7 +7,7 @@ import Loader from "../../components/common/Loader";
 import { formatTime } from "../../utils/utils";
 import { queryClient } from "../../lib/queryClient";
 
-export default function AddEditAdmin() {
+export function AddEditAdmin() {
     const { userId } = useParams();
     const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ export default function AddEditAdmin() {
                 navigate("/cafes");
             },
             onError: (error) => {
-                toast.error(error || "Failed to update user");
+                toast.error(error);
             },
         },
     );
@@ -43,7 +43,7 @@ export default function AddEditAdmin() {
                 navigate("/cafes");
             },
             onError: (error) => {
-                toast.error(error || "Failed to create admin");
+                toast.error(error);
             },
         },
     );

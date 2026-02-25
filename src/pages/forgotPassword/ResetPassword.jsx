@@ -79,7 +79,7 @@ const paperSx = {
     backdropFilter: "blur(50px)",
 };
 
-const ResetPassword = () => {
+export const ResetPassword = () => {
     const navigate = useNavigate();
     const { token } = useParams();
 
@@ -112,8 +112,7 @@ const ResetPassword = () => {
                 toast.success("Password reset successfully!");
             },
             onError: (error) => {
-                // If token is invalid, middleware will reject with 401/403
-                toast.error(error || "Failed to reset password. Please try again.");
+                toast.error(error);
             },
         }
     );
@@ -141,22 +140,7 @@ const ResetPassword = () => {
                     <Typography variant="body2" sx={{ color: "#5D4037", mb: 3 }}>
                         This password reset link is invalid or missing.
                     </Typography>
-                    {/* <Button
-                        fullWidth
-                        variant="contained"
-                        onClick={() => navigate("/forgot-password")}
-                        sx={{
-                            py: 1.5,
-                            borderRadius: 3,
-                            textTransform: "none",
-                            fontSize: "1rem",
-                            fontWeight: 600,
-                            backgroundColor: "#6F4E37",
-                            "&:hover": { backgroundColor: "#5D4037" },
-                        }}
-                    >
-                        Request New Link
-                    </Button> */}
+                    
                     <CommonButton fullWidth onClick={() => navigate("/forgot-password")}>
                         Request New Link
                     </CommonButton>
@@ -234,25 +218,7 @@ const ResetPassword = () => {
                                     }
                                 />
                             </Box>
-                            {/* <Button
-                                fullWidth
-                                type="submit"
-                                variant="contained"
-                                disabled={!isValid || isPending}
-                                sx={{
-                                    mt: 3,
-                                    mb: 2,
-                                    py: 1.5,
-                                    borderRadius: 3,
-                                    textTransform: "none",
-                                    fontSize: "1rem",
-                                    fontWeight: 600,
-                                    backgroundColor: "#6F4E37",
-                                    "&:hover": { backgroundColor: "#5D4037" },
-                                }}
-                            >
-                                {isPending ? <CircularProgress size={26} color="inherit" /> : "Reset Password"}
-                            </Button> */}
+    
                             <CommonButton
                                 type="submit"
                                 fullWidth
@@ -276,22 +242,7 @@ const ResetPassword = () => {
                             <br />
                             You can now log in with your new password.
                         </Typography>
-                        {/* <Button
-                            fullWidth
-                            variant="contained"
-                            onClick={() => navigate("/login")}
-                            sx={{
-                                py: 1.5,
-                                borderRadius: 3,
-                                textTransform: "none",
-                                fontSize: "1rem",
-                                fontWeight: 600,
-                                backgroundColor: "#6F4E37",
-                                "&:hover": { backgroundColor: "#5D4037" },
-                            }}
-                        >
-                            Go to Login
-                        </Button> */}
+                        
                         <CommonButton fullWidth onClick={() => navigate("/login")}>
                             Go to Login
                         </CommonButton>
@@ -302,4 +253,3 @@ const ResetPassword = () => {
     );
 };
 
-export default ResetPassword;

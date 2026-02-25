@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import CommonButton from "../common/commonButton";
 
-const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
+export const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
     const handleAction = () => {
         if (isPending) {
             onAccept(order._id);
@@ -198,5 +198,3 @@ const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
 });
 
 OrderCard.displayName = "OrderCard";
-
-export default OrderCard;

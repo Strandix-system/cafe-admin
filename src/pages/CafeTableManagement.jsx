@@ -21,7 +21,7 @@ import { useLocation } from "react-router-dom";
 import CommonButton from "../components/common/commonButton";
 
 
-const CafeTableManagement = () => {
+export const CafeTableManagement = () => {
   const { layoutId: urlLayoutId } = useParams();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -65,10 +65,9 @@ const CafeTableManagement = () => {
         }
 
         queryClient.invalidateQueries({ queryKey: "get-qr-codes" });
-        refetch();
       },
       onError: (error) => {
-        toast.error(error || "Failed to generate QR codes");
+        toast.error(error);
       },
     }
   );
@@ -203,13 +202,6 @@ const CafeTableManagement = () => {
         <Typography variant="h5" sx={{ color: "#6F4E37", fontWeight: 600 }}>
           Table Management
         </Typography>
-        {/* <Button
-          variant="contained"
-          sx={{ backgroundColor: "#6F4E37" }}
-          onClick={handleOpenDialog}
-        >
-          Generate QR Codes
-        </Button> */}
         <CommonButton
           variant="contained"
           onClick={handleOpenDialog}
@@ -331,13 +323,7 @@ const CafeTableManagement = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
-          {/* <Button
-            onClick={handleCloseDialog}
-            disabled={isCreating}
-            sx={{ color: "#666" }}
-          >
-            Cancel
-          </Button> */}
+
           <CommonButton
             variant="text"
             onClick={handleCloseDialog}
@@ -347,14 +333,6 @@ const CafeTableManagement = () => {
             Cancel
           </CommonButton>
 
-          {/* <Button
-            onClick={handleSubmit}
-            variant="contained"
-            sx={{ backgroundColor: "#6F4E37" }}
-            disabled={isCreating || !totalTables}
-          >
-            {isCreating ? "Generating..." : "Generate"}
-          </Button> */}
           <CommonButton
             variant="contained"
             onClick={handleSubmit}
@@ -370,4 +348,4 @@ const CafeTableManagement = () => {
   );
 };
 
-export default CafeTableManagement;
+

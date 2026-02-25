@@ -60,7 +60,7 @@ const rowVariants = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
 
-const TableComponent = (props) => {
+export const TableComponent = (props) => {
     const {
         columns = [],
         rows,
@@ -472,4 +472,3 @@ const TableComponent = (props) => {
     );
 };
 
-export default TableComponent;

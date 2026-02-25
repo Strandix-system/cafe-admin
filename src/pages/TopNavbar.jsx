@@ -18,7 +18,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import CommonButton from "../components/common/commonButton";
 
-export default function TopNavbar() {
+export function TopNavbar() {
     const { user, logout, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();

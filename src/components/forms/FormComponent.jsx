@@ -68,7 +68,7 @@ const TIME_PICKER_STYLES = {
     },
 };
 
-export default function FormComponent({
+export function FormComponent({
     defaultValues = {},
     onSubmit,
     isSubmitting = false,
@@ -199,27 +199,6 @@ export default function FormComponent({
                         </Box>
                     </Box>
 
-                    {/* <Button
-                        type="submit"
-                        form="admin-form"
-                        variant="contained"
-                        disabled={!isValid || isSubmitting}
-                        sx={{
-                            bgcolor: "white",
-                            color: "#6F4E37",
-                            fontWeight: 600,
-                            px: 4,
-                            "&:hover": {
-                                bgcolor: "#F5EFE6",
-                            },
-                            "&:disabled": {
-                                bgcolor: "#E0E0E0",
-                                color: "#9E9E9E",
-                            },
-                        }}
-                    >
-                        {isEdit ? "Update" : "Create"}
-                    </Button> */}
                     <CommonButton
                         type="submit"
                         form="admin-form"

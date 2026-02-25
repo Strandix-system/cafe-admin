@@ -10,9 +10,9 @@ import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
 import CommonButton from "../components/common/commonButton";
 
-const AdminList = () => {
+export const AdminList = () => {
   const navigate = useNavigate();
-  const { user, isSuperAdmin, isAdmin } = useAuth();
+  const { isSuperAdmin } = useAuth();
   const { adminId } = useParams();
 
   const [activeTab, setActiveTab] = useState("active"); // active | inactive
@@ -32,8 +32,7 @@ const AdminList = () => {
         }
       },
       onError: (error) => {
-        toast.error(error || "Failed to update status");
-        console.error("Status update failed:", error);
+        toast.error(error);
       },
     },
   );
@@ -154,12 +153,6 @@ const AdminList = () => {
 
         <Box display="flex" gap={2}>
           {adminId && (
-            // <Button
-            //   variant="outlined"
-            //   onClick={() => navigate("/cafes")}
-            // >
-            //   Back to Cafes
-            // </Button>
             <CommonButton
               variant="outlined"
               onClick={() => navigate("/cafes")}
@@ -169,15 +162,6 @@ const AdminList = () => {
           )}
 
           {isSuperAdmin && !adminId && (
-            // <Button
-            //   variant="contained"
-            //   sx={{ backgroundColor: "#6F4E37" }}
-            //   startIcon={<Plus size={18} />}
-            //   onClick={() => navigate("/cafe/create-edit")}
-            // >
-            //   Create Cafe
-            // </Button>
-
             <CommonButton
               variant="contained"
               startIcon={<Plus size={18} />}
@@ -229,4 +213,4 @@ const AdminList = () => {
   );
 };
 
-export default AdminList;
+

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, Trash2 } from "lucide-react";
 import { useMemo } from "react";
 
-const OrderHistoryList = () => {
+export const OrderHistoryList = () => {
     const navigate = useNavigate();
 
     const columns = useMemo(
@@ -107,4 +107,3 @@ const OrderHistoryList = () => {
     );
 };
 
-export default OrderHistoryList;

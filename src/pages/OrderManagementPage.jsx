@@ -26,7 +26,7 @@ function TabPanel({ children, value, index, ...other }) {
     );
 }
 
-const OrderManagementPage = () => {
+export const OrderManagementPage = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
 
@@ -116,12 +116,10 @@ const OrderManagementPage = () => {
     const { mutate: updateOrder } = usePatch(API_ROUTES.updateOrder, {
         onSuccess: () => {
             toast.success("Order updated!");
-            // Refetch to sync with backend
             queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
         onError: (error) => {
-            toast.error(error || "Failed to update order");
-            // Refetch to restore correct state
+            toast.error(error);
             queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
     });
@@ -130,12 +128,10 @@ const OrderManagementPage = () => {
     const { mutate: updatePaymentStatus } = usePatch(API_ROUTES.updatePaymentStatus, {
         onSuccess: () => {
             toast.success("Payment status updated to Paid!");
-            // Refetch to sync with backend
             queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },
         onError: (error) => {
-            toast.error(error || "Failed to update payment status");
-            // Refetch to restore correct state
+            toast.error(error);
             queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },
     });
@@ -324,4 +320,3 @@ const OrderManagementPage = () => {
     );
 };
 
-export default OrderManagementPage;

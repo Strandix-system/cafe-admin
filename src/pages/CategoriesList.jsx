@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import CreateCategoryDialog from "../components/categories/CreateCategoryDialog";
 import CommonButton from "../components/common/commonButton";
 
-const CategoriesList = () => {
+export const CategoriesList = () => {
   // console.log("✅ CategoriesList component mounted" );
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -103,4 +103,3 @@ const CategoriesList = () => {
   );
 };
 
-export default CategoriesList;

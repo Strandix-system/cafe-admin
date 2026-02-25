@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 const getNestedError = (errors, name) =>
   name?.split(".").reduce((obj, key) => obj?.[key], errors);
 
-const CommonTimeField = ({
+export const CommonTimeField = ({
   label,
   control,
   errors,
@@ -155,4 +155,3 @@ const CommonTimeField = ({
   );
 };
 
-export default CommonTimeField;

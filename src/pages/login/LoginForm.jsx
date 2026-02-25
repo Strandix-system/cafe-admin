@@ -17,7 +17,7 @@ const loginSchema = yup.object({
     password: yup.string().required("Password is required"),
 });
 
-const LoginForm = () => {
+export const LoginForm = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [rememberMe, setRememberMe] = useState(false);
@@ -40,7 +40,7 @@ const LoginForm = () => {
             toast.success("Logged in successfully!!");
         },
         onError: (error) => {
-            toast.error(error || "Login Failed! Please try again.");
+            toast.error(error);
         },
     });
 
@@ -115,5 +115,3 @@ const LoginForm = () => {
         </form>
     );
 };
-
-export default LoginForm;

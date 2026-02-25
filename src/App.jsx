@@ -25,7 +25,7 @@ const emotionCacheOptions = {
   },
 };
 
-function App() {
+export function App() {
   return (
     <>
       <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
@@ -41,4 +41,3 @@ function App() {
   )
 }
 
-export default App

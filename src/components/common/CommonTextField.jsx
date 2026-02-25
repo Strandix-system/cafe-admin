@@ -7,7 +7,7 @@ const getError = (errors, name) =>
     ? name.split(".").reduce((obj, key) => obj?.[key], errors)
     : errors[name];
 
-const CommonTextField = ({
+export const CommonTextField = ({
   name,
   label,
   icon,
@@ -61,4 +61,4 @@ const CommonTextField = ({
   );
 };
 
-export default CommonTextField;
+

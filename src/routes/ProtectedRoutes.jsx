@@ -9,6 +9,8 @@ const ProtectedRoutes = ({ children }) => {
   }
   return (
     <>
+      //Used CompleteProfileDialog in protected routes so the dialog
+      // is visible throughout the application until the condition are met to close the dialog 
       <CompleteProfileDialog />
       {children}
     </>

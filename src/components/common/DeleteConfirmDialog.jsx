@@ -10,7 +10,7 @@ import {
 import CommonButton from "./commonButton";
 
 
-const DeleteConfirmationDialog = ({
+export const DeleteConfirmationDialog = ({
   open,
   onClose,
   onConfirm,
@@ -61,8 +61,6 @@ const DeleteConfirmationDialog = ({
     </Dialog>
   );
 };
-
-export default DeleteConfirmationDialog;
 
 
 

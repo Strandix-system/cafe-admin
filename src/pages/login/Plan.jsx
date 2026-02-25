@@ -76,7 +76,7 @@ const Plans = () => {
             },
             onError: (error) => {
                 setIsLoading(false);
-                toast.error(error || "Failed to initiate payment. Please try again.");
+                toast.error(error);
             },
         }
     );
@@ -134,7 +134,7 @@ const Plans = () => {
     }, []);
 
     if (!signupData) {
-        return null; // Prevent rendering if no signup data
+        return; // Prevent rendering if no signup data
     }
 
     return (

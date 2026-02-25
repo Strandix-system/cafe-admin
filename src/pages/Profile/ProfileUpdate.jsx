@@ -8,7 +8,7 @@ import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfileUpdate() {
-    const { user, refreshUser } = useAuth();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const { mutate: updateMutate, isPending } = usePatch(
@@ -19,7 +19,7 @@ export default function ProfileUpdate() {
                 toast.success("Profile updated successfully");
                 navigate("/dashboard");
             },
-            onError: (error) => toast.error(error || "Failed to update profile"),
+            onError: (error) => toast.error(error),
         }
     );
 
