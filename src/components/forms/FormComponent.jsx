@@ -236,6 +236,7 @@ export default function FormComponent({
                         }}
                     >
                         {isEdit ? "Update" : "Create"}
+                        {isSubmitting && <Loader variant="buttonLoader" />}
                     </CommonButton>
                 </Box>
 
