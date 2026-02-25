@@ -6,7 +6,7 @@ export const API_ROUTES = {
     getMe: "auth/me",
     getUsers: "/admin/get-users",
 
-    dashboardStats: "admin/dashboard/stats",
+    dashboardStats: "dashboard/stats",
 
     getUserById: "admin/get-user",
     updateUsers: "admin/update",
@@ -65,4 +65,7 @@ export const API_ROUTES = {
     forgotPassword: "auth/forgot-password",
     resetPassword: "auth/reset-password",
     changePassword: "auth/change-password",
+    adminRequest: "demo/all",
+    updateAdminRequestStatus: "demo/status"
+
 };

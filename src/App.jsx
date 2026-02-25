@@ -10,35 +10,37 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter } from 'react-router-dom';
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ThemeModeProvider } from "./context/ThemeContext";
 import "./index.css"
+// import { ThemeModeProvider } from './context/ThemeContext';
 
 const emotionCacheOptions = {
-  rtl: {
-    key: "muirtl",
-    stylisPlugins: [rtlPlugin],
-    insertionPoint: document.getElementById("emotion-insertion-point"),
-  },
-  ltr: {
-    key: "muiltr",
-    stylisPlugins: [],
-    insertionPoint: document.getElementById("emotion-insertion-point"),
-  },
+    rtl: {
+        key: "muirtl",
+        stylisPlugins: [rtlPlugin],
+        insertionPoint: document.getElementById("emotion-insertion-point"),
+    },
+    ltr: {
+        key: "muiltr",
+        stylisPlugins: [],
+        insertionPoint: document.getElementById("emotion-insertion-point"),
+    },
 };
 
 function App() {
-  return (
-    <>
-      <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <AppRoutes />
-            <Toaster position="top-right" reverseOrder={false} />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </AuthProvider>
-        </QueryClientProvider>
-      </CacheProvider>
-    </>
-  )
+    return (
+        <>
+            <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
+                <QueryClientProvider client={queryClient}>
+                    <AuthProvider>
+                        <AppRoutes />
+                        <Toaster position="top-right" reverseOrder={false} />
+                        <ReactQueryDevtools initialIsOpen={false} />
+                    </AuthProvider>
+                </QueryClientProvider>
+            </CacheProvider>
+        </>
+    )
 }
 
 export default App

@@ -18,6 +18,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import CommonButton from "../components/common/commonButton";
 
+
 export default function TopNavbar() {
     const { user, logout, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
@@ -119,6 +120,7 @@ export default function TopNavbar() {
 
             </Box>
 
+
             {/* Right Side - Actions & Profile */}
             <Box display="flex" alignItems="center" gap={2}>
                 {/* Divider */}
@@ -139,7 +141,7 @@ export default function TopNavbar() {
                     }}
                     onClick={handleMenuOpen}
                 >
-                    <Avatar
+                    {/* <Avatar
                         sx={{
                             width: 40,
                             height: 40,
@@ -149,7 +151,27 @@ export default function TopNavbar() {
                         }}
                     >
                         {getInitials(user?.name || user?.email)}
+                    </Avatar> */}
+                    <Avatar
+                        src={user?.profileImage || undefined}
+                        alt={`${user?.firstName} ${user?.lastName}`}
+                        sx={{
+                            width: 40,
+                            height: 40,
+                            bgcolor: !user?.profileImage
+                                ? isSuperAdmin
+                                    ? "#5B4CFF"
+                                    : "#6F4E37"
+                                : "transparent",
+                            fontWeight: 600,
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        {!user?.profileImage &&
+                            `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}
                     </Avatar>
+
+
 
                     <Box sx={{ display: { xs: "none", sm: "block" } }}>
                         <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
@@ -187,17 +209,17 @@ export default function TopNavbar() {
                         },
                     }}
                 >
-                    {!isSuperAdmin && (
-                        <MenuItem
-                            onClick={() => {
-                                handleMenuClose();
-                                navigate("/profile");
-                            }}
-                            sx={{ gap: 1.5, py: 1.5 }}
-                        >
-                            <PersonIcon fontSize="small" />
-                            <Typography variant="body2">My Profile</Typography>
-                        </MenuItem>)}
+
+                    <MenuItem
+                        onClick={() => {
+                            handleMenuClose();
+                            navigate("/profile");
+                        }}
+                        sx={{ gap: 1.5, py: 1.5 }}
+                    >
+                        <PersonIcon fontSize="small" />
+                        <Typography variant="body2">My Profile</Typography>
+                    </MenuItem>
 
                     <Divider sx={{ my: 1 }} />
 
