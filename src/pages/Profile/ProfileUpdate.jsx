@@ -7,7 +7,7 @@ import FormComponent from "../../components/forms/FormComponent";
 import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
 
-export default function ProfileUpdate() {
+export function ProfileUpdate() {
     const { user } = useAuth();
     const navigate = useNavigate();
 

@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { sideBarItems } from "../../configs/sideBarItems";
 
-export default function Sidebar() {
+export function Sidebar() {
   const { isSuperAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();

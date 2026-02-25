@@ -41,7 +41,7 @@ const menuSchema = yup.object({
     }),
 });
 
-export default function CreateEditMenuModal({ open, onClose, menuId }) {
+export function CreateEditMenuModal({ open, onClose, menuId }) {
   const isEdit = Boolean(menuId);
 
   const {
@@ -260,16 +260,6 @@ export default function CreateEditMenuModal({ open, onClose, menuId }) {
       </DialogContent>
 
       <DialogActions>
-        {/* <Button onClick={handleClose} sx={{ color: "#6F4E37" }}>Cancel</Button>
-        <Button
-          type="submit"
-          form="menu-form"
-          variant="contained"
-          sx={{ backgroundColor: "#6F4E37" }}
-          disabled={!isValid || loading}
-        >
-          {loading ? "Saving..." : isEdit ? "Update" : "Create"}
-        </Button> */}
         <CommonButton
           variant="outlined"
           onClick={handleClose}

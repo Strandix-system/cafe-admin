@@ -6,7 +6,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { getSuperAdminStats, getAdminStats } from "../../configs/statsItems";
 import StatCard from "./StatCard";
 
-export default function Dashboard() {
+export function Dashboard() {
     const { isSuperAdmin, isAdmin } = useAuth();
 
     const roleReady = isSuperAdmin || isAdmin;

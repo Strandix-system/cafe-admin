@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import CommonButton from "../../components/common/commonButton";
 
-const Plans = () => {
+export const Plans = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
     const signupData = JSON.parse(localStorage.getItem("signupData"));
@@ -247,4 +247,3 @@ const Plans = () => {
     );
 };
 
-export default Plans;

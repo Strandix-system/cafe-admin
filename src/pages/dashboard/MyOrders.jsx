@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import TableComponent from "../../components/TableComponent/TableComponent";
 import { Box, Chip, Typography, Paper } from "@mui/material";
 
-const MyOrders = () => {
+export const MyOrders = () => {
     const { userId } = useParams();
 
     const columns = useMemo(
@@ -181,4 +181,4 @@ const MyOrders = () => {
     );
 };
 
-export default MyOrders;
+

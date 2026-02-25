@@ -137,20 +137,6 @@ export const ChangePassword = () => {
                             {renderTextField("newPassword", "New Password", null, "Enter New Password", null, { xs: 12 }, "password")}
                             {renderTextField("confirmPassword", "Confirm Password", null, "Confirm New Password", null, { xs: 12 }, "password")}
                         </Grid>
-                        {/* 
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            type="submit"
-                            sx={{ mt: 3, py: 1.2 }}
-                            disabled={isPending}
-                        >
-                            {isPending ? (
-                                <CircularProgress size={24} color="inherit" />
-                            ) : (
-                                "Update Password"
-                            )}
-                        </Button> */}
                         <CommonButton
                             fullWidth
                             variant="contained"

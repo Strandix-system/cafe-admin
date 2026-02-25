@@ -6,7 +6,7 @@ import AddEditUser from "../addEditUser/AddEditUser";
 import { useNavigate } from "react-router-dom";
 import CommonButton from "../../components/common/commonButton";
 
-const CustomerList = () => {
+export const CustomerList = () => {
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState("create");
     const [selectedUser, setSelectedUser] = useState(null);
@@ -105,4 +105,3 @@ const CustomerList = () => {
 };
 
 
-export default CustomerList;

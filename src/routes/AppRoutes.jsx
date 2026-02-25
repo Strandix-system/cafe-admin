@@ -25,7 +25,7 @@ import ProfileUpdate from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import ResetPassword from "../pages/forgotPassword/ResetPassword";
 
-const AppRoutes = () => {
+export const AppRoutes = () => {
   return (
     <Routes>
       {/* PUBLIC ROUTES */}
@@ -67,4 +67,3 @@ const AppRoutes = () => {
   );
 };
 
-export default AppRoutes;

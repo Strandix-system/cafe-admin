@@ -6,7 +6,7 @@ import { api_enums } from "../../enums/api";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
-const LoginSignup = () => {
+export const LoginSignup = () => {
   const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
 
@@ -71,4 +71,3 @@ const LoginSignup = () => {
   );
 };
 
-export default LoginSignup;

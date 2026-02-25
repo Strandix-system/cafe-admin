@@ -27,7 +27,7 @@ const signupSchema = yup.object({
         .required("Confirm password is required"),
 });
 
-const SignupForm = () => {
+export const SignupForm = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -36,7 +36,7 @@ const SignupForm = () => {
         register,
         handleSubmit,
         reset,
-        formState: { errors, isValid, isSubmitting },
+        formState: { errors, isValid },
     } = useForm({
         resolver: yupResolver(signupSchema),
         defaultValues: {
@@ -146,7 +146,6 @@ const SignupForm = () => {
             <CommonButton
                 fullWidth
                 type="submit"
-                loading={isSubmitting}
                 disabled={!isValid}
                 sx={{ mt: 3, mb: 2 }}
             >
@@ -156,4 +155,3 @@ const SignupForm = () => {
     );
 };
 
-export default SignupForm;

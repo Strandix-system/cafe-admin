@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography, Box, Skeleton } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
-export default function StatCard({ label, value, loading }) {
+export function StatCard({ label, value, loading }) {
     return (
         <Card
             sx={{

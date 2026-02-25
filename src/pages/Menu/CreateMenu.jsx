@@ -9,7 +9,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 import { useFetch } from "../../utils/hooks/api_hooks";
 
-export default function CreateMenu() {
+export function CreateMenu() {
   const { menuId } = useParams();
   const navigate = useNavigate();
 

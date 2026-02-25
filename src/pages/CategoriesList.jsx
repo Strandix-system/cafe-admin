@@ -56,17 +56,6 @@ export const CategoriesList = () => {
           justifyContent: "flex-end",
         }}
       >
-        {/* <Button
-          variant="contained"
-          sx={{ backgroundColor: "#6F4E37" }}
-          startIcon={<Plus size={18} />}
-          onClick={() => {
-            setSelectedCategory(null);
-            setOpenDialog(true);
-          }}
-        >
-          Create Category
-        </Button> */}
         <CommonButton
           variant="contained"
           startIcon={<Plus size={18} />}

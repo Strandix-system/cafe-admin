@@ -11,7 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import CommonButton from "../../components/common/commonButton";
 import { AlertTriangle } from "lucide-react";
 
-export default function CompleteProfileDialog() {
+export function CompleteProfileDialog() {
     const { user, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();

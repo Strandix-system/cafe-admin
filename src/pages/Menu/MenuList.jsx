@@ -11,7 +11,7 @@ import CreateEditMenuModal from "./CreateEditMenuModal";
 import CommonButton from "../../components/common/commonButton";
 
 
-const MenuList = () => {
+export const MenuList = () => {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -123,5 +123,3 @@ const MenuList = () => {
     </div>
   );
 };
-
-export default MenuList;

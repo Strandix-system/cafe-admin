@@ -8,7 +8,7 @@ import { useFetch, usePatch, usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function AddEditLayout() {
+export function AddEditLayout() {
   const { layoutId } = useParams();
   const { isSuperAdmin, isAdmin, adminId } = useAuth();
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ export default function AddEditLayout() {
         navigate("/layouts");
       },
       onError: (error) => {
-        toast.error(error );
+        toast.error(error);
       },
     }
   );
