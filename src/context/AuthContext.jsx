@@ -11,7 +11,7 @@ import { API_ROUTES } from "../utils/api_constants";
 import { AUTH_ROLES } from "../utils/constant";
 import Loader from "../components/common/Loader";
 import { getAccessToken } from "../utils/api_request";
-// import APIRequest from "../utils/api_request";
+//import APIRequest from "../utils/api_request";
 
 const AuthContext = createContext();
 
@@ -28,13 +28,14 @@ export function AuthProvider({ children }) {
         {},
         { enabled: !!token },
     );
-
+    console.log("hello and");
     useEffect(() => {
         const init = async () => {
             if (token) {
                 try {
                     const res = await refetch();
                     if (res?.data?.result) {
+                        console.log("result", res.data.result);
                         setUser(res.data.result);
                         setIsAuthenticated(true);
                     } else {

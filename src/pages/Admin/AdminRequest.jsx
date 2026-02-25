@@ -8,30 +8,49 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { usePatch, usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { queryClient } from "../../lib/queryClient";
-
-
+import { Chip } from "@mui/material";
+// import { useQuery } from "@tanstack/react-query";
+import { Tabs, Tab } from "@mui/material";
 const AdminRequest = () => {
 
 
     const navigate = useNavigate();
     const { isSuperAdmin } = useAuth();
 
+
     const [selectedRequestId, setSelectedRequestId] = useState(null);
+    const [activeTab, setActiveTab] = useState("requested");
+    <Box sx={{ px: 3, mb: 2 }}>
+        <Tabs
+            value={activeTab}
+            onChange={(_, value) => setActiveTab(value)}
+            textColor="primary"
+            indicatorColor="primary"
+            sx={{
+                "& .MuiTab-root": {
+                    fontWeight: 600,
+                    textTransform: "none",
+                },
+            }}
+        >
+            <Tab label="Requested" value="requested" />
+            <Tab label="Accepted" value="accepted" />
+            <Tab label="Rejected" value="rejected" />
+        </Tabs>
+    </Box>
 
-
-    const { mutate: updateRequestStatus } = usePost(
+    const { mutate: updateRequestStatus } = usePatch(
         API_ROUTES.updateAdminRequestStatus,
         {
             onSuccess: () => {
                 toast.success("Status updated successfully");
-                queryClient.invalidateQueries({ queryKey: ["admin-request"] });
+                queryClient.invalidateQueries({ queryKey: ["adminRequest"] });
             },
             onError: () => {
                 toast.error("Failed to update status");
             },
         }
     );
-
     const columns = useMemo(
         () => [
             {
@@ -55,8 +74,25 @@ const AdminRequest = () => {
                 header: "Request Message",
             },
             {
-                accessorKey: "status",
+                id: "status",
                 header: "Status",
+                Cell: ({ row }) => {
+                    const status = row.original.status;
+
+                    const colorMap = {
+                        requested: "warning",
+                        accepted: "success",
+                        rejected: "error",
+                    };
+
+                    return (
+                        <Chip
+                            label={status}
+                            color={colorMap[status]}
+                            size="small"
+                        />
+                    );
+                },
             },
             {
                 accessorKey: "createdAt",
@@ -67,40 +103,53 @@ const AdminRequest = () => {
         []
     );
 
-    // const handleStatusChange = (row, status) => {
-    //     updateRequestStatus({
-    //         id: row.original._id,
-    //         data: { status },
-    //     });
-    // };
     const handleStatusChange = (row, status) => {
-        console.log("Updating ID:", row.original._id);
-        updateRequestStatus({
-            id: row.original._id,
-            data: { status },
-        });
+        updateRequestStatus(
+            {
+                id: row.original._id,
+                data: { status },
+            },
+            {
+                onSuccess: () => {
+                    toast.success("Status updated successfully");
+                    queryClient.invalidateQueries({
+                        queryKey: ["adminRequest"],
+                    });
+                },
+                onError: () => {
+                    toast.error("Failed to update status");
+                },
+            }
+        );
     };
 
     const actions = [
         {
             label: "Accept",
             onClick: (row) => handleStatusChange(row, "accepted"),
+            hidden: (row) => row.original.status === "accepted",
         },
         {
             label: "Reject",
             onClick: (row) => handleStatusChange(row, "rejected"),
+            hidden: (row) => row.original.status === "rejected",
         },
         {
             label: "Mark as Requested",
             onClick: (row) => handleStatusChange(row, "requested"),
+            hidden: (row) => row.original.status === "requested",
         },
     ];
-
 
     const handleClose = () => {
         setOpenDialog(false);
         setSelectedCategory(null);
     };
+    const queryParams = {
+        status: activeTab,
+    };
+
+    const queryKey = `adminRequest-${activeTab}`;
 
     return (
         <div>
@@ -121,12 +170,14 @@ const AdminRequest = () => {
                 columns={columns}
                 actions={actions}
                 actionsType="menu"
-                querykey="admin-request"
+                querykey="adminRequest"
                 getApiEndPoint="adminRequest"
                 // deleteApiEndPoint="deleteCategory"
-                // deleteAction={isSuperAdmin}
+                queryParams={queryParams}
                 enableExportTable={true}
+
             />
+
         </div>
     );
 };

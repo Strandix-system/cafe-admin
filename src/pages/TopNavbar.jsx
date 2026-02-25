@@ -209,17 +209,17 @@ export default function TopNavbar() {
                         },
                     }}
                 >
-                    {!isSuperAdmin && (
-                        <MenuItem
-                            onClick={() => {
-                                handleMenuClose();
-                                navigate("/profile");
-                            }}
-                            sx={{ gap: 1.5, py: 1.5 }}
-                        >
-                            <PersonIcon fontSize="small" />
-                            <Typography variant="body2">My Profile</Typography>
-                        </MenuItem>)}
+
+                    <MenuItem
+                        onClick={() => {
+                            handleMenuClose();
+                            navigate("/profile");
+                        }}
+                        sx={{ gap: 1.5, py: 1.5 }}
+                    >
+                        <PersonIcon fontSize="small" />
+                        <Typography variant="body2">My Profile</Typography>
+                    </MenuItem>
 
                     <Divider sx={{ my: 1 }} />
 
