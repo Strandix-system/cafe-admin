@@ -1,6 +1,6 @@
 import { Grid, FormLabel } from "@mui/material";
 import { Controller } from "react-hook-form";
-import InputField from "./InputField";
+import {InputField} from "./InputField";
 
 const getError = (errors, name) =>
   name.includes(".")

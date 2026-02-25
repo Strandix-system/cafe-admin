@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FormLabel, MenuItem } from "@mui/material";
 import { toast } from "react-hot-toast";
 import { APIRequest } from "../../utils/api_request";
-import InputField from "../../components/common/InputField";
+import {InputField} from "../../components/common/InputField";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 import { useFetch } from "../../utils/hooks/api_hooks";

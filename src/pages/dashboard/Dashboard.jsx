@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { getSuperAdminStats, getAdminStats } from "../../configs/statsItems";
-import StatCard from "./StatCard";
+import {StatCard} from "./StatCard";
 
 export function Dashboard() {
     const { isSuperAdmin, isAdmin } = useAuth();

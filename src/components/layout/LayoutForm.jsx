@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button, Grid, Box, FormLabel } from "@mui/material";
 import { useEffect } from "react";
-import Loader from "../common/Loader";
+import {Loader} from "../common/Loader";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -15,13 +15,13 @@ import {
     Facebook,
     Twitter,
 } from "@mui/icons-material";
-import InputField from "../common/InputField";
-import ImageUploadSection from "../common/ImageUploadSection";
+import {InputField} from "../common/InputField";
+import {ImageUploadSection} from "../common/ImageUploadSection";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import { m } from "framer-motion";
-import CommonTextField from "../common/CommonTextField";
-import CommonImageField from "../common/CommonImageField";
-import CommonButton from "../common/commonButton";
+import {CommonTextField} from "../common/CommonTextField";
+import {CommonImageField} from "../common/CommonImageField";
+import {CommonButton} from "../common/commonButton";
 
 const layoutSchema = yup.object({
     layoutTitle: yup.string().required("Layout title is required"),

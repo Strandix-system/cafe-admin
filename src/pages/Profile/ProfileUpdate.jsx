@@ -3,7 +3,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { formatTime } from "../../utils/utils";
-import FormComponent from "../../components/forms/FormComponent";
+import {FormComponent} from "../../components/forms/FormComponent";
 import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
 

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 import { AlertTriangle } from "lucide-react";
 
 export function CompleteProfileDialog() {

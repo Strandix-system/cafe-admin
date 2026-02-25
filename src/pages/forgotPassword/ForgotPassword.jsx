@@ -15,10 +15,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import toast from "react-hot-toast";
 import cafe1 from "../../assets/cafe1.jpg";
-import InputField from "../../components/common/InputField";
+import {InputField} from "../../components/common/InputField";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
 const emailSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),

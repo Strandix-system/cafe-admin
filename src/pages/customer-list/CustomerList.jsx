@@ -1,10 +1,10 @@
-import TableComponent from "../../components/TableComponent/TableComponent";
+import {TableComponent} from "../../components/TableComponent/TableComponent";
 import { Box, Button, Typography } from "@mui/material";
 import { Edit, Plus, Eye } from "lucide-react";
 import { useMemo, useState } from "react";
-import AddEditUser from "../addEditUser/AddEditUser";
+import {AddEditUser} from "../addEditUser/AddEditUser";
 import { useNavigate } from "react-router-dom";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
 export const CustomerList = () => {
     const [open, setOpen] = useState(false);

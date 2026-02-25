@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import LoginSignup from '../src/pages/login/LoginSignup'
-import AppRoutes from './routes/AppRoutes'
+import {LoginSignup} from '../src/pages/login/LoginSignup'
+import {AppRoutes} from './routes/AppRoutes'
 import { queryClient } from './lib/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { CacheProvider } from '@emotion/react';

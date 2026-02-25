@@ -9,7 +9,7 @@ import { api_enums } from "../enums/api";
 import { useFetch } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
 import { AUTH_ROLES } from "../utils/constant";
-import Loader from "../components/common/Loader";
+import { Loader } from "../components/common/Loader";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
@@ -92,7 +92,6 @@ export function AuthProvider({ children }) {
         isSuperAdmin: user?.role === AUTH_ROLES.SUPER_ADMIN,
         login,
         logout,
-        refreshUser,
         authLoading,
       }}
     >

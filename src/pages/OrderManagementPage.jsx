@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Box, Tabs, Tab, Typography, Grid, Badge, Chip } from "@mui/material";
 import { useFetch, usePatch } from "../utils/hooks/api_hooks";
-import Loader from "../components/common/Loader";
-import OrderCard from "../components/OderComponent/OrderCard";
-import TableComponent from "../components/TableComponent/TableComponent";
+import {Loader} from "../components/common/Loader";
+import {OrderCard} from "../components/OderComponent/OrderCard";
+import {TableComponent} from "../components/TableComponent/TableComponent";
 import { API_ROUTES } from "../utils/api_constants";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";

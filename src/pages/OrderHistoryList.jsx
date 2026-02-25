@@ -1,4 +1,4 @@
-import TableComponent from "../components/TableComponent/TableComponent";
+import {TableComponent} from "../components/TableComponent/TableComponent";
 import { Box, Typography, Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Eye, Trash2 } from "lucide-react";

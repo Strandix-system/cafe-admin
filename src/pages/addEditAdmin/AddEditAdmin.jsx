@@ -1,9 +1,9 @@
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import FormComponent from "../../components/forms/FormComponent";
+import {FormComponent} from "../../components/forms/FormComponent";
 import { useFetch, usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import Loader from "../../components/common/Loader";
+import {Loader} from "../../components/common/Loader";
 import { formatTime } from "../../utils/utils";
 import { queryClient } from "../../lib/queryClient";
 

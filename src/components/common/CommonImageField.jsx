@@ -1,6 +1,6 @@
 import { Grid, FormLabel, Box } from "@mui/material";
 import { Controller } from "react-hook-form";
-import ImageUploadSection from "./ImageUploadSection";
+import {ImageUploadSection} from "./ImageUploadSection";
 
 export const CommonImageField = ({
   name,

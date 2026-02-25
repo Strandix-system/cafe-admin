@@ -9,7 +9,7 @@ import { get } from "lodash";
 import { keepPreviousData } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import RestoreIcon from "@mui/icons-material/Restore";
-import ExporterTable from "./ExporterTable";
+import {ExporterTable} from "./ExporterTable";
 import {
     Columns,
     DeleteIcon,
@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useDelete, useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import DeleteConfirmationDialog from "../common/DeleteConfirmDialog";
+import {DeleteConfirmationDialog} from "../common/DeleteConfirmDialog";
 import toast from "react-hot-toast";
 import { queryClient } from "../../lib/queryClient";
 

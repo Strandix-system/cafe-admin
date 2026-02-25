@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import InputField from "../../components/common/InputField";
+import {InputField} from "../../components/common/InputField";
 import { useAuth } from "../../context/AuthContext";
 import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
 const loginSchema = yup.object({
     email: yup.string().email("Invalid email").required("Email is required"),

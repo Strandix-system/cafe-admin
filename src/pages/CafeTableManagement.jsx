@@ -9,8 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Download, QrCode } from "lucide-react";
-import TableComponent from "../components/TableComponent/TableComponent";
-import InputField from "../components/common/InputField";
+import {TableComponent} from "../components/TableComponent/TableComponent";
+import {InputField} from "../components/common/InputField";
 import toast from "react-hot-toast";
 import { useFetch, usePost } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
@@ -18,7 +18,7 @@ import { queryClient } from "../lib/queryClient";
 import { useAuth } from "../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import CommonButton from "../components/common/commonButton";
+import {CommonButton} from "../components/common/commonButton";
 
 
 export const CafeTableManagement = () => {

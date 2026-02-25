@@ -19,12 +19,12 @@ import { useFetch, usePost, usePatch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 
-import InputField from "../../components/common/InputField";
-import ImageUploadSection from "../../components/common/ImageUploadSection";
-import CommonTextField from "../../components/common/CommonTextField";
-import CommonImageField from "../../components/common/CommonImageField";
+import {InputField} from "../../components/common/InputField";
+import {ImageUploadSection} from "../../components/common/ImageUploadSection";
+import {CommonTextField} from "../../components/common/CommonTextField";
+import {CommonImageField} from "../../components/common/CommonImageField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
 
 const menuSchema = yup.object({

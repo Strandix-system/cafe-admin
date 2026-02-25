@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import TopNavbar from "../TopNavbar";
+import {Sidebar} from "./Sidebar";
+import {TopNavbar} from "../TopNavbar";
 
 export function DashboardLayout() {
     return (

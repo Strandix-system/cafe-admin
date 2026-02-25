@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Grid, Button, Box, Typography, Skeleton, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDelete, useFetch, usePatch } from "../utils/hooks/api_hooks";
-import LayoutPreviewCard from "../components/layout/LayoutPreviewCard";
+import {LayoutPreviewCard} from "../components/layout/LayoutPreviewCard";
 import { API_ROUTES } from "../utils/api_constants";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
@@ -13,7 +13,7 @@ import {
   DialogActions,
   DialogTitle,
 } from "@mui/material";
-import CommonButton from "../components/common/commonButton";
+import {CommonButton} from "../components/common/commonButton";
 
 export function LayoutsPage() {
   const navigate = useNavigate();

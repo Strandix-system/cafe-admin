@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import InputField from "../../components/common/InputField";
+import {InputField} from "../../components/common/InputField";
 import toast from "react-hot-toast";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
 const signupSchema = yup.object({
     firstName: yup.string().trim().required("First name is required"),

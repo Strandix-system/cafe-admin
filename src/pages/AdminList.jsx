@@ -1,4 +1,4 @@
-import TableComponent from "../components/TableComponent/TableComponent"
+import {TableComponent} from "../components/TableComponent/TableComponent"
 import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate, useParams } from 'react-router-dom'
@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
-import CommonButton from "../components/common/commonButton";
+import {CommonButton} from "../components/common/commonButton";
 
 export const AdminList = () => {
   const navigate = useNavigate();

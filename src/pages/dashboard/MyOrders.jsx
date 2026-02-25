@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useMemo } from "react";
-import TableComponent from "../../components/TableComponent/TableComponent";
+import {TableComponent} from "../../components/TableComponent/TableComponent";
 import { Box, Chip, Typography, Paper } from "@mui/material";
 
 export const MyOrders = () => {

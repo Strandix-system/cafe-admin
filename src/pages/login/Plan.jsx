@@ -15,9 +15,9 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
-import CommonButton from "../../components/common/commonButton";
+import { CommonButton } from "../../components/common/commonButton";
 
-export const Plans = () => {
+export const Plan = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
     const signupData = JSON.parse(localStorage.getItem("signupData"));

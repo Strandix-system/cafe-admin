@@ -1,14 +1,14 @@
-import TableComponent from "../../components/TableComponent/TableComponent";
+import {TableComponent} from "../../components/TableComponent/TableComponent";
 import { Box, Button, Chip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Eye, Trash2, Plus } from "lucide-react";
 import { useMemo } from "react";
 import { API_ROUTES } from "../../utils/api_constants";
 import { APIRequest } from "../../utils/api_request";
-import EditMenuModal from "./EditMenuModal";
+import {EditMenuModal} from "./EditMenuModal";
 import { useState } from "react";
-import CreateEditMenuModal from "./CreateEditMenuModal";
-import CommonButton from "../../components/common/commonButton";
+import {CreateEditMenuModal} from "./CreateEditMenuModal";
+import {CommonButton} from "../../components/common/commonButton";
 
 
 export const MenuList = () => {

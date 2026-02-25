@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Loader from "../../components/common/Loader";
-import LayoutForm from "../../components/layout/LayoutForm";
+import {Loader} from "../../components/common/Loader";
+import {LayoutForm} from "../../components/layout/LayoutForm";
 import { useAuth } from "../../context/AuthContext";
 import { queryClient } from "../../lib/queryClient";
 import { API_ROUTES } from "../../utils/api_constants";
