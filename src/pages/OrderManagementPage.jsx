@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import { socket } from "../utils/socket";
 import { DollarSign, Eye } from "lucide-react";
 import { queryClient } from "../lib/queryClient";
+import OrderBillModal from "../components/OrderComponent/OrderBillModal";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -33,6 +34,10 @@ export const OrderManagementPage = () => {
     const [tabValue, setTabValue] = useState(0);
     const [pendingOrders, setPendingOrders] = useState([]);
     const [acceptedOrders, setAcceptedOrders] = useState([]);
+
+    const [isBillOpen, setIsBillOpen] = useState(false);
+    const [selectedBillId, setSelectedBillId] = useState(null);
+
     const hasInitialized = useRef(false); // Track if we've initialized
 
     /* ---------------- INITIAL API LOAD ---------------- */
@@ -153,6 +158,11 @@ export const OrderManagementPage = () => {
         updateOrder({ orderId, orderStatus: "completed" });
     };
 
+    const handleOpenBill = (row) => {
+        setSelectedBillId(row._id);   // or row.billId depending on your backend
+        setIsBillOpen(true);
+    };
+
     /* ---------------- ORDER HISTORY TABLE CONFIG ---------------- */
     const historyColumns = useMemo(
         () => [
@@ -220,11 +230,9 @@ export const OrderManagementPage = () => {
 
     const historyActions = [
         {
-            label: "View",
+            label: "View Bill",
             icon: Eye,
-            onClick: (row) => {
-                navigate(`/orders/view/${row.original._id}`);
-            },
+            onClick: (row) => handleOpenBill(row.original)
         },
         {
             label: "Mark as Paid",
@@ -316,7 +324,18 @@ export const OrderManagementPage = () => {
                     />
                 </Box>
             </TabPanel>
+            {isBillOpen && selectedBillId && (
+                <OrderBillModal
+                    open={isBillOpen}
+                    onClose={() => {
+                        setIsBillOpen(false);
+                        setSelectedBillId(null);
+                    }}
+                    billId={selectedBillId}
+                />
+            )}
         </Box>
+
     );
 };
 
