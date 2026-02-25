@@ -98,10 +98,7 @@ const Plans = () => {
         }
     );
 
-    // Handle successful payment
     const handlePaymentSuccess = (response) => {
-        console.log("Payment Success:", response);
-
         // Create admin user with payment details
         verifySignup({
             firstName: signupData.firstName,
@@ -114,7 +111,6 @@ const Plans = () => {
             razorpay_signature: response.razorpay_signature,
         });
     };
-
 
     const handleContinue = () => {
         if (!window.Razorpay) {

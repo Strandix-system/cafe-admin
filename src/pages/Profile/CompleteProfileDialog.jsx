@@ -12,11 +12,11 @@ import CommonButton from "../../components/common/commonButton";
 import { AlertTriangle } from "lucide-react";
 
 export default function CompleteProfileDialog() {
-    const { isProfileComplete, isSuperAdmin } = useAuth();
+    const { user, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    if (isSuperAdmin || isProfileComplete || location.pathname.startsWith("/profile")) return null;
+    if (isSuperAdmin || user.isProfileComplete || location.pathname.startsWith("/profile")) return;
 
     return (
         <Dialog
@@ -68,8 +68,7 @@ export default function CompleteProfileDialog() {
 
             <DialogContent sx={{ px: 3, pt: 1.5, pb: 0 }}>
                 <Typography variant="body2" sx={{ color: "#5D4037", mb: 2, lineHeight: 1.6 }}>
-                    Your profile is incomplete. You must fill in all required details
-                    before accessing the dashboard.
+                    Please fill in your details and update your profile to access the dashboard and all other features.
                 </Typography>
 
                 {/* Required fields list */}
@@ -83,30 +82,6 @@ export default function CompleteProfileDialog() {
                         mb: 1,
                     }}
                 >
-                    <Typography
-                        variant="caption"
-                        sx={{ color: "#E65100", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8 }}
-                    >
-                        Required Fields
-                    </Typography>
-                    <Box
-                        component="ul"
-                        sx={{ m: 0, mt: 1, pl: 2.5, display: "flex", flexDirection: "column", gap: 0.6 }}
-                    >
-                        {[
-                            "Cafe Name & Contact info",
-                            "Address, City, State & Pincode",
-                            "Operating hours (weekdays & weekends)",
-                            "Cafe logo & Profile image",
-                            "GST Percentage",
-                        ].map((item) => (
-                            <li key={item}>
-                                <Typography variant="body2" sx={{ color: "#5D4037" }}>
-                                    {item}
-                                </Typography>
-                            </li>
-                        ))}
-                    </Box>
                 </Box>
 
                 <Typography

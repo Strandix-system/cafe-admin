@@ -14,8 +14,7 @@ export default function ProfileUpdate() {
     const { mutate: updateMutate, isPending } = usePatch(
         `${API_ROUTES.updateUsers}/${user?.id}`,
         {
-            onSuccess: async () => {
-                await refreshUser();
+            onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: "get-me" });
                 toast.success("Profile updated successfully");
                 navigate("/dashboard");

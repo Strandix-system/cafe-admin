@@ -81,39 +81,6 @@ export function AuthProvider({ children }) {
     [logout],
   );
 
-  const refreshUser = useCallback(async () => {
-    try {
-      const res = await refetch();
-      if (res?.data?.result) {
-        setUser(res.data.result);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [refetch]);
-
-  // Add this helper above the return
-  const isProfileComplete = (userData) => {
-    if (!userData) return false;
-    const required = [
-      userData.firstName,
-      userData.lastName,
-      userData.phoneNumber,
-      userData.address,
-      userData.city,
-      userData.state,
-      userData.pincode,
-      userData.cafeName,
-      userData.gst,
-      userData.logo,
-      userData.profileImage,
-      userData.hours?.weekdays,
-      userData.hours?.weekends,
-
-    ];
-    return required.every((val) => val !== null && val !== undefined && val !== "");
-  };
-
   if (authLoading) return <><Loader variant="fullscreen" /></>;
 
   return (
@@ -123,7 +90,6 @@ export function AuthProvider({ children }) {
         isAuthenticated,
         isAdmin: user?.role === AUTH_ROLES.ADMIN,
         isSuperAdmin: user?.role === AUTH_ROLES.SUPER_ADMIN,
-        isProfileComplete: isProfileComplete(user),
         login,
         logout,
         refreshUser,
