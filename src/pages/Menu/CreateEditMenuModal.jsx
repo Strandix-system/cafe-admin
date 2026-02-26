@@ -10,6 +10,7 @@ import {
   FormLabel,
   Box,
 } from "@mui/material";
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -19,19 +20,32 @@ import { useFetch, usePost, usePatch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 
-import {InputField} from "../../components/common/InputField";
-import {ImageUploadSection} from "../../components/common/ImageUploadSection";
-import {CommonTextField} from "../../components/common/CommonTextField";
-import {CommonImageField} from "../../components/common/CommonImageField";
+import { InputField } from "../../components/common/InputField";
+import { ImageUploadSection } from "../../components/common/ImageUploadSection";
+import { CommonTextField } from "../../components/common/CommonTextField";
+import { CommonImageField } from "../../components/common/CommonImageField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
-import {CommonButton} from "../../components/common/commonButton";
+import { CommonButton } from "../../components/common/commonButton";
 
 
 const menuSchema = yup.object({
   itemName: yup.string().required("Item name is required"),
   category: yup.string().required("Category is required"),
   price: yup.number().typeError("Price is required").required(),
-  discountPrice: yup.number().nullable(),
+  discountPrice: yup
+    .number()
+    .nullable()
+    .transform((value, originalValue) =>
+      originalValue === "" ? null : value
+    )
+    .test(
+      "less-than-price",
+      "Discount price must be less than price",
+      function (value) {
+        if (value == null) return true; // allow null
+        return value < this.parent.price;
+      }
+    ),
   description: yup.string().required("Description is required"),
   image: yup
     .mixed()
@@ -65,9 +79,7 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
     mode: "all",
   });
 
-  const [preview, setPreview] = useState(null);
-  // const { previews, setPreview } = useImageUpload(setValue);
-
+  const { previews, setPreview } = useImageUpload(setValue);
 
   const { data: { result: { results: categories = [] } = {} } = {}, } = useFetch("categories", API_ROUTES.getCategories);
 
@@ -217,6 +229,7 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
             <CommonTextField
               name="price"
               label="Price"
+              icon={<CurrencyRupeeIcon />}
               placeholder="Enter price"
               gridSize={{ xs: 12, md: 6 }}
               type="number"
@@ -227,6 +240,7 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
             <CommonTextField
               name="discountPrice"
               label="Discount Price"
+              icon={<CurrencyRupeeIcon />}
               placeholder="Optional"
               gridSize={{ xs: 12, md: 6 }}
               type="number"
@@ -250,7 +264,7 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
               inputId="menu-image-upload"
               control={control}
               errors={errors}
-              preview={preview}
+              preview={previews.image}
               setPreview={setPreview}
               isEdit={isEdit}
               gridSize={{ xs: 12, sm: 6 }}

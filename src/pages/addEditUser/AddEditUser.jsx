@@ -16,7 +16,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { loginSchema } from "../../utils/validation";
 import { queryClient } from '../../lib/queryClient'
 import { useAuth } from "../../context/AuthContext";
-import {CommonButton} from "../../components/common/commonButton";
+import { CommonButton } from "../../components/common/commonButton";
 
 export const AddEditUser = ({ open, onClose, mode, data }) => {
     const isEdit = mode === "edit";
@@ -45,7 +45,7 @@ export const AddEditUser = ({ open, onClose, mode, data }) => {
         } else {
             reset({ name: "", phoneNumber: "" });
         }
-    }, [isEdit, data, reset]);
+    }, [isEdit, data, reset, open]);
 
     const { mutate: createUser, isPending: creating } = usePost(
         API_ROUTES.createCustomer,
@@ -57,7 +57,6 @@ export const AddEditUser = ({ open, onClose, mode, data }) => {
                     queryKey: ["get-cafe-users"], // 🔥 THIS
                 });
                 onClose(true);
-                refetch();
             },
             onError: (error) => {
                 toast.error(error);
@@ -72,7 +71,6 @@ export const AddEditUser = ({ open, onClose, mode, data }) => {
                 toast.success("User updated successfully");
                 queryClient.invalidateQueries({ queryKey: ["get-cafe-users"], });
                 onClose(true);
-                refetch();
             },
             onError: (error) => {
                 toast.error(error);

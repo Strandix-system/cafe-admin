@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
 
   const token = localStorage.getItem(api_enums.JWT_ACCESS_TOKEN);
 
-  const { refetch } = useFetch(
+  const { data: { result: userData } = {}, refetch } = useFetch(
     "get-me",
     API_ROUTES.getMe,
     {},
@@ -37,7 +37,6 @@ export function AuthProvider({ children }) {
           if (res?.data?.result) {
             setUser(res.data.result);
             setIsAuthenticated(true);
-            navigate("/dashboard");
           } else {
             logout();
           }
@@ -50,6 +49,12 @@ export function AuthProvider({ children }) {
     };
     init();
   }, [token, refetch]);
+
+  useEffect(() => {
+    if (userData) {
+      setUser(userData);
+    }
+  }, [userData]);
 
   const logout = useCallback(() => {
     localStorage.removeItem(api_enums.JWT_ACCESS_TOKEN);

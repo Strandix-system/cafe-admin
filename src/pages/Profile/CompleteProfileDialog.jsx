@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import {CommonButton} from "../../components/common/commonButton";
+import { CommonButton } from "../../components/common/commonButton";
 import { AlertTriangle } from "lucide-react";
 
 export function CompleteProfileDialog() {
@@ -70,19 +70,6 @@ export function CompleteProfileDialog() {
                 <Typography variant="body2" sx={{ color: "#5D4037", mb: 2, lineHeight: 1.6 }}>
                     Please fill in your details and update your profile to access the dashboard and all other features.
                 </Typography>
-
-                {/* Required fields list */}
-                <Box
-                    sx={{
-                        bgcolor: "#FFF3E0",
-                        border: "1px solid #FFCC80",
-                        borderRadius: 2,
-                        px: 2.5,
-                        py: 2,
-                        mb: 1,
-                    }}
-                >
-                </Box>
 
                 <Typography
                     variant="caption"
