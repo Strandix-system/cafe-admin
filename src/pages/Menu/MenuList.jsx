@@ -1,14 +1,15 @@
-import {TableComponent} from "../../components/TableComponent/TableComponent";
-import { Box, Button, Chip, Typography } from "@mui/material";
+import { TableComponent } from "../../components/TableComponent/TableComponent";
+import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Eye, Trash2, Plus } from "lucide-react";
 import { useMemo } from "react";
 import { API_ROUTES } from "../../utils/api_constants";
 import { APIRequest } from "../../utils/api_request";
-import {EditMenuModal} from "./EditMenuModal";
+import { EditMenuModal } from "./EditMenuModal";
 import { useState } from "react";
-import {CreateEditMenuModal} from "./CreateEditMenuModal";
-import {CommonButton} from "../../components/common/commonButton";
+import { CreateEditMenuModal } from "./CreateEditMenuModal";
+import { CommonButton } from "../../components/common/commonButton";
+import { useFetch } from "../../utils/hooks/api_hooks";
 
 
 export const MenuList = () => {
@@ -16,8 +17,14 @@ export const MenuList = () => {
 
   const [open, setOpen] = useState(false);
   const [menuId, setMenuId] = useState(null);
-
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedMenuId, setSelectedMenuId] = useState(null);
+
+  const { data: { result: { results: categories = [] } = {} } = {}, } = useFetch(
+    "categories",
+    API_ROUTES.getCategories
+  );
+
 
   // 🔹 Table Columns
   const columns = useMemo(
@@ -67,6 +74,8 @@ export const MenuList = () => {
     },
   ];
 
+  const queryParams = selectedCategory ? { category: selectedCategory } : {};
+
   return (
     <div className="overflow-hidden">
       {/* Header */}
@@ -104,12 +113,30 @@ export const MenuList = () => {
       />
       {/* Table */}
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <FormControl size="small" sx={{ minWidth: 180 }}>
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={selectedCategory}
+              label="Category"
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat._id} value={cat.name}>
+                  {cat.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
         <TableComponent
           slug="menu"
           columns={columns}
           actions={actions}
           actionsType="icons"
-          querykey="menu-list"
+          querykey={`menu-list-${selectedCategory}`}
+          params={queryParams}
           getApiEndPoint="menulist"
           deleteApiEndPoint="MENU_DELETE"
           deleteAction={true}
