@@ -2,15 +2,19 @@ import Chart from "react-apexcharts";
 import { Box } from "@mui/material";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
+import { useAuth } from "../../context/AuthContext";
 
-export default function PeakTimeChart({range}) {
+export default function PeakTimeChart({ range }) {
+  const { user } = useAuth();
+
   const { data } = useFetch(
-    ["dashboard-peak-time", range],
+    ["dashboard-peak-time", user?._id, range],
     API_ROUTES.dashboardPeakTime,
     {
       ...(range.startDate && { startDate: range.startDate }),
       ...(range.endDate && { endDate: range.endDate }),
-    }
+    },
+    { enabled: !!user?._id }
   );
 
   const peakData = data?.result ?? [];

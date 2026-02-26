@@ -2,18 +2,22 @@ import Chart from "react-apexcharts";
 import { Box } from "@mui/material";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
+import { useAuth } from "../../context/AuthContext";
 
 const THEME_COLOR = "#6F4E37";
 
 export default function PlatformSalesChart({ range }) {
-    const { data, isLoading } = useFetch(
-  ["platform-sales", range],
-  API_ROUTES.dashboardPlatformSales,
-  {
-    ...(range?.startDate && { startDate: range.startDate }),
-    ...(range?.endDate && { endDate: range.endDate }),
-  },
-)
+    const { user } = useAuth();
+
+    const { data } = useFetch(
+        ["platform-sales", user?._id, range],
+        API_ROUTES.dashboardPlatformSales,
+        {
+            ...(range?.startDate && { startDate: range.startDate }),
+            ...(range?.endDate && { endDate: range.endDate }),
+        },
+        { enabled: !!user?._id }
+    );
 
     const chartData = data?.result ?? [];
 

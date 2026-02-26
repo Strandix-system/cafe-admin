@@ -4,21 +4,19 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import DateRangeFilter from "./DateRangeFilter";
 import dayjs from "dayjs";
+import { useAuth } from "../../context/AuthContext";
 
 export default function SalesChart({range}){
-  // const [range, setRange] = useState({
-  //   startDate: null,
-  //   endDate: null,
-  // });
+    const { user } = useAuth();
 
   const { data } = useFetch(
-    ["dashboard-sales", range],
+    ["dashboard-sales", user?._id, range],
     API_ROUTES.dashboardSales,
     {
       ...(range.startDate && { startDate: range.startDate }),
       ...(range.endDate && { endDate: range.endDate }),
     },
-    // { enabled: !!range.startDate }
+    { enabled: !!user?._id }
   );
 
   const salesData = data?.result ?? [];

@@ -3,19 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import StoreIcon from "@mui/icons-material/Store";
+import { useAuth } from "../../context/AuthContext";
 
 const THEME_COLOR = "#6F4E37";
 
 export default function TopCafesCard() {
   const navigate = useNavigate();
+   const { user } = useAuth();
 
   const { data } = useFetch(
-    ["top-cafes"],
-    API_ROUTES.dashboardTopCafes
+    ["top-cafes", user?._id],
+    API_ROUTES.dashboardTopCafes,
+    {},
+    { enabled: !!user?._id }
   );
 
   const cafes = data?.result ?? [];
-
+  if (cafes.length === 0) {
+    return null;
+  }
   return (
     <Card
       sx={{
