@@ -1,6 +1,6 @@
 import { Grid, FormLabel, Box } from "@mui/material";
 import { Controller } from "react-hook-form";
-import {ImageUploadSection} from "./ImageUploadSection";
+import { ImageUploadSection } from "./ImageUploadSection";
 
 export const CommonImageField = ({
   name,
@@ -50,13 +50,11 @@ export const CommonImageField = ({
               isEdit={isEdit}
               handleImageChange={(file) => {
                 field.onChange(file);
-                if (setPreview) {
-                  setPreview(URL.createObjectURL(file));
-                }
+                setPreview?.(name, URL.createObjectURL(file));
               }}
               handleReplaceImage={() => {
                 field.onChange(null);
-                setPreview?.(null);
+                setPreview?.(name, null);
               }}
             />
 
