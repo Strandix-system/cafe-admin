@@ -28,7 +28,6 @@ export function AuthProvider({ children }) {
         {},
         { enabled: !!token },
     );
-    console.log("hello and");
     useEffect(() => {
         const init = async () => {
             if (token) {

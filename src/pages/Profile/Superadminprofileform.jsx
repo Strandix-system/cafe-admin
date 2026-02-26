@@ -111,7 +111,7 @@ export default function SuperAdminProfileForm({
                         <UserRoundPlus className="w-7 h-7" />
                         <Box>
                             <Typography variant="h5" fontWeight={700}>
-                                My Profile
+                                Super Admin Profile
                             </Typography>
                             <Typography variant="body2" sx={{ opacity: 0.9 }}>
                                 Update your personal information
@@ -207,46 +207,7 @@ export default function SuperAdminProfileForm({
                         />
 
                         {/* Social Links Section */}
-                        <Grid size={{ xs: 12 }}>
-                            <Box sx={{ borderBottom: "2px solid #6F4E37", pb: 1, mb: 2 }}>
-                                <Typography variant="h6" fontWeight={700} color="#6F4E37">
-                                    Social Media Links
-                                </Typography>
-                            </Box>
-                        </Grid>
 
-                        <CommonTextField
-                            name="socialLinks.instagram"
-                            label="Instagram Link"
-                            icon={<Instagram sx={{ color: "#6F4E37" }} />}
-                            placeholder="https://instagram.com/yourprofile"
-                            gridSize={{ xs: 12, md: 4 }}
-                            type="url"
-                            control={control}
-                            errors={errors}
-                        />
-
-                        <CommonTextField
-                            name="socialLinks.facebook"
-                            label="Facebook Link"
-                            icon={<Facebook sx={{ color: "#6F4E37" }} />}
-                            placeholder="https://facebook.com/yourprofile"
-                            gridSize={{ xs: 12, md: 4 }}
-                            type="url"
-                            control={control}
-                            errors={errors}
-                        />
-
-                        <CommonTextField
-                            name="socialLinks.twitter"
-                            label="Twitter Link"
-                            icon={<Twitter sx={{ color: "#6F4E37" }} />}
-                            placeholder="https://twitter.com/yourprofile"
-                            gridSize={{ xs: 12, md: 4 }}
-                            type="url"
-                            control={control}
-                            errors={errors}
-                        />
                     </Grid>
                 </Box>
             </Paper>
