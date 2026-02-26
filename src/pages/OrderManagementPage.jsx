@@ -11,7 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import { socket } from "../utils/socket";
 import { DollarSign, Eye } from "lucide-react";
 import { queryClient } from "../lib/queryClient";
-import OrderBillModal from "../components/OrderComponent/OrderBillModal";
+import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
