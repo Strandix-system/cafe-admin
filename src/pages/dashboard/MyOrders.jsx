@@ -155,7 +155,7 @@ export const MyOrders = () => {
                     Customer Orders
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Order history for selected user
+                    Order history for selected customer
                 </Typography>
             </Box>
 
