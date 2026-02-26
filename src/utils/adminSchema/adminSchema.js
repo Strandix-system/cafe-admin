@@ -43,7 +43,7 @@ export const adminSchema = yup.object().shape({
     .number()
     .required("GST percentage is required")
     .min(5, "GST must be at least 5%")
-    .max(28, "GST cannot exceed 28%"),
+    .max(18, "GST cannot exceed 18%"),
   logo: yup
     .mixed()
     .test("required", "Cafe logo is required", (value) => {
@@ -127,8 +127,25 @@ export const adminSchema = yup.object().shape({
       .required("Weekend hours are required"),
   }),
   socialLinks: yup.object({
-    instagram: yup.string().url("Invalid Instagram URL").required("Required"),
-    facebook: yup.string().url("Invalid Facebook URL").required("Required"),
-    twitter: yup.string().url("Invalid Twitter URL").required("Required"),
+    instagram: yup
+      .string()
+      .nullable()
+      .transform((value) => (value === "" ? null : value))
+      .url("Invalid Instagram URL")
+      .notRequired(),
+
+    facebook: yup
+      .string()
+      .nullable()
+      .transform((value) => (value === "" ? null : value))
+      .url("Invalid Facebook URL")
+      .notRequired(),
+
+    twitter: yup
+      .string()
+      .nullable()
+      .transform((value) => (value === "" ? null : value))
+      .url("Invalid Twitter URL")
+      .notRequired(),
   }),
 });
