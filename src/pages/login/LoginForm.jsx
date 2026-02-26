@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Box, FormControlLabel, Checkbox, Link, Typography, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
+import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {InputField} from "../../components/common/InputField";
 import { useAuth } from "../../context/AuthContext";
 import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
-import {CommonButton} from "../../components/common/commonButton";
+import { CommonButton } from "../../components/common/commonButton";
+import { CommonTextField } from "../../components/common/CommonTextField";
 
 const loginSchema = yup.object({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -24,13 +25,14 @@ export const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const {
-        register,
+        control,
         handleSubmit,
         reset,
         formState: { errors, isValid },
     } = useForm({
         resolver: yupResolver(loginSchema),
         defaultValues: { email: "", password: "" },
+        mode: "all",
     });
 
     const { mutate: loginMutate, isPending: loginPending } = usePost(API_ROUTES.login, {
@@ -51,21 +53,23 @@ export const LoginForm = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ mt: 2, mb: 2 }}>
-                <InputField
-                    field={register("email")}
-                    label="Email Address"
-                    error={errors.email}
+                <CommonTextField
+                    name="email"
+                    control={control}
+                    placeholder="Email Address"
+                    errors={errors}
                     helperText={errors.email?.message}
                     startIcon={<Email fontSize="small" />}
                 />
             </Box>
 
             <Box sx={{ mt: 2, mb: 2 }}>
-                <InputField
-                    field={register("password")}
-                    label="Password"
+                <CommonTextField
+                    name="password"
+                    control={control}
+                    placeholder="Password"
                     type={showPassword ? "text" : "password"}
-                    error={errors.password}
+                    errors={errors}
                     helperText={errors.password?.message}
                     startIcon={<Lock fontSize="small" />}
                     endIcon={

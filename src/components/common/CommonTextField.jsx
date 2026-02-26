@@ -1,6 +1,6 @@
 import { Grid, FormLabel } from "@mui/material";
 import { Controller } from "react-hook-form";
-import {InputField} from "./InputField";
+import { InputField } from "./InputField";
 
 const getError = (errors, name) =>
   name.includes(".")
@@ -11,6 +11,8 @@ export const CommonTextField = ({
   name,
   label,
   icon,
+  startIcon,
+  endIcon,
   placeholder,
   disabled = false,
   gridSize = { xs: 12, sm: 6 },
@@ -48,7 +50,8 @@ export const CommonTextField = ({
             helperText={errorObj?.message}
             placeholder={placeholder}
             disabled={disabled}
-            startIcon={icon}
+            startIcon={startIcon || icon}
+            endIcon={endIcon}
             type={type}
 
             /* ✅ multiline support */

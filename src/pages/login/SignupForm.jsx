@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {InputField} from "../../components/common/InputField";
 import toast from "react-hot-toast";
-import {CommonButton} from "../../components/common/commonButton";
+import { CommonButton } from "../../components/common/commonButton";
+import { CommonTextField } from "../../components/common/CommonTextField";
 
 const signupSchema = yup.object({
     firstName: yup.string().trim().required("First name is required"),
@@ -33,7 +33,7 @@ export const SignupForm = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
-        register,
+        control,
         handleSubmit,
         reset,
         formState: { errors, isValid },
@@ -47,6 +47,7 @@ export const SignupForm = () => {
             password: "",
             confirmPassword: "",
         },
+        mode: "all",
     });
 
     const onSubmit = (data) => {
@@ -69,29 +70,31 @@ export const SignupForm = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ mt: 2, mb: 2, display: "flex", gap: 2 }}>
-                <InputField
-                    field={register("firstName")}
-                    label="First Name"
-                    error={errors.firstName}
+                <CommonTextField
+                    name="firstName"
+                    control={control}
+                    placeholder="First Name"
+                    errors={errors}
                     helperText={errors.firstName?.message}
                     startIcon={<Person fontSize="small" />}
                 />
 
-                <InputField
-                    field={register("lastName")}
-                    label="Last Name"
-                    error={errors.lastName}
+                <CommonTextField
+                    name="lastName"
+                    control={control}
+                    placeholder="Last Name"
+                    errors={errors}
                     helperText={errors.lastName?.message}
                     startIcon={<Person fontSize="small" />}
                 />
             </Box>
 
             <Box sx={{ mt: 2, mb: 2 }}>
-                <InputField
-                    field={register("phoneNumber")}
-                    label="Phone Number"
+                <CommonTextField
+                    name="phoneNumber"
+                    control={control}
                     type="tel"
-                    error={errors.phoneNumber}
+                    errors={errors}
                     helperText={errors.phoneNumber?.message}
                     startIcon={<Phone fontSize="small" />}
                     placeholder="+91 XXXXXXXXXX"
@@ -99,21 +102,23 @@ export const SignupForm = () => {
             </Box>
 
             <Box sx={{ mt: 2, mb: 2 }}>
-                <InputField
-                    field={register("email")}
-                    label="Email Address"
-                    error={errors.email}
+                <CommonTextField
+                    name="email"
+                    control={control}
+                    placeholder="Email Address"
+                    errors={errors}
                     helperText={errors.email?.message}
                     startIcon={<Email fontSize="small" />}
                 />
             </Box>
 
             <Box sx={{ mt: 2, mb: 2 }}>
-                <InputField
-                    field={register("password")}
-                    label="Password"
+                <CommonTextField
+                    name="password"
+                    control={control}
+                    placeholder="Password"
                     type={showPassword ? "text" : "password"}
-                    error={errors.password}
+                    errors={errors}
                     helperText={errors.password?.message}
                     startIcon={<Lock fontSize="small" />}
                     endIcon={
@@ -125,11 +130,12 @@ export const SignupForm = () => {
             </Box>
 
             <Box sx={{ mt: 2, mb: 2 }}>
-                <InputField
-                    field={register("confirmPassword")}
-                    label="Confirm Password"
+                <CommonTextField
+                    name="confirmPassword"
+                    control={control}
+                    placeholder="Confirm Password"
                     type={showConfirmPassword ? "text" : "password"}
-                    error={errors.confirmPassword}
+                    errors={errors}
                     helperText={errors.confirmPassword?.message}
                     startIcon={<Lock fontSize="small" />}
                     endIcon={
