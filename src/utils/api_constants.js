@@ -8,6 +8,13 @@ export const API_ROUTES = {
     getUsers: "/admin/get-users",
 
     dashboardStats: "admin/dashboard/stats",
+    dashboardSales:"admin/dashboard/sales",
+    dashboardItems:'admin/dashboard/items-performance',
+    dashboardPeakTime:"admin/dashboard/peak-time",
+    dashboardTables:"admin/dashboard/tables",
+    dashboardTopCustomers:"admin/dashboard/top-customers",
+    dashboardTopCafes:"admin/dashboard/top-cafes",
+    dashboardPlatformSales:"admin/dashboard/platform-sales",
 
     getUserById: "admin/get-user",
     updateUsers: "admin/update",
