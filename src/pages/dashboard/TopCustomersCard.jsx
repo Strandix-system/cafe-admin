@@ -4,19 +4,25 @@ import { useNavigate } from "react-router-dom";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import PersonIcon from "@mui/icons-material/Person";
+import { useAuth } from "../../context/AuthContext";
 
 const THEME_COLOR = "#6F4E37";
 
 export default function TopCustomersCard() {
     const navigate = useNavigate();
-
+    const { user } = useAuth();
     const { data } = useFetch(
-        ["top-customers"],
-        API_ROUTES.dashboardTopCustomers
-    );
+        ["top-customers", user?._id],
+        API_ROUTES.dashboardTopCustomers,
+        {},
+        { enabled: !!user?._id }
+    )
 
     const customers = data?.result ?? [];
 
+    if (customers.length === 0) {
+        return null; // 🚫 DO NOT RENDER
+    }
     return (
         <Card
             sx={{
@@ -56,7 +62,7 @@ export default function TopCustomersCard() {
                             gap: 1.2,
                             cursor: "pointer",
                             px: 1,
-                            py: 0.6,           // 🔑 reduced vertical padding
+                            py: 0.75,           // 🔑 reduced vertical padding
                             borderRadius: 1,
                             "&:hover": {
                                 backgroundColor: `${THEME_COLOR}10`,

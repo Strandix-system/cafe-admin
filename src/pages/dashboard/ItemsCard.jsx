@@ -1,6 +1,7 @@
 import { Box, Grid, Card, Typography, Avatar, Stack, CardMedia, Chip } from "@mui/material";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
+import { useAuth } from "../../context/AuthContext";
 
 const ItemCard = ({ name, qty, image, revenue, type }) => {
   const isTop = type === "top";
@@ -86,14 +87,21 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
 };
 
 export default function ItemCards() {
+  const { user } = useAuth();
+
   const { data } = useFetch(
-    ["dashboard-items"],
-    API_ROUTES.dashboardItems
+    ["dashboard-items", user?._id],
+    API_ROUTES.dashboardItems,
+    {},
+    { enabled: !!user?._id }
   );
 
   const top = data?.result?.topSelling ?? null;
   const low = data?.result?.lowSelling ?? null;
 
+  if (!top && !low) {
+    return null;
+  }
   return (
     <Box>
       <Stack spacing={2}>
@@ -115,19 +123,19 @@ export default function ItemCards() {
             }}
           >
 
-          {top ? (
-            <ItemCard
-              name={top.name}
-              qty={top.quantity}
-              image={top.image}
-              revenue={top.revenue}
-              type="top"
-            />
-          ) : (
-            <Typography fontSize={13} color="text.secondary">
-              No data
-            </Typography>
-          )}
+            {top ? (
+              <ItemCard
+                name={top.name}
+                qty={top.quantity}
+                image={top.image}
+                revenue={top.revenue}
+                type="top"
+              />
+            ) : (
+              <Typography fontSize={13} color="text.secondary">
+                No data
+              </Typography>
+            )}
           </Box>
         </Box>
 
@@ -140,7 +148,7 @@ export default function ItemCards() {
           >
             Low Selling Item
           </Typography>
-           <Box
+          <Box
             sx={{
               p: 1,
               borderRadius: 3,
@@ -149,19 +157,19 @@ export default function ItemCards() {
             }}
           >
 
-          {low ? (
-            <ItemCard
-              name={low.name}
-              qty={low.quantity}
-              image={low.image}
-              revenue={low.revenue}
-              type="low"
-            />
-          ) : (
-            <Typography fontSize={13} color="text.secondary">
-              No data
-            </Typography>
-          )}
+            {low ? (
+              <ItemCard
+                name={low.name}
+                qty={low.quantity}
+                image={low.image}
+                revenue={low.revenue}
+                type="low"
+              />
+            ) : (
+              <Typography fontSize={13} color="text.secondary">
+                No data
+              </Typography>
+            )}
           </Box>
         </Box>
       </Stack>

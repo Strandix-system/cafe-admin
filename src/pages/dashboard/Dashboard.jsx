@@ -48,12 +48,10 @@ export function Dashboard() {
     const roleReady = isSuperAdmin || isAdmin;
 
     const { data, isLoading } = useFetch(
-        ["dashboard-stats", isSuperAdmin ? "super" : "admin"],
+        ["dashboard-stats", user?._id, isSuperAdmin ? "super" : "admin"],
         API_ROUTES.dashboardStats,
         {},
-        {
-            enabled: roleReady, // 🔥 THIS IS THE FIX
-        }
+        { enabled: roleReady && !!user?._id }
     );
 
     // const { data: ordersData } = useFetch(
@@ -124,7 +122,7 @@ export function Dashboard() {
                         xs: 12,
                         sm: 6,
                         // md: pendingOrders.length > 0 ? 2 : 2.4
-                        md:2.4
+                        md: 2
                     }} key={stat.label}>
                         <StatCard
                             label={stat.label}
@@ -161,7 +159,7 @@ export function Dashboard() {
             {
                 isAdmin &&
                 <>
-                    <Grid container spacing={3} mt={4}>
+                    <Grid container spacing={3} mt={5}>
                         <Grid item size={{ xs: 12, md: 6 }}>
                             <ChartCard
                                 title="Sales Overview"
