@@ -27,6 +27,7 @@ export function ProfileUpdate() {
         delete data.__v;
         delete data._id;
         delete data.id;
+        delete data.isProfileComplete;
         delete data.createdAt;
         delete data.updatedAt;
 
@@ -60,3 +61,4 @@ export function ProfileUpdate() {
         />
     );
 }
+
