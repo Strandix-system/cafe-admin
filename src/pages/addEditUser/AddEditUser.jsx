@@ -37,17 +37,17 @@ export const AddEditUser = ({ open, onClose, mode, data }) => {
     mode: "all",
   });
 
-  /* 🔹 Fill form on edit */
-  useEffect(() => {
-    if (isEdit && data) {
-      reset({
-        name: data.name,
-        phoneNumber: data.phoneNumber,
-      });
-    } else {
-      reset({ name: "", phoneNumber: "" });
-    }
-  }, [isEdit, data, reset, open]);
+    /* 🔹 Fill form on edit */
+    useEffect(() => {
+        if (isEdit && data) {
+            reset({
+                name: data.name,
+                phoneNumber: data.phoneNumber,
+            });
+        } else {
+            reset({ name: "", phoneNumber: "" });
+        }
+    }, [isEdit, data, reset, open]);
 
   const { mutate: createUser, isPending: creating } = usePost(
     API_ROUTES.createCustomer,
