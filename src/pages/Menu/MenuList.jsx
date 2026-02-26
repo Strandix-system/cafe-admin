@@ -1,17 +1,17 @@
-import TableComponent from "../../components/TableComponent/TableComponent";
+import {TableComponent} from "../../components/TableComponent/TableComponent";
 import { Box, Button, Chip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Eye, Trash2, Plus } from "lucide-react";
 import { useMemo } from "react";
 import { API_ROUTES } from "../../utils/api_constants";
 import { APIRequest } from "../../utils/api_request";
-import EditMenuModal from "./EditMenuModal";
+import {EditMenuModal} from "./EditMenuModal";
 import { useState } from "react";
-import CreateEditMenuModal from "./CreateEditMenuModal";
-import CommonButton from "../../components/common/commonButton";
+import {CreateEditMenuModal} from "./CreateEditMenuModal";
+import {CommonButton} from "../../components/common/commonButton";
 
 
-const MenuList = () => {
+export const MenuList = () => {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -82,18 +82,6 @@ const MenuList = () => {
           Menu Management
         </Typography>
 
-        {/* <Button
-          variant="contained"
-          sx={{ backgroundColor: "#6F4E37" }}
-          startIcon={<Plus size={18} />}
-          onClick={() => {
-            setMenuId(null); // create mode
-            setOpen(true);
-          }}
-        >
-          Create Menu
-        </Button> */}
-
         <CommonButton
           variant="contained"
           startIcon={<Plus size={18} />}
@@ -106,20 +94,6 @@ const MenuList = () => {
         </CommonButton>
       </Box>
 
-      {/* Table */}
-      <TableComponent
-        slug="menu"
-        columns={columns}
-        actions={actions}
-        actionsType="icons"
-        querykey="menu-list"
-        getApiEndPoint="menulist"
-        deleteApiEndPoint="MENU_DELETE"
-        deleteAction={true}
-        enableExportTable={true}
-
-      />
-
       <CreateEditMenuModal
         open={open}
         menuId={menuId}
@@ -128,9 +102,24 @@ const MenuList = () => {
           setMenuId(null);
         }}
       />
+      {/* Table */}
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+        <TableComponent
+          slug="menu"
+          columns={columns}
+          actions={actions}
+          actionsType="icons"
+          querykey="menu-list"
+          getApiEndPoint="menulist"
+          deleteApiEndPoint="MENU_DELETE"
+          deleteAction={true}
+          enableExportTable={true}
+
+
+        />
+      </Box>
+
 
     </div>
   );
 };
-
-export default MenuList;

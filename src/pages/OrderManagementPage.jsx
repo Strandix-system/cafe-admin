@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Box, Tabs, Tab, Typography, Grid, Badge, Chip } from "@mui/material";
 import { useFetch, usePatch } from "../utils/hooks/api_hooks";
-import Loader from "../components/common/Loader";
-import OrderCard from "../components/OrderComponent/OrderCard";
-import TableComponent from "../components/TableComponent/TableComponent";
+import { Loader } from "../components/common/Loader";
+import { OrderCard } from "../components/OrderComponent/OrderCard";
+import { TableComponent } from "../components/TableComponent/TableComponent";
 import { API_ROUTES } from "../utils/api_constants";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -11,7 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import { socket } from "../utils/socket";
 import { DollarSign, Eye } from "lucide-react";
 import { queryClient } from "../lib/queryClient";
-import OrderBillModal from "../components/OrderComponent/OrderBillModal";
+import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -27,7 +27,7 @@ function TabPanel({ children, value, index, ...other }) {
     );
 }
 
-const OrderManagementPage = () => {
+export const OrderManagementPage = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
 
@@ -121,12 +121,10 @@ const OrderManagementPage = () => {
     const { mutate: updateOrder } = usePatch(API_ROUTES.updateOrder, {
         onSuccess: () => {
             toast.success("Order updated!");
-            // Refetch to sync with backend
             queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
-        onError: () => {
-            toast.error("Failed to update order");
-            // Refetch to restore correct state
+        onError: (error) => {
+            toast.error(error);
             queryClient.invalidateQueries({ queryKey: "get-all-orders" });
         },
     });
@@ -135,12 +133,10 @@ const OrderManagementPage = () => {
     const { mutate: updatePaymentStatus } = usePatch(API_ROUTES.updatePaymentStatus, {
         onSuccess: () => {
             toast.success("Payment status updated to Paid!");
-            // Refetch to sync with backend
             queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },
-        onError: () => {
-            toast.error("Failed to update payment status");
-            // Refetch to restore correct state
+        onError: (error) => {
+            toast.error(error);
             queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
         },
     });
@@ -343,4 +339,3 @@ const OrderManagementPage = () => {
     );
 };
 
-export default OrderManagementPage;

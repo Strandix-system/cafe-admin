@@ -1,13 +1,13 @@
-import TableComponent from "../components/TableComponent/TableComponent";
+import {TableComponent} from "../components/TableComponent/TableComponent";
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Trash2, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import CreateCategoryDialog from "../components/categories/CreateCategoryDialog";
-import CommonButton from "../components/common/commonButton";
+import {CreateCategoryDialog} from "../components/categories/CreateCategoryDialog";
+import {CommonButton} from "../components/common/commonButton";
 
-const CategoriesList = () => {
+export const CategoriesList = () => {
   // console.log("✅ CategoriesList component mounted" );
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -56,17 +56,6 @@ const CategoriesList = () => {
           justifyContent: "flex-end",
         }}
       >
-        {/* <Button
-          variant="contained"
-          sx={{ backgroundColor: "#6F4E37" }}
-          startIcon={<Plus size={18} />}
-          onClick={() => {
-            setSelectedCategory(null);
-            setOpenDialog(true);
-          }}
-        >
-          Create Category
-        </Button> */}
         <CommonButton
           variant="contained"
           startIcon={<Plus size={18} />}
@@ -79,17 +68,20 @@ const CategoriesList = () => {
         </CommonButton>
       </Box>
 
-      <TableComponent
-        slug="category"
-        columns={columns}
-        actions={actions}
-        actionsType="icons"
-        querykey="get-categories"
-        getApiEndPoint="getCategories"
-        deleteApiEndPoint="deleteCategory"
-        deleteAction={isSuperAdmin}
-        enableExportTable={true}
-      />
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+
+        <TableComponent
+          slug="category"
+          columns={columns}
+          actions={actions}
+          actionsType="icons"
+          querykey="get-categories"
+          getApiEndPoint="getCategories"
+          deleteApiEndPoint="deleteCategory"
+          deleteAction={isSuperAdmin}
+          enableExportTable={true}
+        />
+      </Box>
 
       <CreateCategoryDialog
         open={openDialog}
@@ -100,4 +92,3 @@ const CategoriesList = () => {
   );
 };
 
-export default CategoriesList;

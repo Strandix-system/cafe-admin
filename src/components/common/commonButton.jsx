@@ -3,7 +3,7 @@ import { Button, CircularProgress } from "@mui/material";
 const DEFAULT_COLOR = "#6F4E37";
 const DEFAULT_HOVER = "#5D4037";
 
-const CommonButton = ({
+export const CommonButton = ({
   children,
 
   /* core */
@@ -78,4 +78,4 @@ const CommonButton = ({
   );
 };
 
-export default CommonButton;
+

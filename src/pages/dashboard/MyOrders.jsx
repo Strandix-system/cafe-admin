@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useMemo } from "react";
-import TableComponent from "../../components/TableComponent/TableComponent";
+import {TableComponent} from "../../components/TableComponent/TableComponent";
 import { Box, Chip, Typography, Paper } from "@mui/material";
 
-const MyOrders = () => {
+export const MyOrders = () => {
     const { userId } = useParams();
 
     const columns = useMemo(
@@ -155,7 +155,7 @@ const MyOrders = () => {
                     Customer Orders
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Order history for selected user
+                    Order history for selected customer
                 </Typography>
             </Box>
 
@@ -181,4 +181,4 @@ const MyOrders = () => {
     );
 };
 
-export default MyOrders;
+

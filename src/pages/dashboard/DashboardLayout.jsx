@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import TopNavbar from "../TopNavbar";
+import {Sidebar} from "./Sidebar";
+import {TopNavbar} from "../TopNavbar";
 
-export default function DashboardLayout() {
+export function DashboardLayout() {
     return (
         <Box
             display="flex"

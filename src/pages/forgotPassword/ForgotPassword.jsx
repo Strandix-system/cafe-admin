@@ -15,16 +15,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import toast from "react-hot-toast";
 import cafe1 from "../../assets/cafe1.jpg";
-import InputField from "../../components/common/InputField";
+import {InputField} from "../../components/common/InputField";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
 const emailSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
 });
 
-const ForgotPassword = () => {
+export const ForgotPassword = () => {
   const navigate = useNavigate();
   const [emailSent, setEmailSent] = useState(false);
 
@@ -50,10 +50,7 @@ const ForgotPassword = () => {
         toast.success("Password reset link sent to your email!");
       },
       onError: (error) => {
-        toast.error(
-          error?.response?.data?.message ||
-          "Failed to send reset link. Please try again."
-        );
+        toast.error(error);
       },
     }
   );
@@ -129,31 +126,6 @@ const ForgotPassword = () => {
                 />
               </Box>
 
-              {/* <Button
-                fullWidth
-                type="submit"
-                variant="contained"
-                disabled={!isValid || isPending}
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  py: 1.5,
-                  borderRadius: 3,
-                  textTransform: "none",
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  backgroundColor: "#6F4E37",
-                  "&:hover": {
-                    backgroundColor: "#5D4037",
-                  },
-                }}
-              >
-                {isPending ? (
-                  <CircularProgress size={26} color="inherit" />
-                ) : (
-                  "Send Reset Link"
-                )}
-              </Button> */}
               <CommonButton
                 type="submit"
                 fullWidth
@@ -242,28 +214,6 @@ const ForgotPassword = () => {
         )}
 
         {/* Single Back to Login button for both states */}
-        {/* <Button
-          fullWidth
-          variant="outlined"
-          onClick={() => navigate("/login")}
-          sx={{
-            mt: 2,
-            py: 1.2,
-            borderRadius: 3,
-            textTransform: "none",
-            fontSize: "0.95rem",
-            fontWeight: 600,
-            color: "#6F4E37",
-            borderColor: "#6F4E37",
-            "&:hover": {
-              borderColor: "#5D4037",
-              backgroundColor: "rgba(111, 78, 55, 0.04)",
-            },
-          }}
-        >
-          <ArrowBack fontSize="small" sx={{ mr: 1 }} />
-          Back to Login
-        </Button> */}
         <CommonButton
           fullWidth
           variant="outlined"
@@ -278,4 +228,3 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;

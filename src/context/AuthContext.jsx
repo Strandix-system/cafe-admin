@@ -9,11 +9,13 @@ import { api_enums } from "../enums/api";
 import { useFetch } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
 import { AUTH_ROLES } from "../utils/constant";
-import Loader from "../components/common/Loader";
+import { Loader } from "../components/common/Loader";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
@@ -35,6 +37,7 @@ export function AuthProvider({ children }) {
           if (res?.data?.result) {
             setUser(res.data.result);
             setIsAuthenticated(true);
+            navigate("/dashboard");
           } else {
             logout();
           }
@@ -64,6 +67,7 @@ export function AuthProvider({ children }) {
         if (res?.data?.result) {
           setUser(res.data.result);
           setIsAuthenticated(true);
+          navigate("/dashboard");
         } else {
           logout();
         }

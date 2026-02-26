@@ -7,7 +7,7 @@ import {
   ThreeDots,
 } from "react-loader-spinner";
 
-export default function Loader({
+export function Loader({
   variant = "oval",
   size = 25,
   color = "#3d55e0",

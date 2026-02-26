@@ -9,8 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Download, QrCode } from "lucide-react";
-import TableComponent from "../components/TableComponent/TableComponent";
-import InputField from "../components/common/InputField";
+import {TableComponent} from "../components/TableComponent/TableComponent";
+import {InputField} from "../components/common/InputField";
 import toast from "react-hot-toast";
 import { useFetch, usePost } from "../utils/hooks/api_hooks";
 import { API_ROUTES } from "../utils/api_constants";
@@ -18,10 +18,10 @@ import { queryClient } from "../lib/queryClient";
 import { useAuth } from "../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import CommonButton from "../components/common/commonButton";
+import {CommonButton} from "../components/common/commonButton";
 
 
-const CafeTableManagement = () => {
+export const CafeTableManagement = () => {
   const { layoutId: urlLayoutId } = useParams();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -65,10 +65,9 @@ const CafeTableManagement = () => {
         }
 
         queryClient.invalidateQueries({ queryKey: "get-qr-codes" });
-        refetch();
       },
       onError: (error) => {
-        toast.error(error?.message || "Failed to generate QR codes");
+        toast.error(error);
       },
     }
   );
@@ -203,13 +202,6 @@ const CafeTableManagement = () => {
         <Typography variant="h5" sx={{ color: "#6F4E37", fontWeight: 600 }}>
           Table Management
         </Typography>
-        {/* <Button
-          variant="contained"
-          sx={{ backgroundColor: "#6F4E37" }}
-          onClick={handleOpenDialog}
-        >
-          Generate QR Codes
-        </Button> */}
         <CommonButton
           variant="contained"
           onClick={handleOpenDialog}
@@ -218,17 +210,19 @@ const CafeTableManagement = () => {
         </CommonButton>
       </Box>
 
-      <TableComponent
-        slug="QR Code"
-        columns={columns}
-        actions={actions}
-        params={{ adminId: user?.id }}
-        actionsType="icons"
-        querykey="get-qr-codes"
-        getApiEndPoint="getQRCodes"
-        enableExportTable={true}
-        serialNo={true}
-      />
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+        <TableComponent
+          slug="QR Code"
+          columns={columns}
+          actions={actions}
+          params={{ adminId: user?.id }}
+          actionsType="icons"
+          querykey="get-qr-codes"
+          getApiEndPoint="getQRCodes"
+          enableExportTable={true}
+          serialNo={true}
+        />
+      </Box>
 
       {/* Generate QR Codes Dialog */}
       <Dialog
@@ -329,13 +323,7 @@ const CafeTableManagement = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
-          {/* <Button
-            onClick={handleCloseDialog}
-            disabled={isCreating}
-            sx={{ color: "#666" }}
-          >
-            Cancel
-          </Button> */}
+
           <CommonButton
             variant="text"
             onClick={handleCloseDialog}
@@ -345,14 +333,6 @@ const CafeTableManagement = () => {
             Cancel
           </CommonButton>
 
-          {/* <Button
-            onClick={handleSubmit}
-            variant="contained"
-            sx={{ backgroundColor: "#6F4E37" }}
-            disabled={isCreating || !totalTables}
-          >
-            {isCreating ? "Generating..." : "Generate"}
-          </Button> */}
           <CommonButton
             variant="contained"
             onClick={handleSubmit}
@@ -368,4 +348,4 @@ const CafeTableManagement = () => {
   );
 };
 
-export default CafeTableManagement;
+

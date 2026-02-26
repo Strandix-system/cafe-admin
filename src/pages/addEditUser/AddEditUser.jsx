@@ -16,9 +16,9 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { loginSchema } from "../../utils/validation";
 import { queryClient } from '../../lib/queryClient'
 import { useAuth } from "../../context/AuthContext";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
-const AddEditUser = ({ open, onClose, mode, data }) => {
+export const AddEditUser = ({ open, onClose, mode, data }) => {
     const isEdit = mode === "edit";
     const { user } = useAuth();
 
@@ -59,7 +59,10 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
                 onClose(true);
                 refetch();
             },
-        }
+            onError: (error) => {
+                toast.error(error);
+            }
+        },
     );
 
     const { mutate: updateUser, isPending: updating } = usePatch(
@@ -67,12 +70,14 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
         {
             onSuccess: () => {
                 toast.success("User updated successfully");
-
                 queryClient.invalidateQueries({ queryKey: ["get-cafe-users"], });
                 onClose(true);
                 refetch();
             },
-        }
+            onError: (error) => {
+                toast.error(error);
+            }
+        },
     );
 
     const onSubmit = (formData) => {
@@ -130,14 +135,6 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
                 </DialogContent>
 
                 <DialogActions sx={{ px: 3, pb: 2 }}>
-                    {/* <Button onClick={() => onClose(false)}>Cancel</Button>
-                    <Button
-                        variant="contained"
-                        type="submit"
-                        disabled={creating || updating}
-                    >
-                        {isEdit ? "Update" : "Create"}
-                    </Button> */}
                     <CommonButton
                         variant="outlined"
                         onClick={() => onClose(false)}
@@ -159,4 +156,3 @@ const AddEditUser = ({ open, onClose, mode, data }) => {
     );
 };
 
-export default AddEditUser;

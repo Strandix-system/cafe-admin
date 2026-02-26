@@ -37,19 +37,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
-import Loader from "../common/Loader";
+import {Loader} from "../common/Loader";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { adminSchema } from "../../utils/adminSchema/adminSchema";
-import ImageUploadSection from "../common/ImageUploadSection";
-import InputField from "../common/InputField";
+import {ImageUploadSection} from "../common/ImageUploadSection";
+import {InputField} from "../common/InputField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { parseHoursFromBackend } from "../../utils/utils";
-import CommonTextField from "../common/CommonTextField";
-import CommonImageField from "../common/CommonImageField";
-import CommonTimeField from "../common/CommonTimeField";
-import CommonButton from "../common/commonButton";
+import {CommonTextField} from "../common/CommonTextField";
+import {CommonImageField} from "../common/CommonImageField";
+import {CommonTimeField} from "../common/CommonTimeField";
+import {CommonButton} from "../common/commonButton";
 
 // Enable custom parse format plugin
 dayjs.extend(customParseFormat);
@@ -68,7 +68,7 @@ const TIME_PICKER_STYLES = {
     },
 };
 
-export default function FormComponent({
+export function FormComponent({
     defaultValues = {},
     onSubmit,
     isSubmitting = false,
@@ -199,27 +199,6 @@ export default function FormComponent({
                         </Box>
                     </Box>
 
-                    {/* <Button
-                        type="submit"
-                        form="admin-form"
-                        variant="contained"
-                        disabled={!isValid || isSubmitting}
-                        sx={{
-                            bgcolor: "white",
-                            color: "#6F4E37",
-                            fontWeight: 600,
-                            px: 4,
-                            "&:hover": {
-                                bgcolor: "#F5EFE6",
-                            },
-                            "&:disabled": {
-                                bgcolor: "#E0E0E0",
-                                color: "#9E9E9E",
-                            },
-                        }}
-                    >
-                        {isEdit ? "Update" : "Create"}
-                    </Button> */}
                     <CommonButton
                         type="submit"
                         form="admin-form"
@@ -310,7 +289,7 @@ export default function FormComponent({
                             placeholder="Enter Cafe Name"
                             control={control}
                             errors={errors}
-                            disabled={isEdit}
+                            disabled={isEdit && !!defaultValues.cafeName}
                         />
 
                         {/* Password Field - Only in Create Mode */}

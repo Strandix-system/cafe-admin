@@ -3,11 +3,11 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { formatTime } from "../../utils/utils";
-import FormComponent from "../../components/forms/FormComponent";
+import {FormComponent} from "../../components/forms/FormComponent";
 import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
 
-export default function ProfileUpdate() {
+export function ProfileUpdate() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ export default function ProfileUpdate() {
                 toast.success("Profile updated successfully");
                 navigate("/dashboard");
             },
-            onError: (error) => toast.error(error.message),
+            onError: (error) => toast.error(error),
         }
     );
 
@@ -27,6 +27,7 @@ export default function ProfileUpdate() {
         delete data.__v;
         delete data._id;
         delete data.id;
+        delete data.isProfileComplete;
         delete data.createdAt;
         delete data.updatedAt;
 
@@ -60,3 +61,4 @@ export default function ProfileUpdate() {
         />
     );
 }
+

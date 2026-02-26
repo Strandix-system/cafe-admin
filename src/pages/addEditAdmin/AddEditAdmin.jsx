@@ -1,13 +1,13 @@
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import FormComponent from "../../components/forms/FormComponent";
+import {FormComponent} from "../../components/forms/FormComponent";
 import { useFetch, usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import Loader from "../../components/common/Loader";
+import {Loader} from "../../components/common/Loader";
 import { formatTime } from "../../utils/utils";
 import { queryClient } from "../../lib/queryClient";
 
-export default function AddEditAdmin() {
+export function AddEditAdmin() {
     const { userId } = useParams();
     const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ export default function AddEditAdmin() {
                 navigate("/cafes");
             },
             onError: (error) => {
-                toast.error(error.message);
+                toast.error(error);
             },
         },
     );
@@ -42,8 +42,8 @@ export default function AddEditAdmin() {
                 toast.success("Admin created successfully");
                 navigate("/cafes");
             },
-            onError: (err) => {
-                toast.error(err?.response?.data?.message || "Failed to create cafe");
+            onError: (error) => {
+                toast.error(error);
             },
         },
     );

@@ -1,7 +1,7 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Box, Tabs, Tab } from "@mui/material";
 
-export default function ProfileLayout() {
+export function ProfileLayout() {
     const location = useLocation();
     const navigate = useNavigate();
 

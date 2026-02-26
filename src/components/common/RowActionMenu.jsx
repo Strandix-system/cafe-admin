@@ -1,6 +1,6 @@
 import { IconButton, MenuItem, Tooltip } from "@mui/material";
 
-const RowActionMenu = ({
+export const RowActionMenu = ({
   actions = [],
   row,
   actionsType = "icons",
@@ -52,4 +52,4 @@ const RowActionMenu = ({
   });
 };
 
-export default RowActionMenu;
+

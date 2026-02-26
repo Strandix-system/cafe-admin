@@ -2,11 +2,19 @@ import { create, get, update } from "lodash";
 
 export const API_ROUTES = {
     login: "auth/login",
-    signup: "auth/signup",
+    createOrder: "signup/create-order",
+    verifySignup: "signup/verify-payment",
     getMe: "auth/me",
     getUsers: "/admin/get-users",
 
     dashboardStats: "admin/dashboard/stats",
+    dashboardSales:"admin/dashboard/sales",
+    dashboardItems:'admin/dashboard/items-performance',
+    dashboardPeakTime:"admin/dashboard/peak-time",
+    dashboardTables:"admin/dashboard/tables",
+    dashboardTopCustomers:"admin/dashboard/top-customers",
+    dashboardTopCafes:"admin/dashboard/top-cafes",
+    dashboardPlatformSales:"admin/dashboard/platform-sales",
 
     getUserById: "admin/get-user",
     updateUsers: "admin/update",

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Loader from "../../components/common/Loader";
-import LayoutForm from "../../components/layout/LayoutForm";
+import {Loader} from "../../components/common/Loader";
+import {LayoutForm} from "../../components/layout/LayoutForm";
 import { useAuth } from "../../context/AuthContext";
 import { queryClient } from "../../lib/queryClient";
 import { API_ROUTES } from "../../utils/api_constants";
@@ -8,7 +8,7 @@ import { useFetch, usePatch, usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function AddEditLayout() {
+export function AddEditLayout() {
   const { layoutId } = useParams();
   const { isSuperAdmin, isAdmin, adminId } = useAuth();
   const navigate = useNavigate();
@@ -35,8 +35,8 @@ export default function AddEditLayout() {
         toast.success("Layout updated successfully");
         navigate("/layouts");
       },
-      onError: (err) => {
-        toast.error(err?.message || "Failed to update layout");
+      onError: (error) => {
+        toast.error(error);
       },
     }
   );
@@ -55,8 +55,8 @@ export default function AddEditLayout() {
         });
         navigate("/layouts")
       },
-      onError: (err) => {
-        toast.error(err?.message || "Failed to create layout");
+      onError: (error) => {
+        toast.error(error);
       },
     }
   );
@@ -64,52 +64,52 @@ export default function AddEditLayout() {
   const isAdminEditing =
     layoutData?.defaultLayout === false && isAdmin && layoutId;
 
- const preparePayload = (formValue, additionalFields = {}) => {
-  const payload = { ...formValue, ...additionalFields };
+  const preparePayload = (formValue, additionalFields = {}) => {
+    const payload = { ...formValue, ...additionalFields };
 
-  const hasFiles =
-    formValue.homeImage instanceof File ||
-    formValue.aboutImage instanceof File;
+    const hasFiles =
+      formValue.homeImage instanceof File ||
+      formValue.aboutImage instanceof File;
 
-  if (!hasFiles) return payload;
+    if (!hasFiles) return payload;
 
-  const formData = new FormData();
+    const formData = new FormData();
 
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value === undefined) return;
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value === undefined) return;
 
-    if (key === "adminId") {
-      formData.append("adminId", String(value?._id || value));
-      return;
-    }
-
-    if (key === "defaultLayoutId") {
-      if (value) {
-        formData.append("defaultLayoutId", String(value));
+      if (key === "adminId") {
+        formData.append("adminId", String(value?._id || value));
+        return;
       }
-      return;
-    }
 
-    // Files
-    if (value instanceof File) {
+      if (key === "defaultLayoutId") {
+        if (value) {
+          formData.append("defaultLayoutId", String(value));
+        }
+        return;
+      }
+
+      // Files
+      if (value instanceof File) {
+        formData.append(key, value);
+        return;
+      }
+
+      // Objects (hours, socialLinks etc.)
+      if (typeof value === "object" && value !== null) {
+        formData.append(key, JSON.stringify(value));
+        return;
+      }
+
+      // Primitives
       formData.append(key, value);
-      return;
-    }
+    });
 
-    // Objects (hours, socialLinks etc.)
-    if (typeof value === "object" && value !== null) {
-      formData.append(key, JSON.stringify(value));
-      return;
-    }
+    return formData;
+  };
 
-    // Primitives
-    formData.append(key, value);
-  });
 
-  return formData;
-};
-
-  
   const onSubmit = (formValue) => {
     // Admin editing their own layout
     if (isAdminEditing) {

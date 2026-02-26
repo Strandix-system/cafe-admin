@@ -1,7 +1,7 @@
 import { Box, Avatar, IconButton, FormLabel } from "@mui/material";
 import { PhotoCamera, Close, Refresh } from "@mui/icons-material";
 
-const ImageUploadSection = ({
+export const ImageUploadSection = ({
     label,
     field,
     preview,
@@ -93,4 +93,3 @@ const ImageUploadSection = ({
     );
 };
 
-export default ImageUploadSection;

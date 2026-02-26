@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button, Grid, Box, FormLabel } from "@mui/material";
 import { useEffect } from "react";
-import Loader from "../common/Loader";
+import {Loader} from "../common/Loader";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -15,13 +15,13 @@ import {
     Facebook,
     Twitter,
 } from "@mui/icons-material";
-import InputField from "../common/InputField";
-import ImageUploadSection from "../common/ImageUploadSection";
+import {InputField} from "../common/InputField";
+import {ImageUploadSection} from "../common/ImageUploadSection";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import { m } from "framer-motion";
-import CommonTextField from "../common/CommonTextField";
-import CommonImageField from "../common/CommonImageField";
-import CommonButton from "../common/commonButton";
+import {CommonTextField} from "../common/CommonTextField";
+import {CommonImageField} from "../common/CommonImageField";
+import {CommonButton} from "../common/commonButton";
 
 const layoutSchema = yup.object({
     layoutTitle: yup.string().required("Layout title is required"),
@@ -73,7 +73,7 @@ const TIME_PICKER_STYLES = {
     },
 };
 
-export default function LayoutForm({
+export function LayoutForm({
     defaultValues = {},
     onSubmit,
     isLoading = false,
@@ -168,36 +168,6 @@ export default function LayoutForm({
         );
     };
 
-    // Replace renderTimeField function
-    // const renderTimeField = (name, label, gridSize = { xs: 12 }) => (
-    //     <Grid size={gridSize}>
-    //         <FormLabel
-    //             sx={{
-    //                 color: "#6F4E37",
-    //                 fontWeight: 600,
-    //                 mb: 1,
-    //                 display: "block",
-    //             }}
-    //         >
-    //             {label}
-    //         </FormLabel>
-    //         <Controller
-    //             name={name}
-    //             control={control}
-    //             render={({ field }) => (
-    //                 <>
-    //                     <div className="flex gap-4 mt-2">{renderTimePickers(field)}</div>
-    //                     {errors.hours?.[name.split(".")[1]] && (
-    //                         <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
-    //                             {errors.hours[name.split(".")[1]].message}
-    //                         </Box>
-    //                     )}
-    //                 </>
-    //             )}
-    //         />
-    //     </Grid>
-    // );
-
     if (isLoading) {
         return (
             <Box
@@ -216,19 +186,6 @@ export default function LayoutForm({
             {/* ===== HEADER ===== */}
             <div className="flex gap-3 items-center justify-between w-full mb-6">
                 <h2 className="text-2xl font-bold">Customize Layout</h2>
-
-                {/* <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={isLoading || !isValid || isSubmitting}
-                    sx={{
-                        bgcolor: "#6F4E37",
-                        "&:hover": { bgcolor: "#5A3D2B" },
-                    }}
-                >
-                    {/* {isEdit && !isAdmin ? "Update Layout" : "Create Layout"} */}
-                {/* {isEdit ? "Update Layout" : "Create Layout"} */}
-                {/* </Button>  */}
 
                 <CommonButton
                     type="submit"

@@ -4,12 +4,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FormLabel, MenuItem } from "@mui/material";
 import { toast } from "react-hot-toast";
 import { APIRequest } from "../../utils/api_request";
-import InputField from "../../components/common/InputField";
+import {InputField} from "../../components/common/InputField";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 import { useFetch } from "../../utils/hooks/api_hooks";
 
-export default function CreateMenu() {
+export function CreateMenu() {
   const { menuId } = useParams();
   const navigate = useNavigate();
 
@@ -63,7 +63,7 @@ export default function CreateMenu() {
 
         setPreview(res.result.image);
       } catch (error) {
-        toast.error("Failed to fetch menu details");
+        toast.error(error);
       } finally {
         setPageLoading(false);
       }
@@ -97,7 +97,6 @@ export default function CreateMenu() {
       if (data.image && data.image[0]) {
         formData.append("image", data.image[0]);
       }
-      // formData.append("image", data.image[0]);
 
       if (menuId) {
         await APIRequest.patch(`${API_ROUTES.updateMenu}/${menuId}`, formData);
@@ -112,15 +111,14 @@ export default function CreateMenu() {
       navigate("/menu");
 
     } catch (error) {
-      console.error(error);
-      toast.error(error?.message || "Something went wrong");
+      toast.error(error);
     } finally {
       setLoading(false);
     }
   };
 
 
-  // if (pageLoading) return <Loader variant="spinner" />;
+  if (pageLoading) return <Loader variant="spinner" />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-6">

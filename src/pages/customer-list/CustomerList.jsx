@@ -1,12 +1,12 @@
-import TableComponent from "../../components/TableComponent/TableComponent";
+import {TableComponent} from "../../components/TableComponent/TableComponent";
 import { Box, Button, Typography } from "@mui/material";
 import { Edit, Plus, Eye } from "lucide-react";
 import { useMemo, useState } from "react";
-import AddEditUser from "../addEditUser/AddEditUser";
+import {AddEditUser} from "../addEditUser/AddEditUser";
 import { useNavigate } from "react-router-dom";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
-const CustomerList = () => {
+export const CustomerList = () => {
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState("create");
     const [selectedUser, setSelectedUser] = useState(null);
@@ -64,21 +64,6 @@ const CustomerList = () => {
                     User Management
                 </Typography>
 
-                {/* <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: "#6F4E37",
-                        "&:hover": { backgroundColor: "#5A3E2B" }
-                    }}
-                    startIcon={<Plus size={18} />}
-                    onClick={() => {
-                        setMode("create");
-                        setSelectedUser(null);
-                        setOpen(true);
-                    }}
-                >
-                    Create User
-                </Button> */}
                 <CommonButton
                     variant="contained"
                     startIcon={<Plus size={18} />}
@@ -93,19 +78,20 @@ const CustomerList = () => {
             </Box>
 
             {/* Table */}
-            <TableComponent
-                slug="user"
-                columns={columns}
-                actions={actions}
-                querykey="get-cafe-users"
-                getApiEndPoint="user_list"
-                deleteApiEndPoint="deleteUser"
-                deleteAction={true}
-                enableExportTable={true}
-                manualPagination={true}
-                serialNo={true}
-            />
-
+            <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+                <TableComponent
+                    slug="user"
+                    columns={columns}
+                    actions={actions}
+                    querykey="get-cafe-users"
+                    getApiEndPoint="user_list"
+                    deleteApiEndPoint="deleteUser"
+                    deleteAction={true}
+                    enableExportTable={true}
+                    manualPagination={true}
+                    serialNo={true}
+                />
+            </Box>
 
             <AddEditUser open={open}
                 mode={mode}
@@ -119,4 +105,3 @@ const CustomerList = () => {
 };
 
 
-export default CustomerList;

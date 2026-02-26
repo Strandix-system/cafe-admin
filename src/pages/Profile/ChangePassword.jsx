@@ -16,9 +16,9 @@ import * as yup from "yup";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { toast } from "react-hot-toast";
-import InputField from "../../components/common/InputField";
+import {InputField} from "../../components/common/InputField";
 import { useNavigate } from "react-router-dom";
-import CommonButton from "../../components/common/commonButton";
+import {CommonButton} from "../../components/common/commonButton";
 
 const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
@@ -137,20 +137,6 @@ export const ChangePassword = () => {
                             {renderTextField("newPassword", "New Password", null, "Enter New Password", null, { xs: 12 }, "password")}
                             {renderTextField("confirmPassword", "Confirm Password", null, "Confirm New Password", null, { xs: 12 }, "password")}
                         </Grid>
-                        {/* 
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            type="submit"
-                            sx={{ mt: 3, py: 1.2 }}
-                            disabled={isPending}
-                        >
-                            {isPending ? (
-                                <CircularProgress size={24} color="inherit" />
-                            ) : (
-                                "Update Password"
-                            )}
-                        </Button> */}
                         <CommonButton
                             fullWidth
                             variant="contained"

@@ -1,34 +1,36 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import LoginSignup from "../pages/LoginSignup";
-import ForgotPassword from "../pages/forgotPassword/ForgotPassword";
+import {LoginSignup} from "../pages/login/LoginSignup";
+import {ForgotPassword} from "../pages/forgotPassword/ForgotPassword";
 
-import DashboardLayout from "../pages/dashboard/DashboardLayout";
-import Dashboard from "../pages/dashboard/Dashboard";
-import LayoutsPage from "../pages/LayoutsPage";
+import {DashboardLayout} from "../pages/dashboard/DashboardLayout";
+import {Dashboard} from "../pages/dashboard/Dashboard";
+import {LayoutsPage} from "../pages/LayoutsPage";
 
-import AdminList from "../pages/AdminList";
-import CategoriesList from "../pages/CategoriesList";
+import {AdminList} from "../pages/AdminList";
+import {CategoriesList} from "../pages/CategoriesList";
 
-import ProtectedRoutes from "./ProtectedRoutes";
-import AddEditAdmin from "../pages/addEditAdmin/AddEditAdmin";
-import AddEditLayout from "../pages/addEditLayout/AddEditLayout";
-import MenuList from "../pages/Menu/MenuList";
-import CustomerList from "../pages/customer-list/CustomerList";
-import OrderManagementPage from "../pages/OrderManagementPage";
-import OrderHistoryList from "../pages/OrderHistoryList";
-import CafeTableManagement from "../pages/CafeTableManagement";
-import MyOrders from "../pages/dashboard/MyOrders";
-import ProfileLayout from "../pages/Profile/ProfileLayout";
-import ProfileUpdate from "../pages/Profile/ProfileUpdate";
+import {ProtectedRoutes} from "./ProtectedRoutes";
+import {AddEditAdmin} from "../pages/addEditAdmin/AddEditAdmin";
+import {AddEditLayout} from "../pages/addEditLayout/AddEditLayout";
+import {MenuList} from "../pages/Menu/MenuList";
+import {Plan} from "../pages/login/Plan";
+import {CustomerList} from "../pages/customer-list/CustomerList";
+import {OrderManagementPage} from "../pages/OrderManagementPage";
+import {OrderHistoryList} from "../pages/OrderHistoryList";
+import {CafeTableManagement} from "../pages/CafeTableManagement";
+import {MyOrders} from "../pages/dashboard/MyOrders";
+import {ProfileLayout} from "../pages/Profile/ProfileLayout";
+import {ProfileUpdate} from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
-import ResetPassword from "../pages/forgotPassword/ResetPassword";
+import {ResetPassword} from "../pages/forgotPassword/ResetPassword";
 
-const AppRoutes = () => {
+export const AppRoutes = () => {
   return (
     <Routes>
       {/* PUBLIC ROUTES */}
       <Route path="/" element={<LoginSignup />} />
+      <Route path="/plans" element={<Plan />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
 
@@ -65,4 +67,3 @@ const AppRoutes = () => {
   );
 };
 
-export default AppRoutes;

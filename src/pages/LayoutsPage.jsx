@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Grid, Button, Box, Typography, Skeleton, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDelete, useFetch, usePatch } from "../utils/hooks/api_hooks";
-import LayoutPreviewCard from "../components/layout/LayoutPreviewCard";
+import {LayoutPreviewCard} from "../components/layout/LayoutPreviewCard";
 import { API_ROUTES } from "../utils/api_constants";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
@@ -13,9 +13,9 @@ import {
   DialogActions,
   DialogTitle,
 } from "@mui/material";
-import CommonButton from "../components/common/commonButton";
+import {CommonButton} from "../components/common/commonButton";
 
-export default function LayoutsPage() {
+export function LayoutsPage() {
   const navigate = useNavigate();
   const { isAdmin, isSuperAdmin, user } = useAuth();
   const [selectedDefaultLayout, setSelectedDefaultLayout] = useState(null);
@@ -61,8 +61,7 @@ export default function LayoutsPage() {
         queryClient.invalidateQueries({ queryKey: "getAdminLayouts" });
       },
       onError: (error) => {
-        console.error("Error setting active layout:", error);
-        toast.error("Failed to set active layout");
+        toast.error(error);
       },
     }
   );
@@ -80,8 +79,8 @@ export default function LayoutsPage() {
         setOpenDeleteDialog(false);
         setDeleteLayoutId(null);
       },
-      onError: () => {
-        toast.error("Failed to delete layout");
+      onError: (error) => {
+        toast.error(error);
       },
     }
   );
@@ -95,7 +94,6 @@ export default function LayoutsPage() {
     if (!deleteLayoutId) return;
     deleteLayout(deleteLayoutId);
   };
-
 
   // Auto-select if only one default layout exists
   useEffect(() => {
@@ -120,7 +118,7 @@ export default function LayoutsPage() {
       }
       return;
     }
-    url = `${import.meta.env.VITE_PORTFOLIO_URL}/${cafeQrId}`;
+    url = `${import.meta.env.VITE_PORTFOLIO_URL}/${cafeQrId}/?previewLayoutId=${layout._id}`;
     window.open(url, "_blank");
   };
 
@@ -169,14 +167,6 @@ export default function LayoutsPage() {
             Default Layouts
           </Typography>
 
-          {/* <Button
-            variant="contained"
-            onClick={handleCustomizeDefault}
-            disabled={!selectedDefaultLayout}
-            sx={{ backgroundColor: "#6F4E37" }}
-          >
-            Customize
-          </Button> */}
           <CommonButton
             variant="contained"
             onClick={handleCustomizeDefault}
@@ -240,14 +230,6 @@ export default function LayoutsPage() {
           Default Layouts
         </Typography>
 
-        {/* <Button
-          variant="contained"
-          onClick={handleCustomizeDefault}
-          disabled={!selectedDefaultLayout}
-          sx={{ backgroundColor: "#6F4E37" }}
-        >
-          Customize
-        </Button> */}
         <CommonButton
           variant="contained"
           onClick={handleCustomizeDefault}
@@ -382,14 +364,6 @@ export default function LayoutsPage() {
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          {/* <Button
-            fullWidth
-            variant="contained"
-            sx={{ backgroundColor: "#6F4E37" }}
-            onClick={() => navigate("/table-management")}
-          >
-            Create QR Codes
-          </Button> */}
           <CommonButton
             fullWidth
             variant="contained"
@@ -426,12 +400,7 @@ export default function LayoutsPage() {
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          {/* <Button
-            onClick={() => setOpenDeleteDialog(false)}
-            disabled={isDeleting}
-          >
-            Cancel
-          </Button> */}
+
           <CommonButton
             variant="outlined"
             onClick={() => setOpenDeleteDialog(false)}
@@ -440,14 +409,6 @@ export default function LayoutsPage() {
             Cancel
           </CommonButton>
 
-          {/* <Button
-            color="error"
-            variant="contained"
-            onClick={handleConfirmDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? "Deleting..." : "Delete"}
-          </Button> */}
           <CommonButton
             variant="contained"
             color="error"

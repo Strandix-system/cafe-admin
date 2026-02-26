@@ -16,7 +16,7 @@ import { usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 import { useEffect, useState } from "react";
-import CommonButton from "../common/commonButton";
+import {CommonButton} from "../common/commonButton";
 
 // ✅ Yup Schema
 const schema = yup.object({
@@ -28,7 +28,7 @@ const schema = yup.object({
     .required("Category name is required"),
 });
 
-const CreateCategoryDialog = ({ open, handleClose, category }) => {
+export const CreateCategoryDialog = ({ open, handleClose, category }) => {
 
   const isEdit = Boolean(category);
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
     },
     onError: (error) => {
       console.error("Create category failed:", error);
-      toast.error(error?.message || "Failed to create category");
+      toast.error(error);
     }
   });
 
@@ -68,7 +68,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
     },
     onError: (error) => {
       console.error("Update category failed:", error);
-      toast.error(error?.message || "Failed to update category");
+      toast.error(error);
     }
   }
   );
@@ -91,8 +91,7 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
         createCategory({ name: data.name });
       }
     } catch (error) {
-      console.error(error);
-      toast.error(error?.message || "Something went wrong");
+      toast.error(error);
     } finally {
       setLoading(false);
     }
@@ -121,27 +120,10 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
       </DialogContent>
 
       <DialogActions>
-        {/* <Button onClick={handleClose} variant="outlined" sx={{ color: "#6F4E37" }}>
-          Cancel
-        </Button> */}
         <CommonButton variant="outlined" onClick={handleClose}>
           Cancel
         </CommonButton>
 
-        {/* <Button
-          variant="contained"
-          onClick={handleSubmit(onSubmit)}
-          disabled={createPending || updatePending || !isValid}
-          sx={{ backgroundColor: "#6F4E37" }}
-        >
-          {createPending || updatePending
-            ? isEdit
-              ? "Updating..."
-              : "Creating..."
-            : isEdit
-              ? "Update"
-              : "Create"}
-        </Button> */}
         <CommonButton variant="contained" onClick={handleSubmit(onSubmit)} loading={createPending || updatePending} disabled={!isValid}>
           {isEdit ? "Update" : "Create"}
         </CommonButton>
@@ -150,4 +132,3 @@ const CreateCategoryDialog = ({ open, handleClose, category }) => {
   );
 };
 
-export default CreateCategoryDialog;

@@ -1,6 +1,6 @@
 import { TextField, InputAdornment } from "@mui/material";
 
-const InputField = ({
+export const InputField = ({
   field,
   error,
   helperText,
@@ -37,4 +37,4 @@ const InputField = ({
   );
 };
 
-export default InputField;
+

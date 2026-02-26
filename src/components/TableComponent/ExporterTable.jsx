@@ -223,7 +223,7 @@ const exportCsvWithHeaders = (columns, data, fileName) => {
 };
 
 
-const ExporterTable = ({ table, fileName = "data", pdfTitle = null }) => {
+export const ExporterTable = ({ table, fileName = "data", pdfTitle = null }) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -323,5 +323,3 @@ const ExporterTable = ({ table, fileName = "data", pdfTitle = null }) => {
         </div>
     )
 }
-
-export default ExporterTable

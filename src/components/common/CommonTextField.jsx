@@ -1,13 +1,13 @@
 import { Grid, FormLabel } from "@mui/material";
 import { Controller } from "react-hook-form";
-import InputField from "./InputField";
+import {InputField} from "./InputField";
 
 const getError = (errors, name) =>
   name.includes(".")
     ? name.split(".").reduce((obj, key) => obj?.[key], errors)
     : errors[name];
 
-const CommonTextField = ({
+export const CommonTextField = ({
   name,
   label,
   icon,
@@ -61,4 +61,4 @@ const CommonTextField = ({
   );
 };
 
-export default CommonTextField;
+

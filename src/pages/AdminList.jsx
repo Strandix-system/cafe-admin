@@ -1,4 +1,4 @@
-import TableComponent from "../components/TableComponent/TableComponent"
+import {TableComponent} from "../components/TableComponent/TableComponent"
 import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate, useParams } from 'react-router-dom'
@@ -8,11 +8,11 @@ import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
-import CommonButton from "../components/common/commonButton";
+import {CommonButton} from "../components/common/commonButton";
 
-const AdminList = () => {
+export const AdminList = () => {
   const navigate = useNavigate();
-  const { user, isSuperAdmin, isAdmin } = useAuth();
+  const { isSuperAdmin } = useAuth();
   const { adminId } = useParams();
 
   const [activeTab, setActiveTab] = useState("active"); // active | inactive
@@ -32,7 +32,7 @@ const AdminList = () => {
         }
       },
       onError: (error) => {
-        console.error("Status update failed:", error);
+        toast.error(error);
       },
     },
   );
@@ -153,12 +153,6 @@ const AdminList = () => {
 
         <Box display="flex" gap={2}>
           {adminId && (
-            // <Button
-            //   variant="outlined"
-            //   onClick={() => navigate("/cafes")}
-            // >
-            //   Back to Cafes
-            // </Button>
             <CommonButton
               variant="outlined"
               onClick={() => navigate("/cafes")}
@@ -168,15 +162,6 @@ const AdminList = () => {
           )}
 
           {isSuperAdmin && !adminId && (
-            // <Button
-            //   variant="contained"
-            //   sx={{ backgroundColor: "#6F4E37" }}
-            //   startIcon={<Plus size={18} />}
-            //   onClick={() => navigate("/cafe/create-edit")}
-            // >
-            //   Create Cafe
-            // </Button>
-
             <CommonButton
               variant="contained"
               startIcon={<Plus size={18} />}
@@ -209,20 +194,23 @@ const AdminList = () => {
       )
       }
 
-      <TableComponent
-        slug={adminId ? "user" : "admin"}
-        columns={adminId ? customerColumns : cafeColumns}
-        actions={actions}
-        actionsType="menu"
-        querykey={queryKey}
-        getApiEndPoint={getApiEndPoint}
-        params={queryParams}
-        deleteApiEndPoint="deleteCafe"
-        deleteAction={isSuperAdmin}
-      // enableExportTable={true}
-      />
+      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+
+        <TableComponent
+          slug={adminId ? "user" : "admin"}
+          columns={adminId ? customerColumns : cafeColumns}
+          actions={actions}
+          actionsType="menu"
+          querykey={queryKey}
+          getApiEndPoint={getApiEndPoint}
+          params={queryParams}
+          deleteApiEndPoint="deleteCafe"
+          deleteAction={isSuperAdmin}
+        // enableExportTable={true}
+        />
+      </Box>
     </div >
   );
 };
 
-export default AdminList;
+

@@ -16,7 +16,7 @@ import html2canvas from "html2canvas";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 
-const OrderBillModal = ({ open, onClose, billId }) => {
+export const OrderBillModal = ({ open, onClose, billId }) => {
     const billRef = useRef(null);
 
     const { data: { result: billData } = {}, isLoading } = useFetch(
@@ -165,4 +165,3 @@ const OrderBillModal = ({ open, onClose, billId }) => {
     );
 };
 
-export default OrderBillModal;
