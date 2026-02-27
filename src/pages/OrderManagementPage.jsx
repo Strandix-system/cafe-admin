@@ -289,12 +289,44 @@ export const OrderManagementPage = () => {
                 onChange={(e, newValue) => setTabValue(newValue)}
                 aria-label="order management tabs"
                 sx={{
-                    "& .MuiTab-root": { color: "#6F4E37", fontWeight: 600 },
+                    "& .MuiTab-root": { color: "#6F4E37", fontWeight: 600, textTransform: "none" },
                     "& .MuiTabs-indicator": { bgcolor: "#6F4E37" },
                 }}
             >
-                <Tab label={<Badge badgeContent={pendingOrders.length} color="error">Pending Orders</Badge>} />
-                <Tab label={<Badge badgeContent={acceptedOrders.length} color="primary">Accepted Orders</Badge>} />
+                <Tab
+                    label={
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <span>Pending Orders</span>
+                            <Badge
+                                badgeContent={pendingOrders.length}
+                                color="error"
+                                sx={{
+                                    "& .MuiBadge-badge": {
+                                        position: "relative",
+                                        transform: "none",
+                                    },
+                                }}
+                            />
+                        </Box>
+                    }
+                />
+                <Tab
+                    label={
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <span>Accepted Orders</span>
+                            <Badge
+                                badgeContent={acceptedOrders.length}
+                                color="primary"
+                                sx={{
+                                    "& .MuiBadge-badge": {
+                                        position: "relative",
+                                        transform: "none",
+                                    },
+                                }}
+                            />
+                        </Box>
+                    }
+                />
                 <Tab label="History" />
             </Tabs>
 
