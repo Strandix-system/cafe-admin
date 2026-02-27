@@ -8,7 +8,7 @@ export const getSuperAdminStats = (statsData) => [
     value: `₹${statsData?.totalIncome?.toLocaleString() ?? 0}`
   },
   {
-    label: "Total Demo Requests",
+    label: "Demo Requests",
     value: statsData?.totalDemoRequest ?? 0
   },
 ];

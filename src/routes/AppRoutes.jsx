@@ -2,14 +2,11 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import {LoginSignup} from "../pages/login/LoginSignup";
 import {ForgotPassword} from "../pages/forgotPassword/ForgotPassword";
-
 import {DashboardLayout} from "../pages/dashboard/DashboardLayout";
 import {Dashboard} from "../pages/dashboard/Dashboard";
 import {LayoutsPage} from "../pages/LayoutsPage";
-
 import {AdminList} from "../pages/AdminList";
 import {CategoriesList} from "../pages/CategoriesList";
-
 import {ProtectedRoutes} from "./ProtectedRoutes";
 import {AddEditAdmin} from "../pages/addEditAdmin/AddEditAdmin";
 import {AddEditLayout} from "../pages/addEditLayout/AddEditLayout";
@@ -43,6 +40,7 @@ export const AppRoutes = () => {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/:adminId" element={<Dashboard />} />
         <Route path="/cafes" element={<AdminList />} />
         <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
         <Route path="/cafes/:adminId?" element={<AdminList />} />
