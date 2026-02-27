@@ -16,6 +16,8 @@ import toast from "react-hot-toast";
 import { CommonButton } from "../../components/common/commonButton";
 import { CommonTextField } from "../../components/common/CommonTextField";
 import { onSpaceOrEnter } from "@mui/x-date-pickers/internals";
+import { usePost } from "../../utils/hooks/api_hooks";
+import { API_ROUTES } from "../../utils/api_constants";
 
 const signupSchema = yup.object({
   firstName: yup.string().trim().required("First name is required"),
@@ -59,17 +61,8 @@ export const SignupForm = () => {
   });
 
   const { mutate: checkEmail } = usePost(API_ROUTES.checkEmail, {
-    onSuccess: (data) => {
-      localStorage.setItem(
-        "signupData",
-        JSON.stringify({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          phoneNumber: data.phoneNumber,
-          password: data.password,
-        }),
-      );
+    onSuccess: (_, variables) => {
+      localStorage.setItem("signupData", JSON.stringify(variables));
       reset();
       toast.success("Redirecting to plans...");
       navigate("/plans");
