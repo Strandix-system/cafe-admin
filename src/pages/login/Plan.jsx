@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
+import cafe1 from "../../assets/cafe1.jpg";
 import cafe_logo from "../../assets/cafe_logo.png";
 import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
@@ -53,7 +54,7 @@ export const Plan = () => {
           order_id: order.id,
           name: "Aeternis",
           description: "Premium Plan Subscription",
-          image: "cafe_logo",
+          image: "/cafe_logo",
           handler: (response) => {
             setIsLoading(false);
             handlePaymentSuccess(response);
@@ -223,7 +224,8 @@ export const Plan = () => {
         {/* User Info Preview */}
         <Box sx={{ mt: 3, p: 2, backgroundColor: "#FFF3E0", borderRadius: 2 }}>
           <Typography variant="body2" sx={{ color: "#5D4037", mb: 0.5 }}>
-            <strong>Name:</strong> {signupData?.name}
+            <strong>Name:</strong> {signupData?.firstName}{" "}
+            {signupData?.lastName}
           </Typography>
           <Typography variant="body2" sx={{ color: "#5D4037" }}>
             <strong>Email:</strong> {signupData?.email}
