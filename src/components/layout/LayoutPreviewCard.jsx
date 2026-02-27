@@ -11,7 +11,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-
 export function LayoutPreviewCard({
   layout,
   isActive,
@@ -210,7 +209,7 @@ export function LayoutPreviewCard({
             </Tooltip>
           )}
 
-          {showDeleteButton && onDelete && (
+          {showDeleteButton && onDelete && !isActive && (
             <Tooltip title="Delete Layout">
               <IconButton
                 onClick={(e) => {
