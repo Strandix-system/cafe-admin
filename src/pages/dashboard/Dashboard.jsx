@@ -15,6 +15,7 @@ import TopCustomersCard from "./TopCustomersCard";
 import TopCafesCard from "./TopCafesCard";
 import PlatformSalesChart from "./PlatformSalesChart";
 // import { usePatch } from "../../utils/hooks/api_hooks";
+import { useNavigate } from "react-router-dom";
 
 export function Dashboard() {
     // useEffect(() => {
@@ -27,7 +28,7 @@ export function Dashboard() {
     //     window.addEventListener("click", enableAudio);
     //     return () => window.removeEventListener("click", enableAudio);
     // }, []);
-
+    const navigate = useNavigate();
     const { isSuperAdmin, isAdmin, user } = useAuth();
 
     const [salesRange, setSalesRange] = useState({
@@ -116,7 +117,7 @@ export function Dashboard() {
                     : "Your cafe performance overview"}
             </Typography> */}
 
-            <Grid container spacing={4} >
+            <Grid container spacing={2} >
                 {stats?.map((stat) => (
                     <Grid size={{
                         xs: 12,
@@ -128,6 +129,26 @@ export function Dashboard() {
                             label={stat.label}
                             value={stat.value}
                             loading={isLoading}
+                            onClick={() => {
+                                if (stat.label === "Total Customers") {
+                                    navigate("/customer");
+                                }
+
+                                if (stat.label === "Total Orders") {
+                                    navigate("/order-management?tab=2");
+                                }
+                                if (stat.label === "Total Cafes") {
+                                    navigate("/cafes");
+                                }
+
+                                if (stat.label === "Active Cafes") {
+                                    navigate("/cafes?tab=active");
+                                }
+
+                                if (stat.label === "Inactive Cafes") {
+                                    navigate("/cafes?tab=inactive");
+                                }
+                            }}
                         />
                     </Grid>
                 ))}
@@ -179,7 +200,7 @@ export function Dashboard() {
                         </Grid>
                     </Grid>
 
-                    <Grid container spacing={3} mt={4}>
+                    <Grid container spacing={2} mt={4}>
                         <Grid item size={{ xs: 12, md: 2 }}>
                             <ItemsCard />
                         </Grid>

@@ -12,6 +12,7 @@ import { socket } from "../utils/socket";
 import { DollarSign, Eye } from "lucide-react";
 import { queryClient } from "../lib/queryClient";
 import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
+import { useLocation } from "react-router-dom";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -30,8 +31,13 @@ function TabPanel({ children, value, index, ...other }) {
 export const OrderManagementPage = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const location = useLocation();
 
-    const [tabValue, setTabValue] = useState(0);
+    const queryParams = new URLSearchParams(location.search);
+    const initialTab = Number(queryParams.get("tab")) || 0;
+
+    const [tabValue, setTabValue] = useState(initialTab);
+    // const [tabValue, setTabValue] = useState(0);
     const [pendingOrders, setPendingOrders] = useState([]);
     const [acceptedOrders, setAcceptedOrders] = useState([]);
 
