@@ -9,8 +9,9 @@ import {
   MenuItem,
   FormLabel,
   Box,
+  IconButton,
 } from "@mui/material";
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -26,7 +27,7 @@ import { CommonTextField } from "../../components/common/CommonTextField";
 import { CommonImageField } from "../../components/common/CommonImageField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import { CommonButton } from "../../components/common/commonButton";
-
+import { X } from "lucide-react";
 
 const menuSchema = yup.object({
   itemName: yup.string().required("Item name is required"),
@@ -35,24 +36,23 @@ const menuSchema = yup.object({
   discountPrice: yup
     .number()
     .nullable()
-    .transform((value, originalValue) =>
-      originalValue === "" ? null : value
-    )
+    .transform((value, originalValue) => (originalValue === "" ? null : value))
     .test(
       "less-than-price",
       "Discount price must be less than price",
       function (value) {
         if (value == null) return true; // allow null
         return value < this.parent.price;
-      }
+      },
     ),
-  description: yup.string().required("Description is required"),
-  image: yup
-    .mixed()
-    .test("required", "Image is required", (value, ctx) => {
-      if (ctx.options.context?.isEdit) return true;
-      return value instanceof File || typeof value === "string";
-    }),
+  description: yup
+    .string()
+    .required("Description is required")
+    .min(10, "Description must be at least 10 characters"),
+  image: yup.mixed().test("required", "Image is required", (value, ctx) => {
+    if (ctx.options.context?.isEdit) return true;
+    return value instanceof File || typeof value === "string";
+  }),
 });
 
 export function CreateEditMenuModal({ open, onClose, menuId }) {
@@ -81,13 +81,16 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
 
   const { previews, setPreview } = useImageUpload(setValue);
 
-  const { data: { result: { results: categories = [] } = {} } = {}, } = useFetch("categories", API_ROUTES.getCategories);
+  const { data: { result: { results: categories = [] } = {} } = {} } = useFetch(
+    "categories",
+    API_ROUTES.getCategories,
+  );
 
   const { data: menuRes } = useFetch(
     ["menu-detail", menuId],
     `${API_ROUTES.getMenuById}/${menuId}`,
     {},
-    { enabled: !!menuId && open }
+    { enabled: !!menuId && open },
   );
 
   useEffect(() => {
@@ -107,7 +110,6 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
     }
   }, [open, menuId, reset]);
 
-
   useEffect(() => {
     if (!menuRes?.result || !isEdit || !categories.length) return;
 
@@ -123,7 +125,7 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
     });
 
     const matchedCategory = categories.find(
-      (cat) => cat.name === menuRes.result.category
+      (cat) => cat.name === menuRes.result.category,
     );
 
     if (matchedCategory) {
@@ -134,7 +136,6 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
 
     setPreview(menuRes.result.image);
   }, [menuRes, isEdit, reset]);
-
 
   const createMenu = usePost(API_ROUTES.createMenu, {
     onSuccess: () => {
@@ -160,22 +161,17 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
     formData.append("price", data.price);
     formData.append("discountPrice", data.discountPrice || "");
 
-    const selectedCategory = categories.find(
-      (c) => c._id === data.category
-    );
+    const selectedCategory = categories.find((c) => c._id === data.category);
     formData.append("category", selectedCategory?.name || "");
 
     if (data.image instanceof File) {
       formData.append("image", data.image);
     }
 
-    isEdit
-      ? updateMenu.mutate(formData)
-      : createMenu.mutate(formData);
+    isEdit ? updateMenu.mutate(formData) : createMenu.mutate(formData);
   };
 
   const handleClose = () => {
-
     reset();
     setPreview(null);
     onClose();
@@ -187,6 +183,12 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle sx={{ fontWeight: 700 }}>
         🍽️ {isEdit ? "Edit Menu Item" : "Create Menu Item"}
+        <IconButton
+          onClick={onClose}
+          sx={{ position: "absolute", right: 10, top: 10 }}
+        >
+          <X size={18} />
+        </IconButton>
       </DialogTitle>
 
       <DialogContent dividers>
