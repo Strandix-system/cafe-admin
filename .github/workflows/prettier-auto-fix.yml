@@ -1,44 +1,22 @@
-name: Prettier Auto Format
-
-permissions:
-  contents: write
+name: Prettier Check
 
 on:
+  pull_request:
   push:
     branches: [main]
-  pull_request:
 
 jobs:
   prettier:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm ci
 
-      - name: Run Prettier (auto-fix)
-        run: npm run format:fix
-
-      - name: Commit changes if any
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-
-          if [[ `git status --porcelain` ]]; then
-            git add .
-            git commit -m "chore: auto-format code with prettier"
-            git push origin HEAD:${{ github.ref_name }}
-          else
-            echo "No formatting changes needed"
-          fi
+      - name: Check formatting
+        run: npx prettier --check .
