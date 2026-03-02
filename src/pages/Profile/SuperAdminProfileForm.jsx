@@ -10,12 +10,10 @@ import { Contact, UserRoundPlus } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-// import CommonImageField from "../../components/common/CommonImageField";
 import { CommonButton } from "../../components/common/commonButton";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import { CommonImageField } from "../../components/common/CommonImageField";
 import { CommonTextField } from "../../components/common/CommonTextField";
-// import CommonTextField from "../../components/common/CommonTextField";
 const superAdminProfileSchema = yup.object({
     firstName: yup.string().required("First name is required"),
     lastName: yup.string().required("Last name is required"),
@@ -140,7 +138,7 @@ export default function SuperAdminProfileForm({
                     </CommonButton>
                 </Box>
 
-                {/* Form Body */}
+
                 <Box
                     component="form"
                     id="superadmin-profile-form"
@@ -148,7 +146,7 @@ export default function SuperAdminProfileForm({
                     sx={{ px: 4, py: 4, bgcolor: "white" }}
                 >
                     <Grid container spacing={4}>
-                        {/* Profile Image */}
+
                         <CommonImageField
                             name="profileImage"
                             label="Profile Image"
@@ -161,10 +159,10 @@ export default function SuperAdminProfileForm({
                             gridSize={{ xs: 12, sm: 6 }}
                         />
 
-                        {/* Empty grid to balance layout */}
+
                         <Grid size={{ xs: 12, sm: 6 }} />
 
-                        {/* Basic Info Section */}
+
                         <Grid size={{ xs: 12 }}>
                             <Box sx={{ borderBottom: "2px solid #6F4E37", pb: 1, mb: 2 }}>
                                 <Typography variant="h6" fontWeight={700} color="#6F4E37">
@@ -207,9 +205,6 @@ export default function SuperAdminProfileForm({
                             control={control}
                             errors={errors}
                         />
-
-                        {/* Social Links Section */}
-
                     </Grid>
                 </Box>
             </Paper>

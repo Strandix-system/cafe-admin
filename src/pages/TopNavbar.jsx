@@ -168,13 +168,19 @@ export function TopNavbar() {
                         {!user?.profileImage &&
                             `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}
                     </Avatar>
-
-
-
                     <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                        <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                        {/* <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
                             {user?.name || "User"}
+                        </Typography> */}
+                        <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                            {user?.firstName
+                                ? `${user.firstName} ${user?.lastName || ""}`
+                                : "User"}
                         </Typography>
+                        {/* if we only first name  */}
+                        {/* <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                            {user?.firstName || "User"}
+                        </Typography> */}
                         <Typography
                             variant="caption"
                             color="text.secondary"

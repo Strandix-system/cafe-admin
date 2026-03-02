@@ -7,7 +7,7 @@ import { queryClient } from "../../lib/queryClient";
 import dayjs from "dayjs";
 import { TableComponent } from "../../components/TableComponent/TableComponent";
 
-// ✅ Matches backend enum exactly
+
 const STATUS_TABS = [
     { label: "Requested", value: "Requested" },
     { label: "Full Filled", value: "Full Filled" },
@@ -16,7 +16,7 @@ const STATUS_TABS = [
 ];
 
 const AdminEnquire = () => {
-    // ✅ Initial value matches first tab value exactly
+
     const [activeTab, setActiveTab] = useState("Requested");
     const [selectedRequestId, setSelectedRequestId] = useState(null);
 
@@ -44,7 +44,7 @@ const AdminEnquire = () => {
             header: "Status",
             Cell: ({ row }) => {
                 const status = row.original.status;
-                // ✅ Keys match backend enum exactly
+
                 const colorMap = {
                     "Requested": "warning",
                     "Full Filled": "success",
@@ -74,7 +74,7 @@ const AdminEnquire = () => {
 
     const handleStatusChange = (row, status) => {
         setSelectedRequestId(row.original._id);
-        // ✅ status passed directly matches backend enum
+
         updateRequestStatus({
             status,
         });
@@ -124,7 +124,7 @@ const AdminEnquire = () => {
                 actionsType="menu"
                 querykey={`adminRequest-${activeTab}`}
                 getApiEndPoint="adminRequest"
-                params={{ status: activeTab }}  // ✅ sends "Requested", "Full Filled", etc.
+                params={{ status: activeTab }}
                 enableExportTable={true}
             />
         </div>
