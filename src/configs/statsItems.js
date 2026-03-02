@@ -1,15 +1,15 @@
 export const getSuperAdminStats = (statsData) => [
-    { label: "Total Cafes", value: statsData?.totalCafe ?? 0 },
-    { label: "Active Cafes", value: statsData?.totalActive ?? 0 },
-    { label: "Inactive Cafes", value: statsData?.totalInActive ?? 0 },
-    {
-        label: "Total Income",
-        value: `₹${statsData?.totalIncome?.toLocaleString() ?? 0}`
-    },
-    {
-        label: "Total Demo Requests",
-        value: statsData?.totalDemoRequest ?? 0
-    },
+  { label: "Total Cafes", value: statsData?.totalCafe ?? 0 },
+  { label: "Active Cafes", value: statsData?.totalActive ?? 0 },
+  { label: "Inactive Cafes", value: statsData?.totalInActive ?? 0 },
+  {
+    label: "Total Income",
+    value: `₹${statsData?.totalIncome?.toLocaleString() ?? 0}`
+  },
+  {
+    label: "Demo Requests",
+    value: statsData?.totalDemoRequest ?? 0
+  },
 ];
 
 export const getAdminStats = (statsData) => [

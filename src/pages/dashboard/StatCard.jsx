@@ -37,17 +37,17 @@ const ICON_MAP = {
   "Total Orders": ReceiptLongIcon,
   "Today's Orders": ShoppingCartIcon,
 
-  "Total Income": PaidIcon,
+  "Total Income": CurrencyRupeeIcon,
   "Today's Income": CurrencyRupeeIcon,
 
   // Super Admin stats
   "Total Cafes": StoreIcon,
   "Active Cafes": StorefrontIcon,
   "Inactive Cafes": BlockIcon,
-    "Total Demo Requests": AssignmentIcon,
+  "Total Demo Requests": AssignmentIcon,
 };
 
-export default function StatCard({ label, value, loading }) {
+export default function StatCard({ label, value, loading ,onClick }) {
   const [displayValue, setDisplayValue] = useState(0);
   const [animate, setAnimate] = useState(false);
 
@@ -80,10 +80,13 @@ export default function StatCard({ label, value, loading }) {
 
   return (
     <Card
+    onClick={onClick}
       sx={{
+        cursor: onClick ? "pointer" : "default",
         position: "relative",
         overflow: "hidden",
         borderRadius: 4,
+         minHeight: 140,
         // backgroundColor: THEME_COLOR, 
         background: `
   linear-gradient(
@@ -124,36 +127,63 @@ export default function StatCard({ label, value, loading }) {
         },
       }}
     >
-      <CardContent sx={{ p: 3 }}>
+      <CardContent sx={{ p: 1.5 }}>
         {/* Header */}
         <Box
           display="flex"
-          justifyContent="space-between"
+          // justifyContent="space-between"
+          justifyContent="start"
           alignItems="center"
+          gap={1}
           mb={2}
+          height={40}
         >
+          <Box
+          // sx={{
+          //   bgcolor: "rgba(111, 78, 55, 0.18)",
+          //   borderRadius: "50%",
+          //   p: 1,
+          //   display: "flex",
+          // }}
+          // 
+          >
+            {/* <TrendingUpIcon sx={{ fontSize: 18, color: "#5C3A26", }} /> */}
+            <IconComponent sx={{ fontSize: 18, color: "#5C3A26" }} />
+          </Box>
+
           <Typography
             variant="body2"
             sx={{
               fontWeight: 500,
               color: "#6F4E37",
               letterSpacing: 0.4,
+              whiteSpace: "wrap",
+              fontSize: "clamp(0.95rem, 1vw, 0.85rem)",
             }}
           >
+          {/* <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 500,
+              color: "#6F4E37",
+              letterSpacing: 0.3,
+              fontSize: {
+                xs: "0.7rem",
+                sm: "0.75rem",
+                md: "0.85rem",
+              },
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              flex: 1,
+              minWidth: 0,
+            }}
+          > */}
+
             {label}
           </Typography>
 
-          <Box
-            sx={{
-              bgcolor:"rgba(111, 78, 55, 0.18)",
-              borderRadius: "50%",
-              p: 1,
-              display: "flex",
-            }}
-          >
-            {/* <TrendingUpIcon sx={{ fontSize: 18, color: "#5C3A26", }} /> */}
-            <IconComponent sx={{ fontSize: 18, color: "#5C3A26" }} />
-          </Box>
+
         </Box>
 
         {/* Value */}
@@ -168,6 +198,9 @@ export default function StatCard({ label, value, loading }) {
               letterSpacing: 0.5,
               transform: animate ? "scale(1.06)" : "scale(1)",
               transition: "transform 0.25s ease",
+
+              fontSize: "clamp(1.3rem, 2vw, 2.1rem)",
+              whiteSpace: "nowrap",
             }}
           >
             {label.toLowerCase().includes("income")
@@ -176,6 +209,6 @@ export default function StatCard({ label, value, loading }) {
           </Typography>
         )}
       </CardContent>
-    </Card>
+    </Card >
   );
 }

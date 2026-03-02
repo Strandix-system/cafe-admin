@@ -12,6 +12,7 @@ import { socket } from "../utils/socket";
 import { DollarSign, Eye } from "lucide-react";
 import { queryClient } from "../lib/queryClient";
 import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
+import { useLocation } from "react-router-dom";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -30,8 +31,13 @@ function TabPanel({ children, value, index, ...other }) {
 export const OrderManagementPage = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const location = useLocation();
 
-    const [tabValue, setTabValue] = useState(0);
+    const queryParams = new URLSearchParams(location.search);
+    const initialTab = Number(queryParams.get("tab")) || 0;
+
+    const [tabValue, setTabValue] = useState(initialTab);
+    // const [tabValue, setTabValue] = useState(0);
     const [pendingOrders, setPendingOrders] = useState([]);
     const [acceptedOrders, setAcceptedOrders] = useState([]);
 
@@ -283,12 +289,44 @@ export const OrderManagementPage = () => {
                 onChange={(e, newValue) => setTabValue(newValue)}
                 aria-label="order management tabs"
                 sx={{
-                    "& .MuiTab-root": { color: "#6F4E37", fontWeight: 600 },
+                    "& .MuiTab-root": { color: "#6F4E37", fontWeight: 600, textTransform: "none" },
                     "& .MuiTabs-indicator": { bgcolor: "#6F4E37" },
                 }}
             >
-                <Tab label={<Badge badgeContent={pendingOrders.length} color="error">Pending Orders</Badge>} />
-                <Tab label={<Badge badgeContent={acceptedOrders.length} color="primary">Accepted Orders</Badge>} />
+                <Tab
+                    label={
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <span>Pending Orders</span>
+                            <Badge
+                                badgeContent={pendingOrders.length}
+                                color="error"
+                                sx={{
+                                    "& .MuiBadge-badge": {
+                                        position: "relative",
+                                        transform: "none",
+                                    },
+                                }}
+                            />
+                        </Box>
+                    }
+                />
+                <Tab
+                    label={
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <span>Accepted Orders</span>
+                            <Badge
+                                badgeContent={acceptedOrders.length}
+                                color="primary"
+                                sx={{
+                                    "& .MuiBadge-badge": {
+                                        position: "relative",
+                                        transform: "none",
+                                    },
+                                }}
+                            />
+                        </Box>
+                    }
+                />
                 <Tab label="History" />
             </Tabs>
 

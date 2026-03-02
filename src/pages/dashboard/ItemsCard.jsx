@@ -10,7 +10,7 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
     <Card
       sx={{
         width: "100%",
-        borderRadius: 3,
+        borderRadius: 2,
         overflow: "hidden",
         boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
         transition: "all 0.25s ease",
@@ -36,7 +36,7 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
       />
 
       {/* Content */}
-      <Box p={1.5}
+      <Box p={1.2}
         sx={{
           flex: 1,
           display: "flex",
@@ -73,7 +73,7 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
           label={isTop ? "Top Seller" : "Low Seller"}
           size="small"
           sx={{
-            mt: 0.5,
+            mt: 0.6,
             width: "fit-content",
             bgcolor: isTop ? "#E8F5E9" : "#FDECEA",
             color: isTop ? "#2E7D32" : "#C62828",
@@ -106,14 +106,8 @@ export default function ItemCards() {
     <Box>
       <Stack spacing={2}>
         {/* Top Selling */}
-        <Box>
-          <Typography
-            fontWeight={600}
-            fontSize={18}
-            mb={1}
-          >
-            Top Selling Item
-          </Typography>
+        <Box  >
+
           <Box
             sx={{
               p: 1,
@@ -122,6 +116,13 @@ export default function ItemCards() {
               boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
             }}
           >
+            <Typography
+              fontWeight={600}
+              fontSize={18}
+              mb={1}
+            >
+              Top Selling Item
+            </Typography>
 
             {top ? (
               <ItemCard
@@ -141,13 +142,7 @@ export default function ItemCards() {
 
         {/* Low Selling */}
         <Box>
-          <Typography
-            fontWeight={600}
-            fontSize={18}
-            mb={1}
-          >
-            Low Selling Item
-          </Typography>
+
           <Box
             sx={{
               p: 1,
@@ -156,7 +151,13 @@ export default function ItemCards() {
               boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
             }}
           >
-
+            <Typography
+              fontWeight={600}
+              fontSize={18}
+              mb={1}
+            >
+              Low Selling Item
+            </Typography>
             {low ? (
               <ItemCard
                 name={low.name}

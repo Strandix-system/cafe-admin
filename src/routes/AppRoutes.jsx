@@ -2,14 +2,11 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import { LoginSignup } from "../pages/login/LoginSignup";
 import { ForgotPassword } from "../pages/forgotPassword/ForgotPassword";
-
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 import { Dashboard } from "../pages/dashboard/Dashboard";
 import { LayoutsPage } from "../pages/LayoutsPage";
-
 import { AdminList } from "../pages/AdminList";
 import { CategoriesList } from "../pages/CategoriesList";
-
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { AddEditAdmin } from "../pages/addEditAdmin/AddEditAdmin";
 import { AddEditLayout } from "../pages/addEditLayout/AddEditLayout";
@@ -20,8 +17,7 @@ import { OrderManagementPage } from "../pages/OrderManagementPage";
 import { OrderHistoryList } from "../pages/OrderHistoryList";
 import { CafeTableManagement } from "../pages/CafeTableManagement";
 import { MyOrders } from "../pages/dashboard/MyOrders";
-// import { ProfileLayout } from "../pages/Profile/ProfileLayout";
-import ProfileLayout from "../pages/Profile/ProfileLayout"; 
+import { ProfileLayout } from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
@@ -59,7 +55,7 @@ export const AppRoutes = () => {
                 <Route path="/my-orders/:userId" element={<MyOrders />} />
                 <Route path="/profile" element={<ProfileLayout />}>
                     <Route index element={<ProfileUpdate />} />
-                    <Route path="change-password" element={<ChangePassword />} />
+                    {/* <Route path="change-password" element={<ChangePassword />} /> */}
                 </Route>
                 <Route path="/admin-enquire" element={<AdminEnquire />}>
                     <Route index element={<ProfileUpdate />} />

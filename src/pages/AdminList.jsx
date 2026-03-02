@@ -1,21 +1,27 @@
-import {TableComponent} from "../components/TableComponent/TableComponent"
-import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material"
-import { useAuth } from "../context/AuthContext"
-import { useNavigate, useParams } from 'react-router-dom'
-import { Edit, Power, Plus, User } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { TableComponent } from "../components/TableComponent/TableComponent";
+import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { Edit, Power, Plus, User } from "lucide-react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
-import {CommonButton} from "../components/common/commonButton";
+import { CommonButton } from "../components/common/commonButton";
+import { useLocation } from "react-router-dom";
 
 export const AdminList = () => {
   const navigate = useNavigate();
   const { isSuperAdmin } = useAuth();
   const { adminId } = useParams();
+  const location = useLocation();
 
-  const [activeTab, setActiveTab] = useState("active"); // active | inactive
+  const UrlParam = new URLSearchParams(location.search);
+  const initialTab = UrlParam.get("tab") || "active";
+
+  const [activeTab, setActiveTab] = useState(initialTab);
+  // const [activeTab, setActiveTab] = useState("active"); // active | inactive
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   const { mutate: updateUserStatus } = usePatch(
@@ -58,11 +64,10 @@ export const AdminList = () => {
       {
         accessorKey: "createdAt",
         header: "Created At",
-        Cell: ({ cell }) =>
-          new Date(cell.getValue()).toLocaleDateString(),
+        Cell: ({ cell }) => new Date(cell.getValue()).toLocaleDateString(),
       },
     ],
-    []
+    [],
   );
 
   const cafeColumns = useMemo(
@@ -75,8 +80,7 @@ export const AdminList = () => {
       {
         id: "ownerName",
         header: "Owner Name",
-        accessorFn: (row) =>
-          `${row.firstName || ""} ${row.lastName || ""}`,
+        accessorFn: (row) => `${row.firstName || ""} ${row.lastName || ""}`,
       },
       {
         accessorKey: "email",
@@ -101,10 +105,22 @@ export const AdminList = () => {
         },
       },
     ],
-    []
+    [],
   );
 
-  const actions = [
+  const userActions = [
+    {
+      label: "View Orders",
+      icon: User,
+      onClick: (row) => {
+        const userId = row?.original?._id;
+        if (userId) {
+          navigate(`/my-orders/${userId}`);
+        }
+      },
+    },
+  ];
+  const adminActions = [
     {
       label: "View Customer",
       icon: User,
@@ -126,6 +142,7 @@ export const AdminList = () => {
     },
   ];
 
+  const actions = adminId ? userActions : adminActions;
   const getApiEndPoint = adminId ? "user_list" : "getUsers";
 
   const queryParams = adminId
@@ -152,15 +169,6 @@ export const AdminList = () => {
         </Typography>
 
         <Box display="flex" gap={2}>
-          {adminId && (
-            <CommonButton
-              variant="outlined"
-              onClick={() => navigate("/cafes")}
-            >
-              Back to Cafes
-            </CommonButton>
-          )}
-
           {isSuperAdmin && !adminId && (
             <CommonButton
               variant="contained"
@@ -191,11 +199,9 @@ export const AdminList = () => {
             <Tab label="Inactive Cafes" value="inactive" />
           </Tabs>
         </Box>
-      )
-      }
+      )}
 
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
-
         <TableComponent
           slug={adminId ? "user" : "admin"}
           columns={adminId ? customerColumns : cafeColumns}
@@ -206,11 +212,9 @@ export const AdminList = () => {
           params={queryParams}
           deleteApiEndPoint="deleteCafe"
           deleteAction={isSuperAdmin}
-        // enableExportTable={true}
+          // enableExportTable={true}
         />
       </Box>
-    </div >
+    </div>
   );
 };
-
-
