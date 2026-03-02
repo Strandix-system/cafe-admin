@@ -1,43 +1,39 @@
-import { useState } from "react";
 import Chart from "react-apexcharts";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import DateRangeFilter from "./DateRangeFilter";
 import dayjs from "dayjs";
 import { useAuth } from "../../context/AuthContext";
 
-export default function SalesChart({range}){
-    const { user } = useAuth();
+export default function SalesChart({ range, salesDataOverride }) {
+  const { user } = useAuth();
+
+  const shouldFetch = !Array.isArray(salesDataOverride);
 
   const { data } = useFetch(
     ["dashboard-sales", user?._id, range],
     API_ROUTES.dashboardSales,
     {
-      ...(range.startDate && { startDate: range.startDate }),
-      ...(range.endDate && { endDate: range.endDate }),
+      ...(range?.startDate && { startDate: range.startDate }),
+      ...(range?.endDate && { endDate: range.endDate }),
     },
-    { enabled: !!user?._id }
+    { enabled: shouldFetch && !!user?._id }
   );
 
-  const salesData = data?.result ?? [];
-
-  /* ---------------- LABEL FORMATTER ---------------- */
+  const salesData = Array.isArray(salesDataOverride)
+    ? salesDataOverride
+    : data?.result ?? [];
 
   const formatLabel = (label) => {
-    // Monthly format: "2-2026"
     if (/^\d{1,2}-\d{4}$/.test(label)) {
       return dayjs(`01-${label}`, "DD-M-YYYY").format("MMM YYYY");
     }
 
-    // Daily format: "2026-02-17"
     return dayjs(label).format("DD MMM");
   };
 
-
   const options = {
-    chart: { type: "area", toolbar: { show: false }, width: "100%", },
+    chart: { type: "area", toolbar: { show: false }, width: "100%" },
     colors: ["#6F4E37"],
-   
     xaxis: {
       categories: salesData.map((item) => formatLabel(item.label)),
       title: {
@@ -46,22 +42,22 @@ export default function SalesChart({range}){
     },
     yaxis: {
       labels: {
-        formatter: (value) => `₹${value.toLocaleString("en-IN")}`,
+        formatter: (value) => `Rs ${Number(value || 0).toLocaleString("en-IN")}`,
       },
     },
     tooltip: {
       x: {
-        formatter: (_, { dataPointIndex }) =>
-          salesData[dataPointIndex]?.label,
+        formatter: (_, { dataPointIndex }) => salesData[dataPointIndex]?.label,
       },
       y: {
-        formatter: (value) => `₹${value.toLocaleString("en-IN")}`,
+        formatter: (value) => `Rs ${Number(value || 0).toLocaleString("en-IN")}`,
       },
     },
     dataLabels: { enabled: false },
     stroke: {
-      curve: "smooth", width: 3,
-      colors: ["#6F4E37"]
+      curve: "smooth",
+      width: 3,
+      colors: ["#6F4E37"],
     },
     markers: {
       size: 4,
@@ -80,10 +76,6 @@ export default function SalesChart({range}){
 
   return (
     <div className="w-full">
-      {/* <div className="flex flex-end mb-2">
-        <DateRangeFilter onChange={setRange} />
-      </div> */}
-
       <Chart options={options} series={series} height={380} width="100%" />
     </div>
   );

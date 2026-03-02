@@ -4,20 +4,24 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
 
-export default function PeakTimeChart({ range }) {
+export default function PeakTimeChart({ range, peakDataOverride }) {
   const { user } = useAuth();
+
+  const shouldFetch = !Array.isArray(peakDataOverride);
 
   const { data } = useFetch(
     ["dashboard-peak-time", user?._id, range],
     API_ROUTES.dashboardPeakTime,
     {
-      ...(range.startDate && { startDate: range.startDate }),
-      ...(range.endDate && { endDate: range.endDate }),
+      ...(range?.startDate && { startDate: range.startDate }),
+      ...(range?.endDate && { endDate: range.endDate }),
     },
-    { enabled: !!user?._id }
+    { enabled: shouldFetch && !!user?._id }
   );
 
-  const peakData = data?.result ?? [];
+  const peakData = Array.isArray(peakDataOverride)
+    ? peakDataOverride
+    : data?.result ?? [];
 
   const options = {
     chart: {
@@ -35,10 +39,10 @@ export default function PeakTimeChart({ range }) {
     },
     dataLabels: { enabled: false },
     stroke: {
-      curve: "smooth", width: 3,
+      curve: "smooth",
+      width: 3,
       colors: ["#6F4E37"],
     },
-
     markers: {
       size: 4,
       colors: ["#6F4E37"],
@@ -61,13 +65,7 @@ export default function PeakTimeChart({ range }) {
 
   return (
     <Box width="100%" height="100%">
-      <Chart
-        options={options}
-        series={series}
-        type="area"
-        height={360}
-        width="100%"
-      />
+      <Chart options={options} series={series} type="area" height={360} width="100%" />
     </Box>
   );
 }

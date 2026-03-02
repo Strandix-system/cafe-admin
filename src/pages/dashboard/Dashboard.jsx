@@ -14,7 +14,9 @@ import TopCustomersCard from "./TopCustomersCard";
 // import { useOrdersRealtime } from "../../utils/hooks/useOrdersRealtime";
 import TopCafesCard from "./TopCafesCard";
 import PlatformSalesChart from "./PlatformSalesChart";
+import AdminAnalyticsView from "./AdminAnalyticsView";
 // import { usePatch } from "../../utils/hooks/api_hooks";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function Dashboard() {
     // useEffect(() => {
@@ -27,8 +29,9 @@ export function Dashboard() {
     //     window.addEventListener("click", enableAudio);
     //     return () => window.removeEventListener("click", enableAudio);
     // }, []);
-
+    const navigate = useNavigate();
     const { isSuperAdmin, isAdmin, user } = useAuth();
+    const { adminId } = useParams();
 
     const [salesRange, setSalesRange] = useState({
         startDate: null,
@@ -46,6 +49,7 @@ export function Dashboard() {
     });
 
     const roleReady = isSuperAdmin || isAdmin;
+    const isAdminAnalyticsView = isSuperAdmin && !!adminId;
 
     const { data, isLoading } = useFetch(
         ["dashboard-stats", user?._id, isSuperAdmin ? "super" : "admin"],
@@ -89,6 +93,10 @@ export function Dashboard() {
 
     const statsData = data?.result ?? {};
 
+    if (isAdminAnalyticsView) {
+        return <AdminAnalyticsView adminId={adminId} />;
+    }
+
     const stats = isSuperAdmin
         ? getSuperAdminStats(statsData)
         : getAdminStats(statsData);
@@ -116,7 +124,7 @@ export function Dashboard() {
                     : "Your cafe performance overview"}
             </Typography> */}
 
-            <Grid container spacing={4} >
+            <Grid container spacing={2} >
                 {stats?.map((stat) => (
                     <Grid size={{
                         xs: 12,
@@ -128,6 +136,26 @@ export function Dashboard() {
                             label={stat.label}
                             value={stat.value}
                             loading={isLoading}
+                            onClick={() => {
+                                if (stat.label === "Total Customers") {
+                                    navigate("/customer");
+                                }
+
+                                if (stat.label === "Total Orders") {
+                                    navigate("/order-management?tab=2");
+                                }
+                                if (stat.label === "Total Cafes") {
+                                    navigate("/cafes");
+                                }
+
+                                if (stat.label === "Active Cafes") {
+                                    navigate("/cafes?tab=active");
+                                }
+
+                                if (stat.label === "Inactive Cafes") {
+                                    navigate("/cafes?tab=inactive");
+                                }
+                            }}
                         />
                     </Grid>
                 ))}
@@ -179,7 +207,7 @@ export function Dashboard() {
                         </Grid>
                     </Grid>
 
-                    <Grid container spacing={3} mt={4}>
+                    <Grid container spacing={2} mt={4}>
                         <Grid item size={{ xs: 12, md: 2 }}>
                             <ItemsCard />
                         </Grid>

@@ -9,7 +9,7 @@ const THEME_COLOR = "#6F4E37";
 
 export default function TopCafesCard() {
   const navigate = useNavigate();
-   const { user } = useAuth();
+  const { user } = useAuth();
 
   const { data } = useFetch(
     ["top-cafes", user?._id],
@@ -51,7 +51,7 @@ export default function TopCafesCard() {
         {cafes.map((cafe, index) => (
           <Box
             key={cafe.cafeId}
-            onClick={() => navigate(`/cafes/${cafe.cafeId}`)}
+            onClick={() => navigate(`/dashboard/${cafe.cafeId}`)}
             sx={{
               display: "grid",
               gridTemplateColumns: "32px 1fr auto",
