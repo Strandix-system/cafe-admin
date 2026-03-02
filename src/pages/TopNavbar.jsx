@@ -16,7 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import {CommonButton} from "../components/common/commonButton";
+import { CommonButton } from "../components/common/commonButton";
 
 export function TopNavbar() {
     const { user, logout, isSuperAdmin } = useAuth();
@@ -140,7 +140,7 @@ export function TopNavbar() {
                     }}
                     onClick={handleMenuOpen}
                 >
-                    <Avatar
+                    {/* <Avatar
                         sx={{
                             width: 40,
                             height: 40,
@@ -150,12 +150,38 @@ export function TopNavbar() {
                         }}
                     >
                         {getInitials(user?.name || user?.email)}
+                    </Avatar> */}
+                    <Avatar
+                        src={user?.profileImage || undefined}
+                        alt={`${user?.firstName} ${user?.lastName}`}
+                        sx={{
+                            width: 40,
+                            height: 40,
+                            bgcolor: !user?.profileImage
+                                ? isSuperAdmin
+                                    ? "#5B4CFF"
+                                    : "#6F4E37"
+                                : "transparent",
+                            fontWeight: 600,
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        {!user?.profileImage &&
+                            `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}
                     </Avatar>
-
                     <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                        <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                        {/* <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
                             {user?.name || "User"}
+                        </Typography> */}
+                        <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                            {user?.firstName
+                                ? `${user.firstName} ${user?.lastName || ""}`
+                                : "User"}
                         </Typography>
+                        {/* if we only first name  */}
+                        {/* <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                            {user?.firstName || "User"}
+                        </Typography> */}
                         <Typography
                             variant="caption"
                             color="text.secondary"
@@ -188,17 +214,17 @@ export function TopNavbar() {
                         },
                     }}
                 >
-                    {!isSuperAdmin && (
-                        <MenuItem
-                            onClick={() => {
-                                handleMenuClose();
-                                navigate("/profile");
-                            }}
-                            sx={{ gap: 1.5, py: 1.5 }}
-                        >
-                            <PersonIcon fontSize="small" />
-                            <Typography variant="body2">My Profile</Typography>
-                        </MenuItem>)}
+
+                    <MenuItem
+                        onClick={() => {
+                            handleMenuClose();
+                            navigate("/profile");
+                        }}
+                        sx={{ gap: 1.5, py: 1.5 }}
+                    >
+                        <PersonIcon fontSize="small" />
+                        <Typography variant="body2">My Profile</Typography>
+                    </MenuItem>
 
                     <Divider sx={{ my: 1 }} />
 
