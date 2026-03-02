@@ -47,6 +47,7 @@ export const API_ROUTES = {
 
     createCategory: "category/create",
     getCategories: "category",
+    getAdminCategories: "category/admin-category",
     getCategoryById: "category/get-by-id",
     updateCategory: "category/update",
     deleteCategory: "category/delete",
