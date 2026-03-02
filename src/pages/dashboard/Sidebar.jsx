@@ -1,24 +1,29 @@
-// Sidebar.jsx
 import { useState, useEffect } from "react";
-import { Box, Typography, Divider, Stack, IconButton, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Divider,
+  Stack,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { sideBarItems } from "../../configs/sideBarItems";
 
 export function Sidebar() {
-  const { isSuperAdmin } = useAuth();
+  const { isSuperAdmin, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
+  const theme = useTheme(); // Detect screen size changes
 
-  // Detect screen size changes
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg')); // >= 1200px
-  const isMediumScreen = useMediaQuery(theme.breakpoints.up('md')); // >= 900px
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg")); // >= 1200px
+  const isMediumScreen = useMediaQuery(theme.breakpoints.up("md")); // >= 900px
 
-  const [sidebarOpen, setSidebarOpen] = useState(isLargeScreen);
+  const [sidebarOpen, setSidebarOpen] = useState(isLargeScreen); // Automatically adjust sidebar based on screen size
 
-  // Automatically adjust sidebar based on screen size
   useEffect(() => {
     if (isLargeScreen) {
       setSidebarOpen(true); // Always open on large screens
@@ -41,7 +46,7 @@ export function Sidebar() {
   };
 
   const isActiveItem = (itemPath) => {
-    return location.pathname === itemPath;
+    return location.pathname.startsWith(itemPath);
   };
 
   return (
@@ -56,32 +61,60 @@ export function Sidebar() {
       sx={{
         width: sidebarOpen ? 260 : 80,
         transition: "width 0.3s ease",
-        ...((!isMediumScreen && sidebarOpen) && {
-          position: 'fixed',
-          zIndex: theme.zIndex.drawer,
-          boxShadow: theme.shadows[8],
-        }),
+        ...(!isMediumScreen &&
+          sidebarOpen && {
+            position: "fixed",
+            zIndex: theme.zIndex.drawer,
+            boxShadow: theme.shadows[8],
+          }),
       }}
     >
+            
       <Box>
+                
         <Box display="flex" alignItems="center" gap={1} px={2} py={2}>
+                    
+          {sidebarOpen && (
+            <>
+                            
+              {!isSuperAdmin && user?.logo && (
+                <Box
+                  component="img"
+                  src={user.logo}
+                  alt="Cafe Logo"
+                  sx={{
+                    width: 35,
+                    height: 35,
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+                            
+              <Typography variant="h6" fontWeight={700} noWrap>
+                                
+                {isSuperAdmin ? "Super Admin" : user?.cafeName || "Admin"}
+                              
+              </Typography>
+                          
+            </>
+          )}
+                    
           <IconButton
             onClick={() => setSidebarOpen((prev) => !prev)}
             sx={{ color: "white" }}
           >
+                        
             <MenuIcon />
+                      
           </IconButton>
-
-          {sidebarOpen && (
-            <Typography variant="h6" fontWeight={700} noWrap>
-              {isSuperAdmin ? "Super Admin" : "Admin"}
-            </Typography>
-          )}
+                  
         </Box>
-
+                
         <Divider sx={{ borderColor: "rgba(255,255,255,0.2)", mb: 1 }} />
-
+                
         <Stack spacing={0.5} px={1}>
+                    
           {sidebarMenu.map((item) => {
             const Icon = item.icon;
             const isActive = isActiveItem(item.path);
@@ -108,9 +141,13 @@ export function Sidebar() {
                   },
                 }}
               >
+                                
                 <Box sx={{ display: "flex", alignItems: "center" }}>
+                                    
                   <Icon />
+                                  
                 </Box>
+                                
                 {sidebarOpen && (
                   <Typography
                     fontWeight={isActive ? 600 : 500}
@@ -119,14 +156,19 @@ export function Sidebar() {
                       transition: "font-weight 0.2s ease",
                     }}
                   >
-                    {item.label}
+                                        {item.label}
+                                      
                   </Typography>
                 )}
+                              
               </Box>
             );
           })}
+                  
         </Stack>
+              
       </Box>
+          
     </Box>
   );
 }
