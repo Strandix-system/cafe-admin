@@ -76,4 +76,9 @@ export const API_ROUTES = {
     forgotPassword: "auth/forgot-password",
     resetPassword: "auth/reset-password",
     changePassword: "auth/change-password",
+
+    createSupportTicket:"issue-reported/raise",
+     getSupportTickets:"issue-reported/all",
+      updateSupportTicket:"issue-reported/status",
+
 };

@@ -38,6 +38,14 @@ export const sideBarItems = {
             path: "/categories",
             tab: "categories",
         },
+        {
+            key: "support-request",
+            label: "Support",
+            icon: CategoryIcon,
+            path: "/support-request",
+            tab: "support-request",
+        },
+
 
     ],
     admin: [
@@ -86,5 +94,12 @@ export const sideBarItems = {
             path: "/table-management",
             tab: "table-management",
         },
+        {
+            key: "support",
+            label: "Support",
+            icon: QrCode,
+            path: "/support",
+            tab: "support",
+        }
     ],
 };
