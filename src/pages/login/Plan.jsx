@@ -11,7 +11,7 @@ import {
 import { CheckCircle } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import cafe1 from "../../assets/cafe1.jpg";
-import { cafe_logo } from "../../assets/cafe_logo.png";
+import cafe_logo from "../../assets/cafe_logo.png";
 import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
