@@ -11,29 +11,30 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { MdReceipt } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CommonButton } from "../components/common/commonButton";
 
 export function TopNavbar() {
-  const { user, logout, isSuperAdmin } = useAuth();
+  const { user, logout, isSuperAdmin, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const name = `${user?.firstName || "User"} ${" "} ${user?.lastName || ""}`;
-    // Routes that should show the back button
-    const showBackButtonRoutes = [
-        "/cafe/create-edit",
-        "/layouts/create-edit",
-        "/cafe/view-customers/",
-        "/categories/create",
-        "/order-history",
-        "/profile",
-        "/my-orders",
-        "/cafes/",
-        "/dashboard/", // for super admin viewing specific admin analytics
-    ];
+  // Routes that should show the back button
+  const showBackButtonRoutes = [
+    "/cafe/create-edit",
+    "/layouts/create-edit",
+    "/cafe/view-customers/",
+    "/categories/create",
+    "/order-history",
+    "/profile",
+    "/my-orders",
+    "/cafes/",
+    "/dashboard/", // for super admin viewing specific admin analytics
+  ];
 
   // Check if current route should show back button
   const shouldShowBackButton = showBackButtonRoutes.some((route) =>
@@ -181,6 +182,19 @@ export function TopNavbar() {
               <Typography variant="body2">My Profile</Typography>
             </MenuItem>
           )}
+
+          <Divider sx={{ my: 1 }} />
+
+          <MenuItem
+            onClick={() => {
+              handleMenuClose();
+              navigate("/payment-history");
+            }}
+            sx={{ gap: 1.5, py: 1.5 }}
+          >
+            <MdReceipt style={{ marginRight: "8px" }} />
+            <Typography variant="body2">Payment history</Typography>
+          </MenuItem>
 
           <Divider sx={{ my: 1 }} />
 

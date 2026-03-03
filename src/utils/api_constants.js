@@ -1,5 +1,3 @@
-import { create, get, update } from "lodash";
-
 export const API_ROUTES = {
     login: "auth/login",
     checkEmail: "signup/check-email",
@@ -77,4 +75,6 @@ export const API_ROUTES = {
     forgotPassword: "auth/forgot-password",
     resetPassword: "auth/reset-password",
     changePassword: "auth/change-password",
+
+    getTransactions: "signup/transactions",
 };
