@@ -61,6 +61,8 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
     reset,
     setValue,
     formState: { errors, isValid },
+    setError,
+    clearErrors,
   } = useForm({
     resolver: yupResolver(menuSchema, {
       context: { isEdit },
@@ -261,6 +263,8 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
               inputId="menu-image-upload"
               control={control}
               errors={errors}
+              setError={setError}
+              clearErrors={clearErrors}
               preview={previews.image}
               setPreview={setPreview}
               isEdit={isEdit}

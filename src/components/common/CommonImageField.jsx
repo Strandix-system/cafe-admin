@@ -8,7 +8,8 @@ export const CommonImageField = ({
   inputId,
   control,
   errors,
-
+  setError,
+  clearErrors,
   /* preview handling */
   preview,
   setPreview,
@@ -49,6 +50,17 @@ export const CommonImageField = ({
               inputId={inputId}
               isEdit={isEdit}
               handleImageChange={(file) => {
+                if (!file) return;
+
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                if (file.size > maxSize) {
+                  setError?.(name, {
+                    type: "manual",
+                    message: "Image size must be less than 10MB",
+                  });
+                  return;
+                }
+                clearErrors?.(name);
                 field.onChange(file);
                 setPreview?.(name, URL.createObjectURL(file));
               }}
@@ -69,5 +81,3 @@ export const CommonImageField = ({
     </Grid>
   );
 };
-
-

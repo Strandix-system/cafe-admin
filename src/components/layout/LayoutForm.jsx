@@ -96,6 +96,8 @@ export function LayoutForm({
     setValue,
     watch,
     formState: { isValid, errors },
+    setError,
+    clearErrors,
   } = useForm({
     resolver: yupResolver(layoutSchema),
     defaultValues: {
@@ -216,6 +218,8 @@ export function LayoutForm({
           inputId="home-image--upload"
           control={control}
           errors={errors}
+          setError={setError}
+          clearErrors={clearErrors}
           preview={previews.homeImage}
           setPreview={setPreview}
           isEdit={isEdit}
@@ -228,6 +232,8 @@ export function LayoutForm({
           inputId="about-image-upload"
           control={control}
           errors={errors}
+          setError={setError}
+          clearErrors={clearErrors}
           preview={previews.aboutImage}
           setPreview={setPreview}
           isEdit={isEdit}

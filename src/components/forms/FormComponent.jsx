@@ -81,6 +81,8 @@ export function FormComponent({
     setValue,
     watch,
     formState: { errors, isValid },
+    setError,
+    clearErrors,
   } = useForm({
     defaultValues: {
       firstName: "",
@@ -246,6 +248,8 @@ export function FormComponent({
               inputId="logo-upload"
               control={control}
               errors={errors}
+              setError={setError}
+              clearErrors={clearErrors}
               preview={previews.logo}
               setPreview={setPreview}
               isEdit={isEdit}
@@ -258,6 +262,8 @@ export function FormComponent({
               inputId="profile-upload"
               control={control}
               errors={errors}
+              setError={setError}
+              clearErrors={clearErrors}
               preview={previews.profileImage}
               setPreview={setPreview}
               isEdit={isEdit}
