@@ -8,17 +8,18 @@ import { useAuth } from "../../context/AuthContext";
 
 const THEME_COLOR = "#6F4E37";
 
-export default function TopCustomersCard() {
+export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
     const navigate = useNavigate();
     const { user } = useAuth();
     const { data } = useFetch(
         ["top-customers", user?._id],
         API_ROUTES.dashboardTopCustomers,
         {},
-        { enabled: !!user?._id }
+        { enabled: !!user?._id && !isViewingAdmin }
     )
 
-    const customers = data?.result ?? [];
+    // const customers = data?.result ?? [];
+    const customers = overrideData ?? data?.result ?? [];
 
     if (customers.length === 0) {
         return null; // 🚫 DO NOT RENDER
@@ -54,13 +55,19 @@ export default function TopCustomersCard() {
                 {customers.map((customer, index) => (
                     <Box
                         key={customer.customerId}
-                        onClick={() => navigate(`/my-orders/${customer.customerId}`)}
+                        // onClick={() => navigate(`/my-orders/${customer.customerId}`)}
+                        onClick={
+                            isViewingAdmin
+                                ? undefined
+                                : () => navigate(`/my-orders/${customer.customerId}`)
+                        }
+
                         sx={{
+                            cursor: isViewingAdmin ? "default" : "pointer",
                             display: "grid",
                             gridTemplateColumns: "32px 1fr auto",
                             alignItems: "center",
                             gap: 1.2,
-                            cursor: "pointer",
                             px: 1,
                             py: 0.75,           // 🔑 reduced vertical padding
                             borderRadius: 1,

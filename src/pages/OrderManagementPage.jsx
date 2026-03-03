@@ -13,6 +13,7 @@ import { DollarSign, Eye } from "lucide-react";
 import { queryClient } from "../lib/queryClient";
 import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 import { useLocation } from "react-router-dom";
+import { useOrders } from "../context/OrderContext";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -38,137 +39,17 @@ export const OrderManagementPage = () => {
 
     const [tabValue, setTabValue] = useState(initialTab);
     // const [tabValue, setTabValue] = useState(0);
-    const [pendingOrders, setPendingOrders] = useState([]);
-    const [acceptedOrders, setAcceptedOrders] = useState([]);
-
     const [isBillOpen, setIsBillOpen] = useState(false);
     const [selectedBillId, setSelectedBillId] = useState(null);
 
-    const hasInitialized = useRef(false); // Track if we've initialized
-
-    /* ---------------- INITIAL API LOAD ---------------- */
-    const { data: ordersData, isLoading } = useFetch(
-        "get-all-orders",
-        API_ROUTES.getAllOrders,
-        {},
-        { refetchOnWindowFocus: true } // Changed to true to sync on window focus
-    );
-
-    /* ---------------- INITIALIZE STATE ONCE ---------------- */
-    useEffect(() => {
-        if (!ordersData?.result?.results) return;
-
-        // Only initialize once on mount
-        if (!hasInitialized.current) {
-            const orders = ordersData.result.results;
-
-            setPendingOrders(orders.filter(o => o.orderStatus === "pending"));
-            setAcceptedOrders(orders.filter(o => o.orderStatus === "accepted"));
-            hasInitialized.current = true;
-        } else {
-            // When coming back, sync with server data
-            const orders = ordersData.result.results;
-
-            // Update based on actual server status
-            setPendingOrders(orders.filter(o => o.orderStatus === "pending"));
-            setAcceptedOrders(orders.filter(o => o.orderStatus === "accepted"));
-        }
-    }, [ordersData]);
-
-    /* ---------------- SOCKET CONNECT ---------------- */
-    useEffect(() => {
-        if (!user?.id) return;
-
-        socket.connect();
-        socket.emit("join-admin", user.id.toString());
-
-        return () => {
-            socket.off();
-            socket.disconnect();
-        };
-    }, [user?.id]);
-
-    /* ---------------- SOCKET LISTENERS ---------------- */
-    useEffect(() => {
-        const handleNewOrder = (order) => {
-            if (order.orderStatus !== "pending") return;
-
-            setPendingOrders(prev => {
-                const exists = prev.find(o => o._id === order._id);
-                return exists ? prev : [order, ...prev];
-            });
-            toast.success("New order received!");
-        };
-
-        const handleStatusUpdate = ({ orderId, status, order }) => {
-            if (status === "accepted") {
-                setPendingOrders((prev) => prev.filter((o) => o._id !== orderId));
-                setAcceptedOrders((prev) => {
-                    // Remove any existing version and add the updated one
-                    const filtered = prev.filter((o) => o._id !== orderId);
-                    return [order, ...filtered];
-                });
-            } else if (status === "completed") {
-                setPendingOrders((prev) => prev.filter((o) => o._id !== orderId));
-                setAcceptedOrders((prev) => prev.filter((o) => o._id !== orderId));
-            }
-        };
-
-        socket.on("order:new", handleNewOrder);
-        socket.on("order:statusUpdated", handleStatusUpdate);
-
-        return () => {
-            socket.off("order:new", handleNewOrder);
-            socket.off("order:statusUpdated", handleStatusUpdate);
-        };
-    }, []);
-
-    /* ---------------- UPDATE ORDER API ---------------- */
-    const { mutate: updateOrder } = usePatch(API_ROUTES.updateOrder, {
-        onSuccess: () => {
-            toast.success("Order updated!");
-            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
-        },
-        onError: (error) => {
-            toast.error(error);
-            queryClient.invalidateQueries({ queryKey: "get-all-orders" });
-        },
-    });
-
-    /* ---------------- UPDATE PAYMENT STATUS API ---------------- */
-    const { mutate: updatePaymentStatus } = usePatch(API_ROUTES.updatePaymentStatus, {
-        onSuccess: () => {
-            toast.success("Payment status updated to Paid!");
-            queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
-        },
-        onError: (error) => {
-            toast.error(error);
-            queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
-        },
-    });
-
-    /* ---------------- ACTIONS ---------------- */
-    const handleAcceptOrder = (orderId) => {
-        const orderToMove = pendingOrders.find(o => o._id === orderId);
-        if (!orderToMove) return;
-
-        // Optimistic update - FIXED: was o.id, should be o._id
-        setPendingOrders(prev => prev.filter(o => o._id !== orderId));
-        setAcceptedOrders(prev => [...prev, { ...orderToMove, orderStatus: "accepted" }]);
-
-        updateOrder({ orderId, orderStatus: "accepted" });
-    };
-
-    const handleCompleteOrder = (orderId) => {
-        setAcceptedOrders((prev) => prev.filter((o) => o._id !== orderId));
-        updateOrder({ orderId, orderStatus: "completed" });
-    };
+    // const hasInitialized = useRef(false); // Track if we've initialized
 
     const handleOpenBill = (row) => {
         setSelectedBillId(row._id);   // or row.billId depending on your backend
         setIsBillOpen(true);
     };
 
+    const { pendingOrders, acceptedOrders, acceptOrder, completeOrder } = useOrders();
     /* ---------------- ORDER HISTORY TABLE CONFIG ---------------- */
     const historyColumns = useMemo(
         () => [
@@ -262,21 +143,13 @@ export const OrderManagementPage = () => {
                     <OrderCard
                         order={order}
                         isPending={isPending}
-                        onAccept={handleAcceptOrder}
-                        onComplete={handleCompleteOrder}
+                        onAccept={acceptOrder}
+                        onComplete={completeOrder}
                     />
                 </Grid>
             ))}
         </Grid>
     );
-
-    if (isLoading) {
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-                <Loader variant="spinner" />
-            </Box>
-        );
-    }
 
     return (
         <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>

@@ -16,6 +16,7 @@ export const API_ROUTES = {
     dashboardTopCustomers:"admin/dashboard/top-customers",
     dashboardTopCafes:"admin/dashboard/top-cafes",
     dashboardPlatformSales:"admin/dashboard/platform-sales",
+    dashboardAdminAnalytics:"admin/dashboard/admin-analytics",
 
     getUserById: "admin/get-user",
     updateUsers: "admin/update",
