@@ -6,7 +6,7 @@ import DateRangeFilter from "./DateRangeFilter";
 import dayjs from "dayjs";
 import { useAuth } from "../../context/AuthContext";
 
-export default function SalesChart({range}){
+export default function SalesChart({range ,overrideData ,isViewingAdmin }){
     const { user } = useAuth();
 
   const { data } = useFetch(
@@ -16,10 +16,11 @@ export default function SalesChart({range}){
       ...(range.startDate && { startDate: range.startDate }),
       ...(range.endDate && { endDate: range.endDate }),
     },
-    { enabled: !!user?._id }
+    { enabled: !!user?._id && !isViewingAdmin }
   );
 
-  const salesData = data?.result ?? [];
+  // const salesData = data?.result ?? [];
+  const salesData = overrideData ?? data?.result ?? [];
 
   /* ---------------- LABEL FORMATTER ---------------- */
 
