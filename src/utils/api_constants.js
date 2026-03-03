@@ -50,7 +50,7 @@ export const API_ROUTES = {
     getCategoryById: "category/get-by-id",
     updateCategory: "category/update",
     deleteCategory: "category/delete",
-    getstates: "get-states",
+    getStates: "get-states",
 
     createAdmins: "admin/create",
 
@@ -76,5 +76,4 @@ export const API_ROUTES = {
     changePassword: "auth/change-password",
     adminRequest: "demo/all",
     updateAdminRequestStatus: "demo/status",
-    getstatus: "demo/getbyid/:id",
 };

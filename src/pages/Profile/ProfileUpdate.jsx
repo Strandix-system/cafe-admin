@@ -1,24 +1,19 @@
-import { usePatch, useFetch } from "../../utils/hooks/api_hooks";
+import { usePatch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { toast } from "react-hot-toast";
+import { useAuth } from "../../context/AuthContext";
+import { formatTime } from "../../utils/utils";
+import { FormComponent } from "../../components/forms/FormComponent";
+import SuperAdminProfileForm from "./SuperAdminProfileForm";
 import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
-import { Loader } from "../../components/common/Loader";
-import SuperAdminProfileForm from "./SuperAdminProfileForm";
-import { FormComponent } from "../../components/forms/FormComponent";
 
 export function ProfileUpdate() {
+    const { user } = useAuth();
     const navigate = useNavigate();
 
-    // Fetch logged-in user
-    const { data, isLoading } = useFetch("get-me", API_ROUTES.getMe);
-    const user = data?.result;
-    const role = user?.role;
-
-    // Update mutation
     const { mutate: updateMutate, isPending } = usePatch(
-        user?.id ? `${API_ROUTES.updateUsers}/${user.id}` : null,
+        `${API_ROUTES.updateUsers}/${user?.id}`,
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: ["get-me"] });
@@ -30,35 +25,45 @@ export function ProfileUpdate() {
         }
     );
 
-    // Loading state
-    if (isLoading || !user) {
-        return (
-            <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="400px"
-            >
-                <Loader variant="spinner" />
-            </Box>
-        );
-    }
-
-    // Common submit handler (for both roles)
-    const onSubmit = (formDataValues) => {
-        const cleaned = { ...formDataValues };
+    const onSubmit = (data) => {
+        const cleaned = { ...data };
 
         delete cleaned.__v;
         delete cleaned._id;
         delete cleaned.id;
+        delete cleaned.isProfileComplete;
         delete cleaned.createdAt;
         delete cleaned.updatedAt;
+        delete cleaned.role;
+
+        // ✅ Convert hours object to required string format
+        const formattedData = {
+            ...cleaned,
+            hours: {
+                weekdays:
+                    cleaned?.hours?.weekdays?.open &&
+                        cleaned?.hours?.weekdays?.close
+                        ? `${formatTime(cleaned.hours.weekdays.open)} - ${formatTime(
+                            cleaned.hours.weekdays.close
+                        )}`
+                        : "",
+                weekends:
+                    cleaned?.hours?.weekends?.open &&
+                        cleaned?.hours?.weekends?.close
+                        ? `${formatTime(cleaned.hours.weekends.open)} - ${formatTime(
+                            cleaned.hours.weekends.close
+                        )}`
+                        : "",
+            },
+        };
 
         const formData = new FormData();
 
-        Object.entries(cleaned).forEach(([key, value]) => {
+        Object.entries(formattedData).forEach(([key, value]) => {
             if (value !== null && value !== undefined) {
-                if (typeof value === "object" && !(value instanceof File)) {
+                if (value instanceof File) {
+                    formData.append(key, value);
+                } else if (typeof value === "object") {
                     formData.append(key, JSON.stringify(value));
                 } else {
                     formData.append(key, value);
@@ -69,26 +74,23 @@ export function ProfileUpdate() {
         updateMutate(formData);
     };
 
-    // Role-based rendering
-    if (role === "admin") {
-        return (
-            <FormComponent
-                defaultValues={user}
-                onSubmit={onSubmit}
-                isSubmitting={isPending}
-            />
-        );
-    }
+    if (!user) return null;
 
-    if (role === "superadmin") {
+    if (user.role === "superadmin") {
         return (
             <SuperAdminProfileForm
-                defaultValues={user}
                 onSubmit={onSubmit}
                 isSubmitting={isPending}
+                defaultValues={user}
             />
         );
     }
 
-    return null;
+    return (
+        <FormComponent
+            onSubmit={onSubmit}
+            isSubmitting={isPending}
+            defaultValues={user}
+        />
+    );
 }

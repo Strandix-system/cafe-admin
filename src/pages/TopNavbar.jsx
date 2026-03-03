@@ -1,4 +1,3 @@
-// TopNavbar.jsx - With conditional back button
 import { useState } from "react";
 import {
     Box,
@@ -14,14 +13,13 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CommonButton } from "../components/common/commonButton";
 
 export function TopNavbar() {
     const { user, logout, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
     const [anchorEl, setAnchorEl] = useState(null);
 
     // Routes that should show the back button
@@ -120,12 +118,9 @@ export function TopNavbar() {
 
             </Box>
 
-            {/* Right Side - Actions & Profile */}
             <Box display="flex" alignItems="center" gap={2}>
-                {/* Divider */}
-                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
 
-                {/* User Profile */}
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
                 <Box
                     display="flex"
                     alignItems="center"
@@ -140,19 +135,8 @@ export function TopNavbar() {
                     }}
                     onClick={handleMenuOpen}
                 >
-                    {/* <Avatar
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            bgcolor: isSuperAdmin ? "#5B4CFF" : "#6F4E37",
-                            fontWeight: 600,
-                            fontSize: "0.9rem",
-                        }}
-                    >
-                        {getInitials(user?.name || user?.email)}
-                    </Avatar> */}
                     <Avatar
-                        src={user?.profileImage || undefined}
+                        src={user?.profileImage}
                         alt={`${user?.firstName} ${user?.lastName}`}
                         sx={{
                             width: 40,
@@ -170,18 +154,13 @@ export function TopNavbar() {
                             `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}
                     </Avatar>
                     <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                        {/* <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
-                            {user?.name || "User"}
-                        </Typography> */}
+
                         <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
                             {user?.firstName
                                 ? `${user.firstName} ${user?.lastName || ""}`
                                 : "User"}
                         </Typography>
-                        {/* if we only first name  */}
-                        {/* <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
-                            {user?.firstName || "User"}
-                        </Typography> */}
+
                         <Typography
                             variant="caption"
                             color="text.secondary"

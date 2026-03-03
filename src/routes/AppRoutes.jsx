@@ -17,11 +17,11 @@ import { OrderManagementPage } from "../pages/OrderManagementPage";
 import { OrderHistoryList } from "../pages/OrderHistoryList";
 import { CafeTableManagement } from "../pages/CafeTableManagement";
 import { MyOrders } from "../pages/dashboard/MyOrders";
-import { ProfileLayout } from "../pages/Profile/ProfileLayout";
+import ProfileLayout from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
-import AdminEnquire from "../pages/Admin/AdminEnquire";
+import { Enquiries } from "../pages/Admin/AdminEnquire";
 
 export const AppRoutes = () => {
     return (
@@ -53,11 +53,8 @@ export const AppRoutes = () => {
                 <Route path="/order-history" element={<OrderHistoryList />} />
                 <Route path="/customer" element={<CustomerList />} />
                 <Route path="/my-orders/:userId" element={<MyOrders />} />
+                <Route path="/enquiries" element={<Enquiries />} />
                 <Route path="/profile" element={<ProfileLayout />}>
-                    <Route index element={<ProfileUpdate />} />
-                    {/* <Route path="change-password" element={<ChangePassword />} /> */}
-                </Route>
-                <Route path="/admin-enquire" element={<AdminEnquire />}>
                     <Route index element={<ProfileUpdate />} />
                     <Route path="change-password" element={<ChangePassword />} />
                 </Route>

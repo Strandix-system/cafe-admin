@@ -7,17 +7,16 @@ import { queryClient } from "../../lib/queryClient";
 import dayjs from "dayjs";
 import { TableComponent } from "../../components/TableComponent/TableComponent";
 
-
 const STATUS_TABS = [
-    { label: "Requested", value: "Requested" },
-    { label: "Full Filled", value: "Full Filled" },
-    { label: "Inquiry", value: "Inquiry" },
-    { label: "Not Interested", value: "Not Interested" },
+    { label: "Requested", value: "requested" },
+    { label: "Full Filled", value: "full_filled" },
+    { label: "Inquiry", value: "inquiry" },
+    { label: "Not Interested", value: "not_interested" },
 ];
 
-const AdminEnquire = () => {
+export const Enquiries = () => {
 
-    const [activeTab, setActiveTab] = useState("Requested");
+    const [activeTab, setActiveTab] = useState("requested");
     const [selectedRequestId, setSelectedRequestId] = useState(null);
 
     const { mutate: updateRequestStatus } = usePatch(
@@ -32,6 +31,12 @@ const AdminEnquire = () => {
             },
         }
     );
+    const labelMap = {
+        requested: "Requested",
+        full_filled: "Full Filled",
+        inquiry: "Inquiry",
+        not_interested: "Not Interested",
+    };
 
     const columns = useMemo(() => [
         { accessorKey: "name", header: "Owner Name" },
@@ -46,14 +51,14 @@ const AdminEnquire = () => {
                 const status = row.original.status;
 
                 const colorMap = {
-                    "Requested": "warning",
-                    "Full Filled": "success",
-                    "Inquiry": "info",
-                    "Not Interested": "error",
+                    "requested": "warning",
+                    "full_filled": "success",
+                    "inquiry": "info",
+                    "not_interested": "error",
                 };
                 return (
                     <Chip
-                        label={status}
+                        label={labelMap[status] || status}
                         color={colorMap[status] || "default"}
                         size="small"
                     />
@@ -83,23 +88,23 @@ const AdminEnquire = () => {
     const actions = [
         {
             label: "Requested",
-            onClick: (row) => handleStatusChange(row, "Requested"),
-            hidden: (row) => row.original.status === "Requested",
+            onClick: (row) => handleStatusChange(row, "requested"),
+            hidden: (row) => row.original.status === "requested",
         },
         {
             label: "Full Filled",
-            onClick: (row) => handleStatusChange(row, "Full Filled"),
-            hidden: (row) => row.original.status === "Full Filled",
+            onClick: (row) => handleStatusChange(row, "full_filled"),
+            hidden: (row) => row.original.status === "full_filled",
         },
         {
             label: "Inquiry",
-            onClick: (row) => handleStatusChange(row, "Inquiry"),
-            hidden: (row) => row.original.status === "Inquiry",
+            onClick: (row) => handleStatusChange(row, "inquiry"),
+            hidden: (row) => row.original.status === "inquiry",
         },
         {
             label: "Not Interested",
-            onClick: (row) => handleStatusChange(row, "Not Interested"),
-            hidden: (row) => row.original.status === "Not Interested",
+            onClick: (row) => handleStatusChange(row, "not_interested"),
+            hidden: (row) => row.original.status === "not_interested",
         },
     ];
 
@@ -130,5 +135,3 @@ const AdminEnquire = () => {
         </div>
     );
 };
-
-export default AdminEnquire;
