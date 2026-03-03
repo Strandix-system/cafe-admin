@@ -1,8 +1,6 @@
 import { TableComponent } from "../../components/TableComponent/TableComponent";
 import {
   Box,
-  Button,
-  Chip,
   FormControl,
   InputLabel,
   MenuItem,
@@ -10,11 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Edit, Eye, Trash2, Plus } from "lucide-react";
+import { Edit, Plus } from "lucide-react";
 import { useMemo } from "react";
 import { API_ROUTES } from "../../utils/api_constants";
-import { APIRequest } from "../../utils/api_request";
-import { EditMenuModal } from "./EditMenuModal";
 import { useState } from "react";
 import { CreateEditMenuModal } from "./CreateEditMenuModal";
 import { CommonButton } from "../../components/common/commonButton";
@@ -26,12 +22,10 @@ export const MenuList = () => {
   const [open, setOpen] = useState(false);
   const [menuId, setMenuId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedMenuId, setSelectedMenuId] = useState(null);
 
   const { data: { result: { categories: adminCategories = [] } = {} } = {} } =
     useFetch("admin-categories", API_ROUTES.getAdminCategories);
 
-  console.log("Categories fetched:", adminCategories);
   // 🔹 Table Columns
   const columns = useMemo(
     () => [
