@@ -1,14 +1,11 @@
 import { useState } from "react";
 import {
     Box,
-    IconButton,
     Avatar,
     Typography,
-    Badge,
     Menu,
     MenuItem,
     Divider,
-    Button,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
@@ -20,8 +17,10 @@ import { CommonButton } from "../components/common/commonButton";
 export function TopNavbar() {
     const { user, logout, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [anchorEl, setAnchorEl] = useState(null);
 
+    const name = `${user?.firstName || "User"} ${" "} ${user?.lastName || ""}`;
     // Routes that should show the back button
     const showBackButtonRoutes = [
         "/cafe/create-edit",
@@ -31,7 +30,8 @@ export function TopNavbar() {
         "/order-history",
         "/profile",
         "/my-orders",
-        "/cafes/"
+        "/cafes/",
+        "/dashboard/", // for super admin viewing specific admin analytics
     ];
 
     // Check if current route should show back button
@@ -59,7 +59,6 @@ export function TopNavbar() {
 
     // Get user initials for avatar
     const getInitials = (name) => {
-        if (!name) return "U";
         return name
             .split(" ")
             .map((n) => n[0])
@@ -84,22 +83,6 @@ export function TopNavbar() {
         >
             {/* Left Side - Back Button (conditional) + Page Title */}
             <Box display="flex" alignItems="center" gap={2}>
-                {/* {shouldShowBackButton && (
-                    <Button
-                        onClick={handleBack}
-                        startIcon={<ArrowBackIcon />}
-                        sx={{
-                            color: "#6F4E37",
-                            textTransform: "none",
-                            fontWeight: 600,
-                            "&:hover": {
-                                bgcolor: "#F5EFE6",
-                            },
-                        }}
-                    >
-                        Back
-                    </Button>
-                )} */}
                 {shouldShowBackButton && (
                     <CommonButton
                         variant="text"
@@ -115,12 +98,14 @@ export function TopNavbar() {
                         Back
                     </CommonButton>
                 )}
-
             </Box>
 
+            {/* Right Side - Actions & Profile */}
             <Box display="flex" alignItems="center" gap={2}>
-
+                {/* Divider */}
                 <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+
+                {/* User Profile */}
                 <Box
                     display="flex"
                     alignItems="center"
@@ -136,64 +121,142 @@ export function TopNavbar() {
                     onClick={handleMenuOpen}
                 >
                     <Avatar
-                        src={user?.profileImage}
-                        alt={`${user?.firstName} ${user?.lastName}`}
                         sx={{
                             width: 40,
                             height: 40,
-                            bgcolor: !user?.profileImage
-                                ? isSuperAdmin
-                                    ? "#5B4CFF"
-                                    : "#6F4E37"
-                                : "transparent",
+                            bgcolor: isSuperAdmin ? "#5B4CFF" : "#6F4E37",
                             fontWeight: 600,
                             fontSize: "0.9rem",
                         }}
                     >
-                        {!user?.profileImage &&
-                            `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}
+                        {getInitials(name)}
                     </Avatar>
-                    <Box sx={{ display: { xs: "none", sm: "block" } }}>
 
-                        <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
-                            {user?.firstName
-                                ? `${user.firstName} ${user?.lastName || ""}`
-                                : "User"}
-                        </Typography>
-
-                        <Typography
-                            variant="caption"
-                            color="text.secondary"
-                            lineHeight={1.2}
-                        >
-                            {isSuperAdmin ? "Super Admin" : "Admin"}
-                        </Typography>
-                    </Box>
                 </Box>
 
-                {/* Profile Menu */}
-                <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleMenuClose}
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                    }}
-                    transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                    }}
-                    PaperProps={{
-                        sx: {
-                            mt: 1.5,
-                            minWidth: 200,
-                            borderRadius: 2,
-                            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                        },
-                    }}
-                >
+                <Box display="flex" alignItems="center" gap={2}>
 
+                    <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={1.5}
+                        sx={{
+                            cursor: "pointer",
+                            px: 1.5,
+                            py: 0.75,
+                            borderRadius: 2,
+                            transition: "background-color 0.2s",
+                            "&:hover": { bgcolor: "#f5f5f5" },
+                        }}
+                        onClick={handleMenuOpen}
+                    >
+                        <Avatar
+                            src={user?.profileImage}
+                            alt={`${user?.firstName} ${user?.lastName}`}
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                bgcolor: !user?.profileImage
+                                    ? isSuperAdmin
+                                        ? "#5B4CFF"
+                                        : "#6F4E37"
+                                    : "transparent",
+                                fontWeight: 600,
+                                fontSize: "0.9rem",
+                            }}
+                        >
+                            {!user?.profileImage &&
+                                `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}
+                        </Avatar>
+                        <Box sx={{ display: { xs: "none", sm: "block" } }}>
+
+                            <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                                {user?.firstName
+                                    ? `${user.firstName} ${user?.lastName || ""}`
+                                    : "User"}
+                            </Typography>
+
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                lineHeight={1.2}
+                            >
+                                {isSuperAdmin ? "Super Admin" : "Admin"}
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    {/* Profile Menu */}
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                        }}
+                        transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                        }}
+                        PaperProps={{
+                            sx: {
+                                mt: 1.5,
+                                minWidth: 200,
+                                borderRadius: 2,
+                                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                            },
+                        }}
+                    >
+
+                        <MenuItem
+                            onClick={() => {
+                                handleMenuClose();
+                                navigate("/profile");
+                            }}
+                            sx={{ gap: 1.5, py: 1.5 }}
+                        >
+                            <PersonIcon fontSize="small" />
+                            <Typography variant="body2">My Profile</Typography>
+                        </MenuItem>
+
+                        <Divider sx={{ my: 1 }} />
+
+                        <MenuItem
+                            onClick={handleLogout}
+                            sx={{ gap: 1.5, py: 1.5, color: "error.main" }}
+                        >
+                            <LogoutIcon fontSize="small" />
+                            <Typography variant="body2">Logout</Typography>
+                        </MenuItem>
+                    </Menu>
+                </Box>
+            </Box>
+
+            {/* Profile Menu */}
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                }}
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                }}
+                PaperProps={{
+                    sx: {
+                        mt: 1.5,
+                        minWidth: 200,
+                        borderRadius: 2,
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                    },
+                }}
+            >
+                {!isSuperAdmin && (
                     <MenuItem
                         onClick={() => {
                             handleMenuClose();
@@ -204,18 +267,18 @@ export function TopNavbar() {
                         <PersonIcon fontSize="small" />
                         <Typography variant="body2">My Profile</Typography>
                     </MenuItem>
+                )}
 
-                    <Divider sx={{ my: 1 }} />
+                <Divider sx={{ my: 1 }} />
 
-                    <MenuItem
-                        onClick={handleLogout}
-                        sx={{ gap: 1.5, py: 1.5, color: "error.main" }}
-                    >
-                        <LogoutIcon fontSize="small" />
-                        <Typography variant="body2">Logout</Typography>
-                    </MenuItem>
-                </Menu>
-            </Box>
+                <MenuItem
+                    onClick={handleLogout}
+                    sx={{ gap: 1.5, py: 1.5, color: "error.main" }}
+                >
+                    <LogoutIcon fontSize="small" />
+                    <Typography variant="body2">Logout</Typography>
+                </MenuItem>
+            </Menu>
         </Box>
     );
 }

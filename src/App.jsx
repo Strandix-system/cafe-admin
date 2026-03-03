@@ -11,6 +11,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter } from 'react-router-dom';
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "./index.css"
+import { OrderProvider } from "./context/OrderContext";
 
 const emotionCacheOptions = {
   rtl: {
@@ -31,7 +32,9 @@ export function App() {
       <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
+             <OrderProvider>
             <AppRoutes />
+            </OrderProvider>
             <Toaster position="top-right" reverseOrder={false} />
             <ReactQueryDevtools initialIsOpen={false} />
           </AuthProvider>
