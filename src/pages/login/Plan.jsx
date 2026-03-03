@@ -11,7 +11,7 @@ import {
 import { CheckCircle } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import cafe1 from "../../assets/cafe1.jpg";
-import cafe_logo from "../../assets/cafe_logo.png";
+import { cafe_logo } from "../../assets/cafe_logo.png";
 import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
@@ -41,39 +41,88 @@ export const Plan = () => {
     ],
   };
 
-  const { mutate: createOrder, isPending: createOrderPending } = usePost(
-    API_ROUTES.createOrder,
+  // const { mutate: createOrder, isPending: createOrderPending } = usePost(
+  //   API_ROUTES.createOrder,
+  //   {
+  //     onSuccess: (res) => {
+  //       const order = res.result;
+
+  //       const razorpayOptions = {
+  //         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+  //         amount: order.amount,
+  //         currency: order.currency,
+  //         order_id: order.id,
+  //         name: "Aeternis",
+  //         description: "Premium Plan Subscription",
+  //         image: "/cafe_logo",
+  //         handler: (response) => {
+  //           setIsLoading(false);
+  //           handlePaymentSuccess(response);
+  //         },
+  //         prefill: {
+  //           name: signupData?.name,
+  //           email: signupData?.email,
+  //         },
+  //         theme: { color: "#6F4E37" },
+  //         modal: {
+  //           ondismiss: () => {
+  //             setIsLoading(false);
+  //             toast.info("Payment cancelled");
+  //           },
+  //         },
+  //       };
+
+  //       const razorpayInstance = new window.Razorpay(razorpayOptions);
+  //       razorpayInstance.open();
+  //     },
+  //     onError: (error) => {
+  //       setIsLoading(false);
+  //       toast.error(error);
+  //     },
+  //   },
+  // );
+
+  // API call to create admin user after payment
+
+  const openRazorpayCheckout = (subscriptionId) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      subscription_id: subscriptionId, // 🔥 THIS IS IMPORTANT
+      name: "Aeternis",
+      image: cafe_logo,
+      description: "Premium Plan Subscription",
+
+      handler: (response) => {
+        setIsLoading(false);
+        handleSubscriptionSuccess(response);
+      },
+
+      prefill: {
+        name: `${signupData.firstName} ${signupData.lastName}`,
+        email: signupData.email,
+        contact: signupData.phoneNumber,
+      },
+
+      theme: { color: "#6F4E37" },
+
+      modal: {
+        ondismiss: () => {
+          setIsLoading(false);
+          toast.info("Payment cancelled");
+        },
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  const { mutate: createSubscription } = usePost(
+    API_ROUTES.createSubscription,
     {
       onSuccess: (res) => {
-        const order = res.result;
-
-        const razorpayOptions = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-          amount: order.amount,
-          currency: order.currency,
-          order_id: order.id,
-          name: "Aeternis",
-          description: "Premium Plan Subscription",
-          image: "/cafe_logo",
-          handler: (response) => {
-            setIsLoading(false);
-            handlePaymentSuccess(response);
-          },
-          prefill: {
-            name: signupData?.name,
-            email: signupData?.email,
-          },
-          theme: { color: "#6F4E37" },
-          modal: {
-            ondismiss: () => {
-              setIsLoading(false);
-              toast.info("Payment cancelled");
-            },
-          },
-        };
-
-        const razorpayInstance = new window.Razorpay(razorpayOptions);
-        razorpayInstance.open();
+        const { subscription } = res.result;
+        openRazorpayCheckout(subscription.id);
       },
       onError: (error) => {
         setIsLoading(false);
@@ -81,8 +130,6 @@ export const Plan = () => {
       },
     },
   );
-
-  // API call to create admin user after payment
   const { mutate: verifySignup } = usePost(
     API_ROUTES.verifySignup, // New endpoint
     {
@@ -97,30 +144,61 @@ export const Plan = () => {
     },
   );
 
-  const handlePaymentSuccess = (response) => {
-    // Create admin user with payment details
+  // const handlePaymentSuccess = (response) => {
+  //   // Create admin user with payment details
+  //   verifySignup({
+  //     firstName: signupData.firstName,
+  //     lastName: signupData.lastName,
+  //     email: signupData.email,
+  //     password: signupData.password,
+  //     phoneNumber: signupData.phoneNumber,
+  //     razorpay_payment_id: response.razorpay_payment_id,
+  //     razorpay_order_id: response.razorpay_order_id,
+  //     razorpay_signature: response.razorpay_signature,
+  //   });
+  // };
+
+  const handleSubscriptionSuccess = (response) => {
+    console.log("Subscription payment successful:", response);
     verifySignup({
       firstName: signupData.firstName,
       lastName: signupData.lastName,
       email: signupData.email,
       password: signupData.password,
       phoneNumber: signupData.phoneNumber,
+
       razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_order_id: response.razorpay_order_id,
+      razorpay_subscription_id: response.razorpay_subscription_id,
       razorpay_signature: response.razorpay_signature,
     });
   };
 
-  const handleContinue = () => {
-    if (!window.Razorpay) {
-      toast.error("Payment gateway not loaded. Please refresh the page.");
-      return;
-    }
-    setIsLoading(true);
-    createOrder({ amount: plan.priceNumeric });
-  };
+  // const handleContinue = () => {
+  //   if (!window.Razorpay) {
+  //     toast.error("Payment gateway not loaded. Please refresh the page.");
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   createOrder({ amount: plan.priceNumeric });
+  // };
 
   // Load Razorpay script
+  const handleContinue = () => {
+    if (!window.Razorpay) {
+      toast.error("Payment gateway not loaded.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    createSubscription({
+      firstName: signupData.firstName,
+      lastName: signupData.lastName,
+      email: signupData.email,
+      phoneNumber: signupData.phoneNumber,
+    });
+  };
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
