@@ -1,16 +1,20 @@
 import { TableComponent } from "../../components/TableComponent/TableComponent";
-import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Edit, Eye, Trash2, Plus } from "lucide-react";
+import { Edit, Plus } from "lucide-react";
 import { useMemo } from "react";
 import { API_ROUTES } from "../../utils/api_constants";
-import { APIRequest } from "../../utils/api_request";
-import { EditMenuModal } from "./EditMenuModal";
 import { useState } from "react";
 import { CreateEditMenuModal } from "./CreateEditMenuModal";
 import { CommonButton } from "../../components/common/commonButton";
 import { useFetch } from "../../utils/hooks/api_hooks";
-
 
 export const MenuList = () => {
   const navigate = useNavigate();
@@ -18,13 +22,9 @@ export const MenuList = () => {
   const [open, setOpen] = useState(false);
   const [menuId, setMenuId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedMenuId, setSelectedMenuId] = useState(null);
 
-  const { data: { result: { results: categories = [] } = {} } = {}, } = useFetch(
-    "categories",
-    API_ROUTES.getCategories
-  );
-
+  const { data: { result: { categories: adminCategories = [] } = {} } = {} } =
+    useFetch("admin-categories", API_ROUTES.getAdminCategories);
 
   // 🔹 Table Columns
   const columns = useMemo(
@@ -60,7 +60,7 @@ export const MenuList = () => {
         Cell: ({ row }) => `₹ ${row.original.discountPrice}`,
       },
     ],
-    []
+    [],
   );
 
   const actions = [
@@ -113,7 +113,7 @@ export const MenuList = () => {
       />
       {/* Table */}
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <FormControl size="small" sx={{ minWidth: 180 }}>
             <InputLabel>Category</InputLabel>
             <Select
@@ -122,7 +122,7 @@ export const MenuList = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               <MenuItem value="">All</MenuItem>
-              {categories.map((cat) => (
+              {adminCategories.map((cat) => (
                 <MenuItem key={cat._id} value={cat.name}>
                   {cat.name}
                 </MenuItem>
@@ -141,12 +141,8 @@ export const MenuList = () => {
           deleteApiEndPoint="MENU_DELETE"
           deleteAction={true}
           enableExportTable={true}
-
-
         />
       </Box>
-
-
     </div>
   );
 };
