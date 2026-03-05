@@ -46,3 +46,8 @@ export const formatHoursForBackend = (hours) => {
         weekends: formatTimeRange(hours.weekends?.open, hours.weekends?.close),
     };
 };
+
+export const formatAmount = (amount) => {
+  if (amount === null || amount === undefined) return "0";
+  return Number(amount).toLocaleString("en-IN");
+};

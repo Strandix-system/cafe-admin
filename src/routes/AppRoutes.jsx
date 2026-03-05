@@ -53,7 +53,6 @@ export const AppRoutes = () => {
         <Route path="/table-management" element={<CafeTableManagement />} />
         <Route path="/menu" element={<MenuList />} />
         <Route path="/order-management" element={<OrderManagementPage />} />
-        <Route path="/order-history" element={<OrderHistoryList />} />
         <Route path="/customer" element={<CustomerList />} />
         <Route path="/my-orders/:userId" element={<MyOrders />} />
         <Route path="/profile" element={<ProfileLayout />}>
