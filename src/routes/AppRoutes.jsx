@@ -14,7 +14,6 @@ import { MenuList } from "../pages/Menu/MenuList";
 import { Plan } from "../pages/login/Plan";
 import { CustomerList } from "../pages/customer-list/CustomerList";
 import { OrderManagementPage } from "../pages/OrderManagementPage";
-import { OrderHistoryList } from "../pages/OrderHistoryList";
 import { CafeTableManagement } from "../pages/CafeTableManagement";
 import { MyOrders } from "../pages/dashboard/MyOrders";
 import { ProfileLayout } from "../pages/Profile/ProfileLayout";
@@ -41,19 +40,21 @@ export const AppRoutes = () => {
                 }
             >
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard/:adminId" element={<Dashboard />} />
                 <Route path="/cafes" element={<AdminList />} />
                 <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
                 <Route path="/cafes/:adminId?" element={<AdminList />} />
                 <Route path="/layouts" element={<LayoutsPage />} />
-                <Route path="/layouts/create-edit/:layoutId?" element={<AddEditLayout />} />
+                <Route
+                    path="/layouts/create-edit/:layoutId?"
+                    element={<AddEditLayout />}
+                />
                 <Route path="/categories" element={<CategoriesList />} />
                 <Route path="/table-management" element={<CafeTableManagement />} />
                 <Route path="/menu" element={<MenuList />} />
                 <Route path="/order-management" element={<OrderManagementPage />} />
-                <Route path="/order-history" element={<OrderHistoryList />} />
                 <Route path="/customer" element={<CustomerList />} />
                 <Route path="/my-orders/:userId" element={<MyOrders />} />
-                <Route path="/enquiries" element={<Enquiries />} />
                 <Route path="/profile" element={<ProfileLayout />}>
                     <Route index element={<ProfileUpdate />} />
                     <Route path="change-password" element={<ChangePassword />} />

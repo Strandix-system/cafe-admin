@@ -32,6 +32,7 @@ export const InputField = ({
             {...params}
             fullWidth
             size="small"
+             placeholder={props.placeholder}
             error={!!error}
             helperText={helperText}
             sx={{

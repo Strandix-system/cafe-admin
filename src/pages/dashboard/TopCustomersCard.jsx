@@ -5,6 +5,7 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth } from "../../context/AuthContext";
+import { formatAmount } from "../../utils/utils";
 
 const THEME_COLOR = "#6F4E37";
 
@@ -98,7 +99,7 @@ export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
                         </Box>
 
                         <Typography fontSize={13} fontWeight={600}>
-                            ₹{customer.totalAmount}
+                            ₹{formatAmount(customer.totalAmount)}
                         </Typography>
                     </Box>
                 ))}

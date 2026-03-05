@@ -22,6 +22,7 @@ export function TopNavbar() {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
 
+<<<<<<< HEAD
     // Routes that should show the back button
     const showBackButtonRoutes = [
         "/cafe/create-edit",
@@ -33,6 +34,20 @@ export function TopNavbar() {
         "/my-orders",
         "/cafes/"
     ];
+=======
+  const name = `${user?.firstName || "User"} ${" "} ${user?.lastName || ""}`;
+  // Routes that should show the back button
+  const showBackButtonRoutes = [
+    "/cafe/create-edit",
+    "/layouts/create-edit",
+    "/cafe/view-customers/",
+    "/categories/create",
+    "/profile",
+    "/my-orders",
+    "/cafes/",
+    "/dashboard/", // for super admin viewing specific admin analytics
+  ];
+>>>>>>> d5d65a25705aabd14cb69ba1145d32533feddbdf
 
     // Check if current route should show back button
     const shouldShowBackButton = showBackButtonRoutes.some((route) =>
