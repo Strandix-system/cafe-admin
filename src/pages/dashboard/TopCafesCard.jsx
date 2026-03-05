@@ -4,6 +4,7 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import StoreIcon from "@mui/icons-material/Store";
 import { useAuth } from "../../context/AuthContext";
+import { formatAmount } from "../../utils/utils";
 
 const THEME_COLOR = "#6F4E37";
 
@@ -90,7 +91,7 @@ export default function TopCafesCard() {
             </Box>
 
             <Typography fontSize={13} fontWeight={600}>
-              ₹{cafe.totalAmount}
+              ₹{formatAmount(cafe.totalAmount)}
             </Typography>
           </Box>
         ))}

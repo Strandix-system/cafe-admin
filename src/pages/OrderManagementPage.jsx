@@ -14,6 +14,7 @@ import { queryClient } from "../lib/queryClient";
 import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 import { useLocation } from "react-router-dom";
 import { useOrders } from "../context/OrderContext";
+import { formatAmount } from "../utils/utils";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -81,6 +82,7 @@ export const OrderManagementPage = () => {
             {
                 accessorKey: "totalAmount",
                 header: "Total Amount (₹)",
+                  Cell: ({ cell }) => `₹ ${formatAmount(cell.getValue())}`,
             },
             {
                 id: "orderStatus",

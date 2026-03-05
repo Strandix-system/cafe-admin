@@ -2,6 +2,7 @@ import { Box, Grid, Card, Typography, Avatar, Stack, CardMedia, Chip } from "@mu
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
+import { formatAmount } from "../../utils/utils";
 
 const ItemCard = ({ name, qty, image, revenue, type }) => {
   const isTop = type === "top";
@@ -65,7 +66,7 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
             fontSize={13}
             mt={0.3}
           >
-            Revenue: <strong>{revenue}</strong>
+            Revenue: <strong>₹{formatAmount(revenue)}</strong>
           </Typography>
         </div>
 
@@ -85,79 +86,6 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
     </Card>
   );
 };
-
-// const ItemCard = ({ name, qty, image, revenue, type }) => {
-//   const isTop = type === "top";
-
-//   return (
-//     <Card
-//       sx={{
-//         borderRadius: 3,
-//         overflow: "hidden",
-//         boxShadow: "0 6px 20px rgba(0,0,0,0.05)",
-//         transition: "all 0.25s ease",
-//         "&:hover": {
-//           transform: "translateY(-4px)",
-//           boxShadow: "0 12px 28px rgba(0,0,0,0.08)",
-//         },
-//       }}
-//     >
-//       <CardMedia
-//         component="img"
-//         image={image || "/placeholder-food.png"}
-//         alt={name}
-//         sx={{
-//           height: 150,
-//           objectFit: "cover",
-//         }}
-//       />
-
-//       <Box p={2}>
-//         <Typography
-//           fontWeight={700}
-//           fontSize={16}
-//           gutterBottom
-//           noWrap
-//         >
-//           {name}
-//         </Typography>
-
-//         <Box
-//           sx={{
-//             display: "flex",
-//             justifyContent: "space-between",
-//             mt: 1,
-//           }}
-//         >
-//           <Box>
-//             <Typography fontSize={12} color="text.secondary">
-//               Qty Sold
-//             </Typography>
-//             <Typography fontWeight={600}>{qty}</Typography>
-//           </Box>
-
-//           <Box textAlign="right">
-//             <Typography fontSize={12} color="text.secondary">
-//               Revenue
-//             </Typography>
-//             <Typography fontWeight={600}>₹{revenue}</Typography>
-//           </Box>
-//         </Box>
-
-//         <Chip
-//           label={isTop ? "Top Seller" : "Low Seller"}
-//           size="small"
-//           sx={{
-//             mt: 2,
-//             fontWeight: 600,
-//             bgcolor: isTop ? "#E8F5E9" : "#FDECEA",
-//             color: isTop ? "#2E7D32" : "#C62828",
-//           }}
-//         />
-//       </Box>
-//     </Card>
-//   );
-// };
 
 export default function ItemCards({ overrideData, isViewingAdmin }) {
   const { user } = useAuth();
