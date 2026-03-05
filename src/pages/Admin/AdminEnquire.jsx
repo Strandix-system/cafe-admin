@@ -9,8 +9,8 @@ import { TableComponent } from "../../components/TableComponent/TableComponent";
 
 const STATUS_TABS = [
     { label: "Requested", value: "requested" },
-    { label: "Full Filled", value: "full_filled" },
     { label: "Inquiry", value: "inquiry" },
+    { label: "Full Filled", value: "full_filled" },
     { label: "Not Interested", value: "not_interested" },
 ];
 
@@ -86,11 +86,11 @@ export const Enquiries = () => {
     };
 
     const actions = [
-        {
-            label: "Requested",
-            onClick: (row) => handleStatusChange(row, "requested"),
-            hidden: (row) => row.original.status === "requested",
-        },
+        // {
+        //     label: "Requested",
+        //     onClick: (row) => handleStatusChange(row, "requested"),
+        //     hidden: (row) => row.original.status === "requested",
+        // },
         {
             label: "Full Filled",
             onClick: (row) => handleStatusChange(row, "full_filled"),

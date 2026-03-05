@@ -21,7 +21,7 @@ export const CommonButton = ({
   /* sizing */
   width,
   height,
-  py = 1.5,
+  py = 1,
 
   /* colors */
   bgColor = DEFAULT_COLOR,
@@ -39,7 +39,7 @@ export const CommonButton = ({
       fullWidth={fullWidth}
       disabled={disabled || loading}
       sx={{
-        borderRadius: 3,
+        borderRadius: 2,
         textTransform: "none",
         fontSize: "1rem",
         fontWeight: 600,
