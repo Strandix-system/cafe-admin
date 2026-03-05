@@ -17,7 +17,7 @@ import { OrderManagementPage } from "../pages/OrderManagementPage";
 import { OrderHistoryList } from "../pages/OrderHistoryList";
 import { CafeTableManagement } from "../pages/CafeTableManagement";
 import { MyOrders } from "../pages/dashboard/MyOrders";
-import ProfileLayout from "../pages/Profile/ProfileLayout";
+import { ProfileLayout } from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
