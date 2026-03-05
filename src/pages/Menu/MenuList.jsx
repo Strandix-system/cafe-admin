@@ -15,6 +15,7 @@ import { useState } from "react";
 import { CreateEditMenuModal } from "./CreateEditMenuModal";
 import { CommonButton } from "../../components/common/commonButton";
 import { useFetch } from "../../utils/hooks/api_hooks";
+import { formatAmount } from "../../utils/utils";
 
 export const MenuList = () => {
   const navigate = useNavigate();
@@ -52,12 +53,15 @@ export const MenuList = () => {
       {
         accessorKey: "price",
         header: "Price",
-        Cell: ({ row }) => `₹ ${row.original.price}`,
+        Cell: ({ row }) => `₹ ${formatAmount(row.original.price)}`,
       },
       {
         accessorKey: "discountPrice",
         header: "Discount Price",
-        Cell: ({ row }) => `₹ ${row.original.discountPrice}`,
+        Cell: ({ row }) =>
+          row.original.discountPrice
+            ? `₹ ${formatAmount(row.original.discountPrice)}`
+            : "-",
       },
     ],
     [],

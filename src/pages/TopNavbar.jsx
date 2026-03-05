@@ -124,6 +124,8 @@ export function TopNavbar() {
           onClick={handleMenuOpen}
         >
           <Avatar
+            src={user?.profileImage}
+            alt={name}
             sx={{
               width: 40,
               height: 40,
@@ -132,7 +134,7 @@ export function TopNavbar() {
               fontSize: "0.9rem",
             }}
           >
-            {getInitials(name)}
+            {!user?.profileImage && getInitials(name)}
           </Avatar>
 
           <Box sx={{ display: { xs: "none", sm: "block" } }}>

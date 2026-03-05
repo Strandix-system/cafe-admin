@@ -14,7 +14,6 @@ import { MenuList } from "../pages/menu/MenuList";
 import { Plan } from "../pages/login/Plan";
 import { CustomerList } from "../pages/customer-list/CustomerList";
 import { OrderManagementPage } from "../pages/OrderManagementPage";
-import { OrderHistoryList } from "../pages/OrderHistoryList";
 import { CafeTableManagement } from "../pages/CafeTableManagement";
 import { MyOrders } from "../pages/dashboard/MyOrders";
 import { ProfileLayout } from "../pages/Profile/ProfileLayout";
@@ -56,7 +55,6 @@ export const AppRoutes = () => {
         <Route path="/table-management" element={<CafeTableManagement />} />
         <Route path="/menu" element={<MenuList />} />
         <Route path="/order-management" element={<OrderManagementPage />} />
-        <Route path="/order-history" element={<OrderHistoryList />} />
         <Route path="/customer" element={<CustomerList />} />
         <Route path="/my-orders/:userId" element={<MyOrders />} />
         <Route path="/profile" element={<ProfileLayout />}>
