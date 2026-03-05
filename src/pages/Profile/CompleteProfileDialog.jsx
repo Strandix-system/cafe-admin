@@ -17,7 +17,6 @@ export function CompleteProfileDialog() {
     const location = useLocation();
 
     if (isSuperAdmin || user.isProfileComplete || location.pathname.startsWith("/profile")) return;
-
     return (
         <Dialog
             open={true}

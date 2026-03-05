@@ -23,11 +23,6 @@ const superAdminProfileSchema = yup.object({
         .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
         .required("Phone number is required"),
     profileImage: yup.mixed().nullable(),
-    socialLinks: yup.object({
-        instagram: yup.string().url("Enter a valid URL").nullable().optional(),
-        facebook: yup.string().url("Enter a valid URL").nullable().optional(),
-        twitter: yup.string().url("Enter a valid URL").nullable().optional(),
-    }),
 });
 
 export default function SuperAdminProfileForm({
@@ -50,11 +45,6 @@ export default function SuperAdminProfileForm({
             email: "",
             phoneNumber: "",
             profileImage: null,
-            socialLinks: {
-                instagram: "",
-                facebook: "",
-                twitter: "",
-            },
         },
         resolver: yupResolver(superAdminProfileSchema),
         context: { isEdit },
@@ -71,11 +61,6 @@ export default function SuperAdminProfileForm({
                 email: defaultValues.email || "",
                 phoneNumber: String(defaultValues.phoneNumber || ""),
                 profileImage: defaultValues.profileImage || null,
-                socialLinks: {
-                    instagram: defaultValues.socialLinks?.instagram || "",
-                    facebook: defaultValues.socialLinks?.facebook || "",
-                    twitter: defaultValues.socialLinks?.twitter || "",
-                },
             });
 
             if (defaultValues.profileImage) {
@@ -137,8 +122,6 @@ export default function SuperAdminProfileForm({
                         {isSubmitting ? "Saving..." : "Update"}
                     </CommonButton>
                 </Box>
-
-
                 <Box
                     component="form"
                     id="superadmin-profile-form"
@@ -158,11 +141,7 @@ export default function SuperAdminProfileForm({
                             isEdit={isEdit}
                             gridSize={{ xs: 12, sm: 6 }}
                         />
-
-
                         <Grid size={{ xs: 12, sm: 6 }} />
-
-
                         <Grid size={{ xs: 12 }}>
                             <Box sx={{ borderBottom: "2px solid #6F4E37", pb: 1, mb: 2 }}>
                                 <Typography variant="h6" fontWeight={700} color="#6F4E37">
