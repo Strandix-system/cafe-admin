@@ -82,24 +82,7 @@ export function TopNavbar() {
                 width: "100%",
             }}
         >
-            {/* Left Side - Back Button (conditional) + Page Title */}
             <Box display="flex" alignItems="center" gap={2}>
-                {/* {shouldShowBackButton && (
-                    <Button
-                        onClick={handleBack}
-                        startIcon={<ArrowBackIcon />}
-                        sx={{
-                            color: "#6F4E37",
-                            textTransform: "none",
-                            fontWeight: 600,
-                            "&:hover": {
-                                bgcolor: "#F5EFE6",
-                            },
-                        }}
-                    >
-                        Back
-                    </Button>
-                )} */}
                 {shouldShowBackButton && (
                     <CommonButton
                         variant="text"
@@ -193,7 +176,6 @@ export function TopNavbar() {
                         },
                     }}
                 >
-
                     <MenuItem
                         onClick={() => {
                             handleMenuClose();

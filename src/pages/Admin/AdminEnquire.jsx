@@ -13,9 +13,7 @@ const STATUS_TABS = [
     { label: "Full Filled", value: "full_filled" },
     { label: "Not Interested", value: "not_interested" },
 ];
-
 export const Enquiries = () => {
-
     const [activeTab, setActiveTab] = useState("requested");
     const [selectedRequestId, setSelectedRequestId] = useState(null);
 
@@ -24,7 +22,9 @@ export const Enquiries = () => {
         {
             onSuccess: () => {
                 toast.success("Status updated successfully");
-                queryClient.invalidateQueries({ queryKey: ["adminRequest"] });
+                queryClient.invalidateQueries({
+                    querykey: [`adminRequest-${activeTab}`],
+                })
             },
             onError: () => {
                 toast.error("Failed to update status");
@@ -86,11 +86,6 @@ export const Enquiries = () => {
     };
 
     const actions = [
-        // {
-        //     label: "Requested",
-        //     onClick: (row) => handleStatusChange(row, "requested"),
-        //     hidden: (row) => row.original.status === "requested",
-        // },
         {
             label: "Full Filled",
             onClick: (row) => handleStatusChange(row, "full_filled"),
@@ -110,28 +105,36 @@ export const Enquiries = () => {
 
     return (
         <div>
-            <Typography variant="h5" fontWeight={700} mb={2}>
-                Admin Request
-            </Typography>
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                m={3}
+            >
+                <Typography variant="h5" fontWeight={700} mb={0}>
+                    Admin Request
+                </Typography>
 
-            <Box sx={{ mb: 2 }}>
+            </Box>
+            <Box sx={{ px: 3, pt: 2, pb: 1 }}>
                 <Tabs value={activeTab} onChange={handleTabChange}>
                     {STATUS_TABS.map((tab) => (
                         <Tab key={tab.value} label={tab.label} value={tab.value} />
                     ))}
                 </Tabs>
             </Box>
-
-            <TableComponent
-                slug="adminRequest"
-                columns={columns}
-                actions={actions}
-                actionsType="menu"
-                querykey={`adminRequest-${activeTab}`}
-                getApiEndPoint="adminRequest"
-                params={{ status: activeTab }}
-                enableExportTable={true}
-            />
+            <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+                <TableComponent
+                    slug="adminRequest"
+                    columns={columns}
+                    actions={activeTab === "full_filled" ? [] : actions}
+                    actionsType="menu"
+                    querykey={`adminRequest-${activeTab}`}
+                    getApiEndPoint="adminRequest"
+                    params={{ status: activeTab }}
+                    enableExportTable={true}
+                />
+            </Box>
         </div>
     );
 };
