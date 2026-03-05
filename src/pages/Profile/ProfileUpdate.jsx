@@ -26,7 +26,6 @@ export function ProfileUpdate() {
     );
 
     const onSubmit = (data) => {
-        const cleaned = { ...data };
 
         delete cleaned.__v;
         delete cleaned._id;
@@ -36,9 +35,7 @@ export function ProfileUpdate() {
         delete cleaned.updatedAt;
         delete cleaned.role;
 
-        // ✅ Convert hours object to required string format
         const formattedData = {
-            ...cleaned,
             hours: {
                 weekdays:
                     cleaned?.hours?.weekdays?.open &&
