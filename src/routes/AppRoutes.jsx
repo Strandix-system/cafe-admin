@@ -43,6 +43,7 @@ export const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/:adminId" element={<Dashboard />} />
         <Route path="/payment-history" element={<PaymentHistory />} />
+        <Route path="/payment-history/:adminId?" element={<PaymentHistory />} />
         <Route path="/cafes" element={<AdminList />} />
         <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
         <Route path="/cafes/:adminId?" element={<AdminList />} />

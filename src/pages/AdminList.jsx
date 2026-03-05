@@ -10,6 +10,7 @@ import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
 import { CommonButton } from "../components/common/commonButton";
 import { useLocation } from "react-router-dom";
+import { MdReceipt } from "react-icons/md";
 
 export const AdminList = () => {
   const navigate = useNavigate();
@@ -126,6 +127,13 @@ export const AdminList = () => {
       icon: User,
       onClick: (row) => {
         navigate(`/cafes/${row.original._id}`);
+      },
+    },
+    {
+      label: "View Payment History",
+      icon: MdReceipt,
+      onClick: (row) => {
+        navigate(`/payment-history/${row.original._id}`);
       },
     },
     {

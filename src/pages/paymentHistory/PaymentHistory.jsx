@@ -1,10 +1,19 @@
 import { TableComponent } from "../../components/TableComponent/TableComponent";
 import { Box, Typography } from "@mui/material";
 import { useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export const PaymentHistory = () => {
+  const { adminId } = useParams();
+
   const columns = useMemo(
     () => [
+      {
+        id: "cafeName",
+        header: "Cafe Name",
+        Cell: ({ row }) => row.original.user?.cafeName || "-",
+      },
       {
         accessorKey: "razorpayPaymentId",
         header: "Payment ID",
@@ -13,14 +22,17 @@ export const PaymentHistory = () => {
         accessorKey: "paidAt",
         header: "Payment Date",
         Cell: ({ row }) =>
-          row.original.paidAt
-            ? new Date(row.original.paidAt).toLocaleDateString()
+          row.original.subscriptionStartDate
+            ? new Date(row.original.subscriptionStartDate).toLocaleDateString()
             : "-",
       },
       {
         id: "expiryDate",
         header: "Expiry Date",
-        Cell: () => "-", // Not available from backend yet
+        Cell: ({ row }) =>
+          row.original.subscriptionEndDate
+            ? new Date(row.original.subscriptionEndDate).toLocaleDateString()
+            : "-", // Not available from backend yet
       },
       {
         accessorKey: "amount",
@@ -41,13 +53,15 @@ export const PaymentHistory = () => {
                 : "bg-red-100 text-red-600"
             }`}
           >
-            {row.original.status}
+            {row.original.status === "captured" ? "Paid" : row.original.status}
           </span>
         ),
       },
     ],
     [],
   );
+
+  const querykey = adminId ? `get-transactions-${adminId}` : "get-transactions";
 
   return (
     <div className="overflow-hidden">
@@ -68,10 +82,10 @@ export const PaymentHistory = () => {
       {/* Table */}
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
         <TableComponent
-          slug="transactions"
           columns={columns}
-          querykey="get-transactions"
+          querykey={querykey}
           getApiEndPoint="getTransactions"
+          params={adminId ? { adminId } : {}}
           manualPagination={true}
           serialNo={true}
           enableExportTable={true}

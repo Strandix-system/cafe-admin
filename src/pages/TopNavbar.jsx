@@ -34,6 +34,7 @@ export function TopNavbar() {
     "/my-orders",
     "/cafes/",
     "/dashboard/", // for super admin viewing specific admin analytics
+    "/payment-history/",
   ];
 
   // Check if current route should show back button
