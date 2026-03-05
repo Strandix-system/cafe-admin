@@ -213,6 +213,12 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
                     select
                     error={errors.category}
                     helperText={errors.category?.message}
+                    isAutocomplete
+                    options={categories}
+                    getOptionLabel={(option) => option.name || ""}
+                    onOptionChange={(newValue) => {
+                      field.onChange(newValue?._id || "");
+                    }}
                   >
                     <MenuItem value="">Select Category</MenuItem>
                     {categories.map((cat) => (

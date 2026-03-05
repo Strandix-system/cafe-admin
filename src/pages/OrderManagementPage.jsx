@@ -50,6 +50,17 @@ export const OrderManagementPage = () => {
     };
 
     const { pendingOrders, acceptedOrders, acceptOrder, completeOrder } = useOrders();
+
+      const { mutate: updatePaymentStatus } = usePatch(API_ROUTES.updatePaymentStatus, {
+        onSuccess: () => {
+            toast.success("Payment status updated to Paid!");
+            queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
+        },
+        onError: (error) => {
+            toast.error(error);
+            queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
+        },
+    });
     /* ---------------- ORDER HISTORY TABLE CONFIG ---------------- */
     const historyColumns = useMemo(
         () => [
