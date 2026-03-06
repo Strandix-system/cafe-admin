@@ -14,6 +14,7 @@ import { CommonButton } from "../../components/common/commonButton";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
 import { CommonImageField } from "../../components/common/CommonImageField";
 import { CommonTextField } from "../../components/common/CommonTextField";
+
 const superAdminProfileSchema = yup.object({
     firstName: yup.string().required("First name is required"),
     lastName: yup.string().required("Last name is required"),
@@ -25,7 +26,7 @@ const superAdminProfileSchema = yup.object({
     profileImage: yup.mixed().nullable(),
 });
 
-export default function SuperAdminProfileForm({
+export function SuperAdminProfileForm({
     defaultValues = {},
     onSubmit,
     isSubmitting = false,

@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { formatTime } from "../../utils/utils";
 import { FormComponent } from "../../components/forms/FormComponent";
-import SuperAdminProfileForm from "./SuperAdminProfileForm";
+import { SuperAdminProfileForm } from "./SuperAdminProfileForm";
 import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
 import { AUTH_ROLES } from "../../utils/constant";
