@@ -7,6 +7,7 @@ import { FormComponent } from "../../components/forms/FormComponent";
 import SuperAdminProfileForm from "./SuperAdminProfileForm";
 import { queryClient } from "../../lib/queryClient";
 import { useNavigate } from "react-router-dom";
+import { AUTH_ROLES } from "../../utils/constant";
 
 export function ProfileUpdate() {
     const { user } = useAuth();
@@ -16,7 +17,7 @@ export function ProfileUpdate() {
         `${API_ROUTES.updateUsers}/${user?.id}`,
         {
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["get-me"] });
+                queryClient.invalidateQueries({ queryKey: "get-me" });
                 toast.success("Profile updated successfully");
                 navigate("/dashboard");
             },
@@ -26,29 +27,29 @@ export function ProfileUpdate() {
     );
 
     const onSubmit = (data) => {
-
-        delete cleaned.__v;
-        delete cleaned._id;
-        delete cleaned.id;
-        delete cleaned.isProfileComplete;
-        delete cleaned.createdAt;
-        delete cleaned.updatedAt;
-        delete cleaned.role;
+        delete data.__v;
+        delete data._id;
+        delete data.id;
+        delete data.isProfileComplete;
+        delete data.createdAt;
+        delete data.updatedAt;
+        delete data.role;
 
         const formattedData = {
+            ...data,
             hours: {
                 weekdays:
-                    cleaned?.hours?.weekdays?.open &&
-                        cleaned?.hours?.weekdays?.close
-                        ? `${formatTime(cleaned.hours.weekdays.open)} - ${formatTime(
-                            cleaned.hours.weekdays.close
+                    data?.hours?.weekdays?.open &&
+                        data?.hours?.weekdays?.close
+                        ? `${formatTime(data.hours.weekdays.open)} - ${formatTime(
+                            data.hours.weekdays.close
                         )}`
                         : "",
                 weekends:
-                    cleaned?.hours?.weekends?.open &&
-                        cleaned?.hours?.weekends?.close
-                        ? `${formatTime(cleaned.hours.weekends.open)} - ${formatTime(
-                            cleaned.hours.weekends.close
+                    data?.hours?.weekends?.open &&
+                        data?.hours?.weekends?.close
+                        ? `${formatTime(data.hours.weekends.open)} - ${formatTime(
+                            data.hours.weekends.close
                         )}`
                         : "",
             },
@@ -71,9 +72,9 @@ export function ProfileUpdate() {
         updateMutate(formData);
     };
 
-    if (!user) return null;
+    if (!user) return undefined;
 
-    if (user.role === "superadmin") {
+    if (user.role === AUTH_ROLES.SUPER_ADMIN) {
         return (
             <SuperAdminProfileForm
                 onSubmit={onSubmit}
