@@ -38,6 +38,13 @@ export const sideBarItems = {
             path: "/categories",
             tab: "categories",
         },
+        {
+            key: "enquiries",
+            label: "Enquiries",
+            icon: SupervisedUserCircleIcon,
+            path: "/enquiries",
+            tab: "enquiries",
+        },
 
     ],
     admin: [

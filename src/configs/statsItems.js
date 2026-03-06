@@ -1,4 +1,3 @@
-// ✅ Super Admin Dashboard Stats
 export const getSuperAdminStats = (statsData) => [
   { label: "Total Cafes", value: statsData?.totalCafe ?? 0 ,path: "/cafes" },
   { label: "Active Cafes", value: statsData?.totalActive ?? 0 ,path: "/cafes?tab=active" },
@@ -13,7 +12,6 @@ export const getSuperAdminStats = (statsData) => [
   },
 ];
 
-// ✅ Admin Dashboard Stats
 export const getAdminStats = (statsData) => [
   { label: "Total Customers", value: statsData?.totalCustomer ?? 0 ,path: "/customer" },
   { label: "Total Orders", value: statsData?.totalOrder ?? 0, path: "/order-management?tab=2" },
