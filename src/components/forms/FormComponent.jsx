@@ -122,7 +122,7 @@ export function FormComponent({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { data: { data: statesData } = {} } = useFetch(
     "states",
-    API_ROUTES.getstates,
+    API_ROUTES.getStates,
   );
 
   const { previews, handleImageChange, handleReplaceImage, setPreview } =
