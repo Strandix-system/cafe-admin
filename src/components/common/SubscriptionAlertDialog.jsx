@@ -14,22 +14,9 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { CommonButton } from "./commonButton";
 
-/**
- * Backend should return `alert` as part of the /me (or profile) API response:
- *
- * Expiring soon (within 7 days):
- * { type: "expiring_soon", message: "Your subscription expires in 5 days.", daysLeft: 5 }
- *
- * Expired:
- * { type: "expired", message: "Your subscription has expired.", daysLeft: 0 }
- *
- * No alert (active, > 7 days left):
- * alert: null
- */
-
 export const SubscriptionAlertDialog = ({ user, alert }) => {
   const isExpired = alert?.type === "expired";
-  const isExpiringSoon = alert?.type === "expiring_soon";
+  const isExpiringSoon = alert?.type === "expiringSoon";
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -52,15 +39,14 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
 
   const title = useMemo(() => {
     if (isExpired) return "Subscription Expired";
-    if (isExpiringSoon)
-      return `Subscription Expiring in ${alert.daysLeft} Day${alert.daysLeft !== 1 ? "s" : ""}`;
+    if (isExpiringSoon) return "Subscription Expiring Soon";
     return "Subscription Alert";
-  }, [alert, isExpired, isExpiringSoon]);
+  }, [isExpired, isExpiringSoon]);
 
   const alertSeverity = isExpired ? "error" : "warning";
 
   const closeDialog = () => {
-    if (isExpired) return; // Block closing if expired
+    if (alert?.modalClosable === false) return; // Block closing if expired
     setIsOpen(false);
   };
 
@@ -146,13 +132,13 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
       onClose={(_, reason) => {
         // Prevent closing by backdrop/escape when expired
         if (
-          isExpired &&
+          alert?.modalClosable === false &&
           (reason === "backdropClick" || reason === "escapeKeyDown")
         )
           return;
         closeDialog();
       }}
-      disableEscapeKeyDown={isExpired}
+      disableEscapeKeyDown={alert?.modalClosable === false}
       maxWidth="xs"
       fullWidth
     >
@@ -160,7 +146,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
 
       <DialogContent>
         <Alert severity={alertSeverity} sx={{ mb: 1.5 }}>
-          {alert?.message || "Please renew your subscription to continue."}
+          {alert?.message}
         </Alert>
 
         {isExpired && (
