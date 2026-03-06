@@ -145,7 +145,6 @@ export function Dashboard() {
                                 borderRadius: 3,
                                 p: 2,
                                 height: 450,
-                                // height: "100%",
                                 display: "flex",
                                 flexDirection: "column",
                                 boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
