@@ -144,8 +144,7 @@ export function Dashboard() {
                                 bgcolor: "#ffffff",
                                 borderRadius: 3,
                                 p: 2,
-                                // height: 450,
-                                height: "100%",
+                                height: 450,
                                 display: "flex",
                                 flexDirection: "column",
                                 boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
@@ -163,13 +162,13 @@ export function Dashboard() {
                             <Box
                                 sx={{
                                     flex: 1,
-                                    overflowY: "auto",
+                                    overflowY: "scroll",
                                     pr: 1,
                                 }}
                             >
                                 <Grid container spacing={2}>
                                     {pendingOrders.map((order) => (
-                                        <Grid item xs={12} key={order._id}>
+                                        <Grid item size={{ xs: 12, sm: 6, md: 6 }} key={order._id}>
                                             <OrderCard
                                                 order={order}
                                                 isPending
