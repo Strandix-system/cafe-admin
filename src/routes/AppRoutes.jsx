@@ -20,6 +20,7 @@ import { ProfileLayout } from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
+import { Enquiries } from "../pages/Admin/AdminEnquire";
 
 export const AppRoutes = () => {
   return (
@@ -54,6 +55,7 @@ export const AppRoutes = () => {
         <Route path="/order-management" element={<OrderManagementPage />} />
         <Route path="/customer" element={<CustomerList />} />
         <Route path="/my-orders/:userId" element={<MyOrders />} />
+        <Route path="/enquiries" element={<Enquiries />} />
         <Route path="/profile" element={<ProfileLayout />}>
           <Route index element={<ProfileUpdate />} />
           <Route path="change-password" element={<ChangePassword />} />

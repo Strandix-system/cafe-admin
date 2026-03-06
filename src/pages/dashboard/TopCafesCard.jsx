@@ -16,7 +16,7 @@ export default function TopCafesCard() {
     ["top-cafes", user?._id],
     API_ROUTES.dashboardTopCafes,
     {},
-    { enabled: !!user?._id }
+    { enabled: !!user?._id },
   );
 
   const cafes = data?.result ?? [];
@@ -52,9 +52,11 @@ export default function TopCafesCard() {
         {cafes.map((cafe, index) => (
           <Box
             key={cafe.cafeId}
-            onClick={() => navigate(`/dashboard/${cafe.cafeId}`, {
-              state: { cafeName: cafe.cafeName }
-            })}
+            onClick={() =>
+              navigate(`/dashboard/${cafe.cafeId}`, {
+                state: { cafeName: cafe.cafeName },
+              })
+            }
             sx={{
               display: "grid",
               gridTemplateColumns: "32px 1fr auto",
