@@ -83,20 +83,7 @@ export const adminSchema = yup.object().shape({
         close: yup
           .string()
           .nullable()
-          .required("Weekday closing time is required")
-          .test(
-            "is-after-open",
-            "Closing time must be after opening time",
-            function (closeTime) {
-              const { open } = this.parent;
-              if (!open || !closeTime) return true;
-
-              const openDate = new Date(open);
-              const closeDate = new Date(closeTime);
-
-              return closeDate > openDate;
-            },
-          ),
+          .required("Weekday closing time is required"),
       })
       .required("Weekday hours are required"),
     weekends: yup
@@ -109,20 +96,7 @@ export const adminSchema = yup.object().shape({
         close: yup
           .string()
           .nullable()
-          .required("Weekend closing time is required")
-          .test(
-            "is-after-open",
-            "Closing time must be after opening time",
-            function (closeTime) {
-              const { open } = this.parent;
-              if (!open || !closeTime) return true;
-
-              const openDate = new Date(open);
-              const closeDate = new Date(closeTime);
-
-              return closeDate > openDate;
-            },
-          ),
+          .required("Weekend closing time is required"),
       })
       .required("Weekend hours are required"),
   }),

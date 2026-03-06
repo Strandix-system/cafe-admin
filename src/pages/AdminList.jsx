@@ -10,6 +10,7 @@ import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
 import { CommonButton } from "../components/common/commonButton";
 import { useLocation } from "react-router-dom";
+import { CommonChip } from "../components/common/CommonChip";
 
 export const AdminList = () => {
   const navigate = useNavigate();
@@ -96,10 +97,9 @@ export const AdminList = () => {
         Cell: ({ row }) => {
           const isActive = row.original.isActive;
           return (
-            <Chip
+            <CommonChip
               label={isActive ? "Active" : "Inactive"}
-              color={isActive ? "success" : "failure"}
-              size="small"
+              color={isActive ? "success" : "error"}
             />
           );
         },

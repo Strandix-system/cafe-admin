@@ -24,6 +24,7 @@ import {
 import { X } from "lucide-react";
 import { InputField } from "../../components/common/InputField";
 import { formatAmount } from "../../utils/utils";
+import { CommonChip } from "../../components/common/CommonChip";
 
 const StatCard = ({ title, value, highlight = false, large = false }) => {
   return (
@@ -106,57 +107,28 @@ export const CustomerList = () => {
                 }}
               >
                 {customerStatus === "frequent" && (
-                  <Chip
+                  <CommonChip
                     label="Frequent"
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: "10px",
-                      fontWeight: 600,
-                      bgcolor: "#1B5E20",
-                      color: "#fff",
-                      // right: -40,
-                      borderRadius: "10px",
-                      "& .MuiChip-label": {
-                        px: 0.8,
-                      },
-                    }}
+                    bgColor="#1B5E20"
+                    textColor="#fff"
+                    fontWeight={600}
                   />
                 )}
                 {customerStatus === "new" && (
-                  <Chip
+                  <CommonChip
                     label="New"
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: "10px",
-                      fontWeight: 500,
-                      bgcolor: "#E5E7EB",
-                      color: "#374151",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": {
-                        px: 0.8,
-                      },
-                    }}
+                    bgColor="#E5E7EB"
+                    textColor="#374151"
                   />
                 )}
 
                 {/* VIP Badge */}
                 {customerStatus === "vip" && (
-                  <Chip
+                  <CommonChip
                     label="VIP"
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: "10px",
-                      fontWeight: 700,
-                      bgcolor: "#F59E0B",
-                      color: "#000",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": {
-                        px: 0.8,
-                      },
-                    }}
+                    bgColor="#F59E0B"
+                    textColor="#000"
+                    fontWeight={700}
                     icon={<Crown size={14} />}
                   />
                 )}

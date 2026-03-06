@@ -1,6 +1,6 @@
 import { Grid, FormLabel, Box } from "@mui/material";
 import { Controller } from "react-hook-form";
-import { TimePicker } from "@mui/x-date-pickers";
+import { TimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
 const getNestedError = (errors, name) =>
@@ -21,6 +21,11 @@ export const CommonTimeField = ({
 
   TIME_PICKER_STYLES,
 }) => {
+  const viewRenderers = {
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+  };
+
   /* ---------- MODE 1: OPEN / CLOSE FIELDS ---------- */
   if (openName && closeName) {
     const openError = getNestedError(errors, openName);
@@ -46,6 +51,9 @@ export const CommonTimeField = ({
             render={({ field }) => (
               <TimePicker
                 label="Open"
+                ampm
+                format="hh:mm A"
+                viewRenderers={viewRenderers}
                 value={field.value ? dayjs(field.value) : null}
                 onChange={(val) =>
                   field.onChange(val ? val.toISOString() : null)
@@ -68,6 +76,9 @@ export const CommonTimeField = ({
             render={({ field }) => (
               <TimePicker
                 label="Close"
+                ampm
+                format="hh:mm A"
+                viewRenderers={viewRenderers}
                 value={field.value ? dayjs(field.value) : null}
                 onChange={(val) =>
                   field.onChange(val ? val.toISOString() : null)
@@ -115,7 +126,9 @@ export const CommonTimeField = ({
               <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
                 <TimePicker
                   label="Open"
+                  ampm
                   format="h:mm A"
+                  viewRenderers={viewRenderers}
                   value={openTime ? dayjs(openTime, "h:mm A") : null}
                   onChange={(val) => {
                     if (!val) return;
@@ -129,7 +142,9 @@ export const CommonTimeField = ({
 
                 <TimePicker
                   label="Close"
+                  ampm
                   format="h:mm A"
+                  viewRenderers={viewRenderers}
                   value={closeTime ? dayjs(closeTime, "h:mm A") : null}
                   onChange={(val) => {
                     if (!val) return;

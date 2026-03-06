@@ -15,6 +15,7 @@ import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 import { useLocation } from "react-router-dom";
 import { useOrders } from "../context/OrderContext";
 import { formatAmount } from "../utils/utils";
+import { CommonChip } from "../components/common/CommonChip";
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -92,23 +93,22 @@ export const OrderManagementPage = () => {
         id: "orderStatus",
         header: "Order Status",
         Cell: ({ row }) => (
-          <Chip
+          <CommonChip
             label={row.original.orderStatus}
-            size="small"
-            sx={{
-              backgroundColor:
-                row.original.orderStatus === "pending"
-                  ? "#FFF3CD"
-                  : row.original.orderStatus === "accepted"
-                    ? "#D1E7FF"
-                    : "#D1FFBE",
-              color:
-                row.original.orderStatus === "pending"
-                  ? "#856404"
-                  : row.original.orderStatus === "accepted"
-                    ? "#004085"
-                    : "#3DB309",
-            }}
+            bgColor={
+              row.original.orderStatus === "pending"
+                ? "#FFF3CD"
+                : row.original.orderStatus === "accepted"
+                  ? "#D1E7FF"
+                  : "#D1FFBE"
+            }
+            textColor={
+              row.original.orderStatus === "pending"
+                ? "#856404"
+                : row.original.orderStatus === "accepted"
+                  ? "#004085"
+                  : "#3DB309"
+            }
           />
         ),
       },
@@ -116,15 +116,10 @@ export const OrderManagementPage = () => {
         id: "paymentStatus",
         header: "Payment Status",
         Cell: ({ row }) => (
-          <Chip
+          <CommonChip
             label={row.original.paymentStatus ? "Paid" : "Unpaid"}
-            size="small"
-            sx={{
-              backgroundColor: row.original.paymentStatus
-                ? "#D1FFBE"
-                : "#FFDADA",
-              color: row.original.paymentStatus ? "#3DB309" : "#FF0000",
-            }}
+            bgColor={row.original.paymentStatus ? "#D1FFBE" : "#FFDADA"}
+            textColor={row.original.paymentStatus ? "#3DB309" : "#FF0000"}
           />
         ),
       },
