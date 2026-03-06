@@ -272,10 +272,7 @@ const shortcuts = [
   { label: "Today", getRange: () => [dayjs(), dayjs()] },
   {
     label: "Yesterday",
-    getRange: () => [
-      dayjs().subtract(1, "day"),
-      dayjs().subtract(1, "day"),
-    ],
+    getRange: () => [dayjs().subtract(1, "day"), dayjs().subtract(1, "day")],
   },
   {
     label: "Last 7 Days",
@@ -283,10 +280,7 @@ const shortcuts = [
   },
   {
     label: "This Month",
-    getRange: () => [
-      dayjs().startOf("month"),
-      dayjs().endOf("month"),
-    ],
+    getRange: () => [dayjs().startOf("month"), dayjs().endOf("month")],
   },
   { label: "Custom Range", getRange: () => [null, null] },
 ];
@@ -351,8 +345,8 @@ export default function DateRangeFilter({ onChange }) {
   const buttonLabel =
     startDate && endDate
       ? `${startDate.format("MMM DD, YYYY")} - ${endDate.format(
-        "MMM DD, YYYY"
-      )}`
+          "MMM DD, YYYY",
+        )}`
       : "Start Date - End Date";
 
   return (
@@ -440,7 +434,7 @@ export default function DateRangeFilter({ onChange }) {
                     if (!tempEnd) setTempEnd(val);
                   }}
                   slots={{
-                    toolbar: null,      // ✅ removes "SELECT DATE"
+                    toolbar: null, // ✅ removes "SELECT DATE"
                   }}
                   slotProps={{
                     actionBar: { actions: [] }, // ✅ removes OK / CANCEL
@@ -463,8 +457,7 @@ export default function DateRangeFilter({ onChange }) {
                   minDate={tempStart || undefined}
                   onChange={(val) => setTempEnd(val)}
                   slots={{
-                    toolbar: null,      // ✅ removes "SELECT DATE"
-
+                    toolbar: null, // ✅ removes "SELECT DATE"
                   }}
                   slotProps={{
                     actionBar: { actions: [] }, // ✅ removes OK / CANCEL
@@ -486,9 +479,9 @@ export default function DateRangeFilter({ onChange }) {
           >
             <Typography variant="body2">
               {tempStart &&
-                `${tempStart.format("MM/DD/YYYY")} - ${(tempEnd || tempStart).format(
-                  "MM/DD/YYYY"
-                )}`}
+                `${tempStart.format("MM/DD/YYYY")} - ${(
+                  tempEnd || tempStart
+                ).format("MM/DD/YYYY")}`}
             </Typography>
 
             <Box display="flex" gap={1}>

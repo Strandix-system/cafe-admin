@@ -1,6 +1,6 @@
 import { Card, Box, Typography } from "@mui/material";
 
-export default function ChartCard({ title,action, children }) {
+export default function ChartCard({ title, action, children }) {
   return (
     <Card
       sx={{
@@ -10,7 +10,6 @@ export default function ChartCard({ title,action, children }) {
         boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
       }}
     >
-
       <Box
         display="flex"
         alignItems="center"

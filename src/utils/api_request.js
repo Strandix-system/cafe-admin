@@ -22,7 +22,7 @@ export const getAccessToken = () => {
 const getHeaders = (body = {}) => {
   return {
     ...(getAccessToken() && { Authorization: `Bearer ${getAccessToken()}` }),
-    'ngrok-skip-browser-warning': "Hello",
+    "ngrok-skip-browser-warning": "Hello",
     ...(!(body instanceof FormData) && { "Content-Type": "application/json" }),
   };
 };
@@ -53,16 +53,16 @@ export const APIRequest = {
     return handleResponse(response);
   },
 
-//   get: async (endpoint, params = {}) => {
-//   console.log("ENDPOINT:", endpoint);
+  //   get: async (endpoint, params = {}) => {
+  //   console.log("ENDPOINT:", endpoint);
 
-//   const response = await fetch(withQuery(endpoint, params), {
-//     method: "GET",
-//     headers: getHeaders(),
-//   });
+  //   const response = await fetch(withQuery(endpoint, params), {
+  //     method: "GET",
+  //     headers: getHeaders(),
+  //   });
 
-//   return handleResponse(response);
-// },
+  //   return handleResponse(response);
+  // },
   post: async (endpoint, data, params = {}) => {
     const queryString = buildQueryString(params);
     const response = await fetch(`${BASE_URL}/${endpoint}?${queryString}`, {
@@ -100,15 +100,14 @@ export const APIRequest = {
   //   return handleResponse(response);
   // },
   remove: async (endpoint) => {
-  const url = `${BASE_URL}/${endpoint}`;
-  console.log("FINAL DELETE REQUEST →", url);
+    const url = `${BASE_URL}/${endpoint}`;
+    console.log("FINAL DELETE REQUEST →", url);
 
-  const response = await fetch(url, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
 
-  return handleResponse(response);
-},
-
+    return handleResponse(response);
+  },
 };

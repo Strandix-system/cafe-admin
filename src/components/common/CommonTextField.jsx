@@ -53,7 +53,6 @@ export const CommonTextField = ({
             startIcon={startIcon || icon}
             endIcon={endIcon}
             type={type}
-
             /* ✅ multiline support */
             multiline={multiline}
             rows={multiline ? rows : undefined}
@@ -63,5 +62,3 @@ export const CommonTextField = ({
     </Grid>
   );
 };
-
-
