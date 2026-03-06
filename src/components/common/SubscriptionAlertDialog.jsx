@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogActions,
   Typography,
+  Alert,
 } from "@mui/material";
 import toast from "react-hot-toast";
 import cafeLogo from "../../assets/cafe_logo.png";
@@ -13,124 +14,142 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { CommonButton } from "./commonButton";
 
-export const SubscriptionAlertDialog = ({ user, alert, onLogout }) => {
+/**
+ * Backend should return `alert` as part of the /me (or profile) API response:
+ *
+ * Expiring soon (within 7 days):
+ * { type: "expiring_soon", message: "Your subscription expires in 5 days.", daysLeft: 5 }
+ *
+ * Expired:
+ * { type: "expired", message: "Your subscription has expired.", daysLeft: 0 }
+ *
+ * No alert (active, > 7 days left):
+ * alert: null
+ */
+
+export const SubscriptionAlertDialog = ({ user, alert }) => {
   const isExpired = alert?.type === "expired";
+  const isExpiringSoon = alert?.type === "expiring_soon";
+
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (isExpired) {
-      setIsOpen(true);
+    if (!alert) {
+      setIsOpen(false);
       return;
     }
-    setIsOpen(Boolean(alert));
-  }, [alert, isExpired]);
+    setIsOpen(true);
+  }, [alert]);
+
+  // Reload Razorpay script once on mount
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => document.body.removeChild(script);
+  }, []);
 
   const title = useMemo(() => {
     if (isExpired) return "Subscription Expired";
-    if (alert?.type === "expiring_soon") return "Subscription Expiring Soon";
+    if (isExpiringSoon)
+      return `Subscription Expiring in ${alert.daysLeft} Day${alert.daysLeft !== 1 ? "s" : ""}`;
     return "Subscription Alert";
-  }, [alert, isExpired]);
+  }, [alert, isExpired, isExpiringSoon]);
+
+  const alertSeverity = isExpired ? "error" : "warning";
 
   const closeDialog = () => {
-    if (isExpired) return;
+    if (isExpired) return; // Block closing if expired
     setIsOpen(false);
   };
 
+  // Step 2: Verify payment with backend
   const { mutate: verifyRenewSubscription, isPending: verifyPending } = usePost(
     API_ROUTES.verifyRenewSubscription,
     {
-      onSuccess: async () => {
+      onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: "get-me" });
         toast.success("Subscription renewed successfully.");
+        setIsOpen(false);
       },
       onError: (error) => {
-        toast.error(error || "Renewal verification failed.");
+        toast.error(error);
       },
     },
   );
 
-  const handleRazorpaySuccess = (response) => {
-    verifyRenewSubscription({
-      razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_subscription_id: response.razorpay_subscription_id,
-      razorpay_signature: response.razorpay_signature,
-    });
-  };
-
+  // Step 1b: Open Razorpay checkout with subscription ID
   const openRazorpayCheckout = (subscriptionId) => {
     if (!window.Razorpay) {
-      toast.error("Payment gateway not loaded.");
+      toast.error("Payment gateway not loaded. Please try again.");
       return;
     }
 
-    const options = {
+    const rzp = new window.Razorpay({
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
       subscription_id: subscriptionId,
       name: "Aeternis",
       image: cafeLogo,
-      description: "Renew subscription",
+      description: "Renew Subscription",
       prefill: {
         name: `${user?.firstName || ""} ${user?.lastName || ""}`.trim(),
         email: user?.email,
         contact: user?.phoneNumber ? String(user.phoneNumber) : "",
       },
       theme: { color: "#6F4E37" },
-      handler: handleRazorpaySuccess,
-      modal: {
-        ondismiss: () => {
-          if (isExpired) {
-            setIsOpen(true);
-          }
-        },
+      handler: ({
+        razorpay_payment_id,
+        razorpay_subscription_id,
+        razorpay_signature,
+      }) => {
+        verifyRenewSubscription({
+          razorpay_payment_id,
+          razorpay_subscription_id,
+          razorpay_signature,
+        });
       },
-    };
+      modal: {
+        // Re-open dialog if user dismisses payment on expired state
+        ondismiss: () => isExpired && setIsOpen(true),
+      },
+    });
 
-    const rzp = new window.Razorpay(options);
     rzp.open();
   };
 
+  // Step 1a: Initiate renewal → get subscription ID
   const { mutate: renewSubscription, isPending: renewPending } = usePost(
     API_ROUTES.renewSubscription,
     {
       onSuccess: (res) => {
         const subscriptionId = res?.result?.id;
         if (!subscriptionId) {
-          toast.error("Subscription ID missing.");
+          toast.error("Subscription ID missing in response.");
           return;
         }
         openRazorpayCheckout(subscriptionId);
       },
       onError: (error) => {
-        toast.error(error || "Unable to start renewal.");
+        toast.error(error);
       },
     },
   );
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    document.body.appendChild(script);
+  if (!alert) return null;
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  if (!alert) {
-    return null;
-  }
+  const isLoading = renewPending || verifyPending;
 
   return (
     <Dialog
       open={isOpen}
       onClose={(_, reason) => {
+        // Prevent closing by backdrop/escape when expired
         if (
           isExpired &&
           (reason === "backdropClick" || reason === "escapeKeyDown")
-        ) {
+        )
           return;
-        }
         closeDialog();
       }}
       disableEscapeKeyDown={isExpired}
@@ -138,25 +157,39 @@ export const SubscriptionAlertDialog = ({ user, alert, onLogout }) => {
       fullWidth
     >
       <DialogTitle>{title}</DialogTitle>
+
       <DialogContent>
-        <Typography variant="body2" color="text.secondary">
+        <Alert severity={alertSeverity} sx={{ mb: 1.5 }}>
           {alert?.message || "Please renew your subscription to continue."}
-        </Typography>
+        </Alert>
+
+        {isExpired && (
+          <Typography variant="body2" color="text.secondary">
+            Your access has been suspended. Renew now to restore full access.
+          </Typography>
+        )}
+
+        {isExpiringSoon && (
+          <Typography variant="body2" color="text.secondary">
+            Renew early to avoid any interruption to your service.
+          </Typography>
+        )}
       </DialogContent>
+
       <DialogActions>
         {!isExpired && (
-          <CommonButton variant="outlined" onClick={closeDialog}>
+          <CommonButton
+            variant="outlined"
+            onClick={closeDialog}
+            disabled={isLoading}
+          >
             Dismiss
-          </CommonButton>
-        )}
-        {isExpired && (
-          <CommonButton variant="outlined" onClick={onLogout}>
-            Logout
           </CommonButton>
         )}
         <CommonButton
           onClick={() => renewSubscription({})}
-          loading={renewPending || verifyPending}
+          loading={isLoading}
+          disabled={isLoading}
         >
           Renew Now
         </CommonButton>

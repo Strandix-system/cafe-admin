@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { SubscriptionAlertDialog } from "../../components/common/SubscriptionAlertDialog";
 
 export function DashboardLayout() {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   return (
     <Box
@@ -47,7 +47,6 @@ export function DashboardLayout() {
           <SubscriptionAlertDialog
             user={user}
             alert={user?.subscriptionAlert}
-            onLogout={logout}
           />
         )}
       </Box>
