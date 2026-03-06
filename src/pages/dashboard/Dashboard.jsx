@@ -168,7 +168,7 @@ export function Dashboard() {
                             >
                                 <Grid container spacing={2}>
                                     {pendingOrders.map((order) => (
-                                        <Grid item size={{ xs: 12 , sm:6 ,md:6 }} key={order._id}>
+                                        <Grid item size={{ xs: 12, sm: 6, md: 6 }} key={order._id}>
                                             <OrderCard
                                                 order={order}
                                                 isPending
