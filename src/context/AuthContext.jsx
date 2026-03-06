@@ -86,7 +86,12 @@ export function AuthProvider({ children }) {
     [logout],
   );
 
-  if (authLoading) return <><Loader variant="fullscreen" /></>;
+  if (authLoading)
+    return (
+      <>
+        <Loader variant="fullscreen" />
+      </>
+    );
 
   return (
     <AuthContext.Provider

@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   Grid,
   MenuItem,
   FormLabel,
-  Box,
   IconButton,
 } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -22,7 +20,6 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 
 import { InputField } from "../../components/common/InputField";
-import { ImageUploadSection } from "../../components/common/ImageUploadSection";
 import { CommonTextField } from "../../components/common/CommonTextField";
 import { CommonImageField } from "../../components/common/CommonImageField";
 import { useImageUpload } from "../../utils/hooks/useImageUpload";
@@ -112,8 +109,6 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
 
   useEffect(() => {
     if (!menuRes?.result || !isEdit || !categories.length) return;
-
-    console.log("🟡 MENU RESULT:", menuRes.result);
 
     reset({
       itemName: menuRes.result.name,
@@ -216,6 +211,12 @@ export function CreateEditMenuModal({ open, onClose, menuId }) {
                     select
                     error={errors.category}
                     helperText={errors.category?.message}
+                    isAutocomplete
+                    options={categories}
+                    getOptionLabel={(option) => option.name || ""}
+                    onOptionChange={(newValue) => {
+                      field.onChange(newValue?._id || "");
+                    }}
                   >
                     <MenuItem value="">Select Category</MenuItem>
                     {categories.map((cat) => (

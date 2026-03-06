@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import cafe1 from "../../assets/cafe1.jpg";
 import cafe_logo from "../../assets/cafe_logo.png";
 import { API_ROUTES } from "../../utils/api_constants";
-import { usePost } from "../../utils/hooks/api_hooks";
+import { useFetch, usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { CommonButton } from "../../components/common/commonButton";
@@ -24,12 +24,9 @@ export const Plan = () => {
   const signupData = JSON.parse(localStorage.getItem("signupData"));
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const [selectedPlanId, setSelectedPlanId] = useState(null);
   // Plan details
-  const plan = {
-    name: "Premium Plan",
-    price: "₹10",
-    priceNumeric: 10,
+  const planFeatures = {
     features: [
       "Manage orders in real time with live status updates (Pending, Accepted, Completed).",
       "Centralized menu and category management for fast updates across outlets.",
@@ -41,39 +38,58 @@ export const Plan = () => {
     ],
   };
 
-  const { mutate: createOrder, isPending: createOrderPending } = usePost(
-    API_ROUTES.createOrder,
+  const formatBillingText = (interval, period) => {
+    if (interval === 1) return `Renews every ${period}`;
+    return `Renews every ${interval} ${period}s`;
+  };
+
+  const { data: plansData, isLoading: plansLoading } = useFetch(
+    "plans",
+    API_ROUTES.getPlans,
+  );
+  const plans = plansData?.result ?? [];
+
+  const selectedPlan = plans.find((plan) => plan.id === selectedPlanId);
+
+  const openRazorpayCheckout = (subscriptionId) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      subscription_id: subscriptionId, // 🔥 THIS IS IMPORTANT
+      name: "Aeternis",
+      image: cafe_logo,
+      description: "Premium Plan Subscription",
+
+      handler: (response) => {
+        setIsLoading(false);
+        handleSubscriptionSuccess(response);
+      },
+
+      prefill: {
+        name: `${signupData.firstName} ${signupData.lastName}`,
+        email: signupData.email,
+        contact: signupData.phoneNumber,
+      },
+
+      theme: { color: "#6F4E37" },
+
+      modal: {
+        ondismiss: () => {
+          setIsLoading(false);
+          toast.info("Payment cancelled");
+        },
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  const { mutate: createSubscription } = usePost(
+    API_ROUTES.createSubscription,
     {
       onSuccess: (res) => {
-        const order = res.result;
-
-        const razorpayOptions = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-          amount: order.amount,
-          currency: order.currency,
-          order_id: order.id,
-          name: "Aeternis",
-          description: "Premium Plan Subscription",
-          image: "/cafe_logo",
-          handler: (response) => {
-            setIsLoading(false);
-            handlePaymentSuccess(response);
-          },
-          prefill: {
-            name: signupData?.name,
-            email: signupData?.email,
-          },
-          theme: { color: "#6F4E37" },
-          modal: {
-            ondismiss: () => {
-              setIsLoading(false);
-              toast.info("Payment cancelled");
-            },
-          },
-        };
-
-        const razorpayInstance = new window.Razorpay(razorpayOptions);
-        razorpayInstance.open();
+        const { subscription } = res.result;
+        openRazorpayCheckout(subscription.id);
       },
       onError: (error) => {
         setIsLoading(false);
@@ -81,8 +97,6 @@ export const Plan = () => {
       },
     },
   );
-
-  // API call to create admin user after payment
   const { mutate: verifySignup } = usePost(
     API_ROUTES.verifySignup, // New endpoint
     {
@@ -97,30 +111,21 @@ export const Plan = () => {
     },
   );
 
-  const handlePaymentSuccess = (response) => {
-    // Create admin user with payment details
+  const handleSubscriptionSuccess = (response) => {
+    console.log("Subscription payment successful:", response);
     verifySignup({
       firstName: signupData.firstName,
       lastName: signupData.lastName,
       email: signupData.email,
       password: signupData.password,
       phoneNumber: signupData.phoneNumber,
+
       razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_order_id: response.razorpay_order_id,
+      razorpay_subscription_id: response.razorpay_subscription_id,
       razorpay_signature: response.razorpay_signature,
     });
   };
 
-  const handleContinue = () => {
-    if (!window.Razorpay) {
-      toast.error("Payment gateway not loaded. Please refresh the page.");
-      return;
-    }
-    setIsLoading(true);
-    createOrder({ amount: plan.priceNumeric });
-  };
-
-  // Load Razorpay script
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -131,6 +136,34 @@ export const Plan = () => {
       document.body.removeChild(script);
     };
   }, []);
+
+  useEffect(() => {
+    if (plans.length > 0 && !selectedPlanId) {
+      setSelectedPlanId(plans[0].id);
+    }
+  }, [plans, selectedPlanId]);
+
+  const handleContinue = () => {
+    if (!window.Razorpay) {
+      toast.error("Payment gateway not loaded.");
+      return;
+    }
+
+    if (!selectedPlan) {
+      toast.error("Please select a plan.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    createSubscription({
+      planId: selectedPlanId,
+      firstName: signupData.firstName,
+      lastName: signupData.lastName,
+      email: signupData.email,
+      phoneNumber: signupData.phoneNumber,
+    });
+  };
 
   if (!signupData) {
     return; // Prevent rendering if no signup data
@@ -185,41 +218,60 @@ export const Plan = () => {
           Join with our premium services ☕
         </Typography>
 
-        {/* Plan Card */}
-        <Paper
-          elevation={5}
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            backgroundColor: "#F5EFE6",
-            border: "2px solid #6F4E37",
-          }}
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ color: "#3E2723", mb: 1 }}
-          >
-            {plan.name}
-          </Typography>
-          <Typography variant="h6" sx={{ color: "#6F4E37", mb: 2 }}>
-            {plan.price}/month
-          </Typography>
-          <List>
-            {plan.features.map((feature, index) => (
-              <ListItem key={index} sx={{ py: 0.5 }}>
-                <ListItemIcon sx={{ minWidth: 36 }}>
-                  <CheckCircle sx={{ color: "#6F4E37", fontSize: 20 }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={feature}
-                  sx={{ color: "#5D4037" }}
-                  primaryTypographyProps={{ fontSize: "0.9rem" }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
+        {plans.map((plan) => {
+          const amount = plan.item.amount / 100;
+          return (
+            <Paper
+              key={plan.id}
+              elevation={5}
+              onClick={() => setSelectedPlanId(plan.id)}
+              sx={{
+                p: 3,
+                borderRadius: 3,
+                backgroundColor:
+                  selectedPlanId === plan.id ? "#E8D8C3" : "#F5EFE6",
+                border:
+                  selectedPlanId === plan.id
+                    ? "2px solid #3E2723"
+                    : "2px solid #6F4E37",
+                cursor: "pointer",
+                mb: 2,
+              }}
+            >
+              <Typography
+                variant="h5"
+                fontWeight="600"
+                sx={{ color: "#3E2723", mb: 1 }}
+              >
+                {plan.item.name}
+              </Typography>
+
+              <Typography variant="h6" sx={{ color: "#6F4E37" }}>
+                ₹{amount} / {plan.period}
+              </Typography>
+
+              <Typography variant="body2" sx={{ color: "#5D4037", mb: 2 }}>
+                ₹{amount} charged today •{" "}
+                {formatBillingText(plan.interval, plan.period)}
+              </Typography>
+
+              <List>
+                {planFeatures.features.map((feature, index) => (
+                  <ListItem key={index} sx={{ py: 0.5 }}>
+                    <ListItemIcon sx={{ minWidth: 36 }}>
+                      <CheckCircle sx={{ color: "#6F4E37", fontSize: 20 }} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={feature}
+                      sx={{ color: "#5D4037" }}
+                      primaryTypographyProps={{ fontSize: "0.9rem" }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          );
+        })}
 
         {/* User Info Preview */}
         <Box sx={{ mt: 3, p: 2, backgroundColor: "#FFF3E0", borderRadius: 2 }}>
@@ -241,7 +293,7 @@ export const Plan = () => {
             mt: 4,
           }}
         >
-          {`Continue to Payment • ${plan.price}`}
+          {`Continue to Payment • ₹${selectedPlan?.item.amount / 100 || ""}`}
         </CommonButton>
 
         <CommonButton

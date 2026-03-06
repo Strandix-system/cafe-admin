@@ -1,7 +1,17 @@
-import { Box, Grid, Card, Typography, Avatar, Stack, CardMedia, Chip } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Card,
+  Typography,
+  Avatar,
+  Stack,
+  CardMedia,
+  Chip,
+} from "@mui/material";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
+import { formatAmount } from "../../utils/utils";
 
 const ItemCard = ({ name, qty, image, revenue, type }) => {
   const isTop = type === "top";
@@ -36,36 +46,25 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
       />
 
       {/* Content */}
-      <Box p={1.2}
+      <Box
+        p={1.2}
         sx={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-        }}>
-        <Typography
-          fontWeight={600}
-          fontSize={15}
-          noWrap
-          title={name}
-        >
+        }}
+      >
+        <Typography fontWeight={600} fontSize={15} noWrap title={name}>
           {name}
         </Typography>
 
         <div className="flex gap-4">
-          <Typography
-            color="text.secondary"
-            fontSize={13}
-            mt={0.3}
-          >
+          <Typography color="text.secondary" fontSize={13} mt={0.3}>
             Qty Sold: <strong>{qty}</strong>
           </Typography>
-          <Typography
-            color="text.secondary"
-            fontSize={13}
-            mt={0.3}
-          >
-            Revenue: <strong>{revenue}</strong>
+          <Typography color="text.secondary" fontSize={13} mt={0.3}>
+            Revenue: <strong>₹{formatAmount(revenue)}</strong>
           </Typography>
         </div>
 
@@ -86,41 +85,42 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
   );
 };
 
-export default function ItemCards() {
+export default function ItemCards({ overrideData, isViewingAdmin }) {
   const { user } = useAuth();
 
   const { data } = useFetch(
     ["dashboard-items", user?._id],
     API_ROUTES.dashboardItems,
     {},
-    { enabled: !!user?._id }
+    { enabled: !!user?._id && !isViewingAdmin },
   );
 
-  const top = data?.result?.topSelling ?? null;
-  const low = data?.result?.lowSelling ?? null;
+  const top = overrideData?.topSelling ?? data?.result?.topSelling ?? null;
+  const low = overrideData?.lowSelling ?? data?.result?.lowSelling ?? null;
 
   if (!top && !low) {
     return null;
   }
   return (
     <Box>
-      <Stack spacing={2}>
+      <Stack spacing={3}>
         {/* Top Selling */}
-        <Box  >
-
+        <Box>
           <Box
+            // sx={{
+            //   p: 1,
+            //   borderRadius: 3,
+            //   backgroundColor: "background.paper",
+            //   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+            // }}
             sx={{
-              p: 1,
+              p: 2,
               borderRadius: 3,
-              backgroundColor: "background.paper",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+              backgroundColor: "#fff",
+              boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
             }}
           >
-            <Typography
-              fontWeight={600}
-              fontSize={18}
-              mb={1}
-            >
+            <Typography fontWeight={600} fontSize={18} mb={1}>
               Top Selling Item
             </Typography>
 
@@ -142,20 +142,21 @@ export default function ItemCards() {
 
         {/* Low Selling */}
         <Box>
-
           <Box
+            // sx={{
+            //   p: 1,
+            //   borderRadius: 3,
+            //   backgroundColor: "background.paper",
+            //   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+            // }}
             sx={{
-              p: 1,
+              p: 2,
               borderRadius: 3,
-              backgroundColor: "background.paper",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+              backgroundColor: "#fff",
+              boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
             }}
           >
-            <Typography
-              fontWeight={600}
-              fontSize={18}
-              mb={1}
-            >
+            <Typography fontWeight={600} fontSize={18} mb={1}>
               Low Selling Item
             </Typography>
             {low ? (
@@ -177,4 +178,3 @@ export default function ItemCards() {
     </Box>
   );
 }
-

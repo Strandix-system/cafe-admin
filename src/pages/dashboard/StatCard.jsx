@@ -1,4 +1,3 @@
-
 import { Card, CardContent, Typography, Box, Skeleton } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useEffect, useState } from "react";
@@ -12,6 +11,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import BlockIcon from "@mui/icons-material/Block";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import { useNavigate } from "react-router-dom";
 
 const shade = (hex, percent) => {
   const num = parseInt(hex.replace("#", ""), 16);
@@ -47,7 +47,14 @@ const ICON_MAP = {
   "Total Demo Requests": AssignmentIcon,
 };
 
-export default function StatCard({ label, value, loading ,onClick }) {
+export default function StatCard({
+  label,
+  value,
+  loading,
+  path,
+  disableClick,
+}) {
+  const navigate = useNavigate();
   const [displayValue, setDisplayValue] = useState(0);
   const [animate, setAnimate] = useState(false);
 
@@ -80,14 +87,17 @@ export default function StatCard({ label, value, loading ,onClick }) {
 
   return (
     <Card
-    onClick={onClick}
+      onClick={() => {
+        if (!disableClick && path) {
+          navigate(path);
+        }
+      }}
       sx={{
-        cursor: onClick ? "pointer" : "default",
+        cursor: !disableClick && path ? "pointer" : "default",
         position: "relative",
         overflow: "hidden",
         borderRadius: 4,
-         minHeight: 140,
-        // backgroundColor: THEME_COLOR, 
+        minHeight: 140,
         background: `
   linear-gradient(
     145deg,
@@ -138,16 +148,7 @@ export default function StatCard({ label, value, loading ,onClick }) {
           mb={2}
           height={40}
         >
-          <Box
-          // sx={{
-          //   bgcolor: "rgba(111, 78, 55, 0.18)",
-          //   borderRadius: "50%",
-          //   p: 1,
-          //   display: "flex",
-          // }}
-          // 
-          >
-            {/* <TrendingUpIcon sx={{ fontSize: 18, color: "#5C3A26", }} /> */}
+          <Box>
             <IconComponent sx={{ fontSize: 18, color: "#5C3A26" }} />
           </Box>
 
@@ -161,29 +162,8 @@ export default function StatCard({ label, value, loading ,onClick }) {
               fontSize: "clamp(0.95rem, 1vw, 0.85rem)",
             }}
           >
-          {/* <Typography
-            variant="body2"
-            sx={{
-              fontWeight: 500,
-              color: "#6F4E37",
-              letterSpacing: 0.3,
-              fontSize: {
-                xs: "0.7rem",
-                sm: "0.75rem",
-                md: "0.85rem",
-              },
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              flex: 1,
-              minWidth: 0,
-            }}
-          > */}
-
             {label}
           </Typography>
-
-
         </Box>
 
         {/* Value */}
@@ -209,6 +189,6 @@ export default function StatCard({ label, value, loading ,onClick }) {
           </Typography>
         )}
       </CardContent>
-    </Card >
+    </Card>
   );
 }
