@@ -7,15 +7,10 @@ export const RowActionMenu = ({
   closeMenu,
 }) => {
   return actions.map((action, i) => {
-    const isDisabled = action?.isDisabled
-      ? action?.isDisabled(row)
-      : false;
+    const isDisabled = action?.isDisabled ? action?.isDisabled(row) : false;
 
     return actionsType === "icons" ? (
-      <Tooltip
-        title={action?.label}
-        key={`action-${action?.label}-${i}`}
-      >
+      <Tooltip title={action?.label} key={`action-${action?.label}-${i}`}>
         <IconButton
           onClick={() => {
             setTimeout(() => action?.onClick(row));
@@ -51,5 +46,3 @@ export const RowActionMenu = ({
     );
   });
 };
-
-

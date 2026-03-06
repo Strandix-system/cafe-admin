@@ -16,7 +16,7 @@ import { usePatch, usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
 import { useEffect, useState } from "react";
-import {CommonButton} from "../common/commonButton";
+import { CommonButton } from "../common/commonButton";
 
 // ✅ Yup Schema
 const schema = yup.object({
@@ -29,7 +29,6 @@ const schema = yup.object({
 });
 
 export const CreateCategoryDialog = ({ open, handleClose, category }) => {
-
   const isEdit = Boolean(category);
   const [loading, setLoading] = useState(false);
 
@@ -46,31 +45,39 @@ export const CreateCategoryDialog = ({ open, handleClose, category }) => {
     mode: "onChange",
   });
 
-  const { mutate: createCategory, isPending: createPending } = usePost(API_ROUTES.createCategory, {
-    onSuccess: () => {
-      toast.success("Category created successfully ✅");
-      queryClient.invalidateQueries({ queryKey: ["get-categories"], type: "all" });
-      reset();
-      handleClose();
+  const { mutate: createCategory, isPending: createPending } = usePost(
+    API_ROUTES.createCategory,
+    {
+      onSuccess: () => {
+        toast.success("Category created successfully ✅");
+        queryClient.invalidateQueries({
+          queryKey: ["get-categories"],
+          type: "all",
+        });
+        reset();
+        handleClose();
+      },
+      onError: (error) => {
+        console.error("Create category failed:", error);
+        toast.error(error);
+      },
     },
-    onError: (error) => {
-      console.error("Create category failed:", error);
-      toast.error(error);
-    }
-  });
+  );
 
-  const { mutate: updateCategory, isPending: updatePending } = usePatch(`${API_ROUTES.updateCategory}/${category?._id}`, {
-    onSuccess: () => {
-      toast.success("Category updated successfully ✅");
-      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
-      reset();
-      handleClose();
+  const { mutate: updateCategory, isPending: updatePending } = usePatch(
+    `${API_ROUTES.updateCategory}/${category?._id}`,
+    {
+      onSuccess: () => {
+        toast.success("Category updated successfully ✅");
+        queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+        reset();
+        handleClose();
+      },
+      onError: (error) => {
+        console.error("Update category failed:", error);
+        toast.error(error);
+      },
     },
-    onError: (error) => {
-      console.error("Update category failed:", error);
-      toast.error(error);
-    }
-  }
   );
 
   useEffect(() => {
@@ -98,7 +105,9 @@ export const CreateCategoryDialog = ({ open, handleClose, category }) => {
   };
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>{isEdit ? "Update Category" : "Create New Category"}</DialogTitle>
+      <DialogTitle>
+        {isEdit ? "Update Category" : "Create New Category"}
+      </DialogTitle>
 
       <DialogContent>
         <Box mt={1}>
@@ -124,11 +133,15 @@ export const CreateCategoryDialog = ({ open, handleClose, category }) => {
           Cancel
         </CommonButton>
 
-        <CommonButton variant="contained" onClick={handleSubmit(onSubmit)} loading={createPending || updatePending} disabled={!isValid}>
+        <CommonButton
+          variant="contained"
+          onClick={handleSubmit(onSubmit)}
+          loading={createPending || updatePending}
+          disabled={!isValid}
+        >
           {isEdit ? "Update" : "Create"}
         </CommonButton>
       </DialogActions>
     </Dialog>
   );
 };
-

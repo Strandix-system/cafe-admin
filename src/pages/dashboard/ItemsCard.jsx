@@ -1,4 +1,13 @@
-import { Box, Grid, Card, Typography, Avatar, Stack, CardMedia, Chip } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Card,
+  Typography,
+  Avatar,
+  Stack,
+  CardMedia,
+  Chip,
+} from "@mui/material";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
@@ -37,35 +46,24 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
       />
 
       {/* Content */}
-      <Box p={1.2}
+      <Box
+        p={1.2}
         sx={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-        }}>
-        <Typography
-          fontWeight={600}
-          fontSize={15}
-          noWrap
-          title={name}
-        >
+        }}
+      >
+        <Typography fontWeight={600} fontSize={15} noWrap title={name}>
           {name}
         </Typography>
 
         <div className="flex gap-4">
-          <Typography
-            color="text.secondary"
-            fontSize={13}
-            mt={0.3}
-          >
+          <Typography color="text.secondary" fontSize={13} mt={0.3}>
             Qty Sold: <strong>{qty}</strong>
           </Typography>
-          <Typography
-            color="text.secondary"
-            fontSize={13}
-            mt={0.3}
-          >
+          <Typography color="text.secondary" fontSize={13} mt={0.3}>
             Revenue: <strong>₹{formatAmount(revenue)}</strong>
           </Typography>
         </div>
@@ -94,7 +92,7 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
     ["dashboard-items", user?._id],
     API_ROUTES.dashboardItems,
     {},
-    { enabled: !!user?._id && !isViewingAdmin }
+    { enabled: !!user?._id && !isViewingAdmin },
   );
 
   const top = overrideData?.topSelling ?? data?.result?.topSelling ?? null;
@@ -107,8 +105,7 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
     <Box>
       <Stack spacing={3}>
         {/* Top Selling */}
-        <Box  >
-
+        <Box>
           <Box
             // sx={{
             //   p: 1,
@@ -123,11 +120,7 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
               boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
             }}
           >
-            <Typography
-              fontWeight={600}
-              fontSize={18}
-              mb={1}
-            >
+            <Typography fontWeight={600} fontSize={18} mb={1}>
               Top Selling Item
             </Typography>
 
@@ -149,7 +142,6 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
 
         {/* Low Selling */}
         <Box>
-
           <Box
             // sx={{
             //   p: 1,
@@ -157,18 +149,14 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
             //   backgroundColor: "background.paper",
             //   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
             // }}
-              sx={{
+            sx={{
               p: 2,
               borderRadius: 3,
               backgroundColor: "#fff",
               boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
             }}
           >
-            <Typography
-              fontWeight={600}
-              fontSize={18}
-              mb={1}
-            >
+            <Typography fontWeight={600} fontSize={18} mb={1}>
               Low Selling Item
             </Typography>
             {low ? (
@@ -190,4 +178,3 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
     </Box>
   );
 }
-

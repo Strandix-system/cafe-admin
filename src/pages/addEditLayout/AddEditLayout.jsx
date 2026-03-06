@@ -1,6 +1,6 @@
 import { useState } from "react";
-import {Loader} from "../../components/common/Loader";
-import {LayoutForm} from "../../components/layout/LayoutForm";
+import { Loader } from "../../components/common/Loader";
+import { LayoutForm } from "../../components/layout/LayoutForm";
 import { useAuth } from "../../context/AuthContext";
 import { queryClient } from "../../lib/queryClient";
 import { API_ROUTES } from "../../utils/api_constants";
@@ -23,7 +23,7 @@ export function AddEditLayout() {
     {},
     {
       enabled: !!layoutId,
-    }
+    },
   );
 
   const { mutate: updateLayoutMutate, isPending: updatePending } = usePatch(
@@ -38,7 +38,7 @@ export function AddEditLayout() {
       onError: (error) => {
         toast.error(error);
       },
-    }
+    },
   );
 
   const { mutate: createLayoutMutate, isPending: createPending } = usePost(
@@ -53,12 +53,12 @@ export function AddEditLayout() {
           open: true,
           layoutId: newLayoutId,
         });
-        navigate("/layouts")
+        navigate("/layouts");
       },
       onError: (error) => {
         toast.error(error);
       },
-    }
+    },
   );
 
   const isAdminEditing =
@@ -108,7 +108,6 @@ export function AddEditLayout() {
 
     return formData;
   };
-
 
   const onSubmit = (formValue) => {
     // Admin editing their own layout
@@ -166,7 +165,7 @@ export function AddEditLayout() {
           facebook: "",
           twitter: "",
         },
-        gst: ""
+        gst: "",
       };
     }
 

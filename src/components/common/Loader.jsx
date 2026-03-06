@@ -7,11 +7,7 @@ import {
   ThreeDots,
 } from "react-loader-spinner";
 
-export function Loader({
-  variant = "oval",
-  size = 25,
-  color = "#3d55e0",
-}) {
+export function Loader({ variant = "oval", size = 25, color = "#3d55e0" }) {
   // Fullscreen loader
   if (variant === "fullscreen") {
     return (

@@ -14,7 +14,7 @@ export const adminSchema = yup.object().shape({
         .min(8, "Password must be at least 8 characters")
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/,
-          "Password must contain uppercase, lowercase, number & special character"
+          "Password must contain uppercase, lowercase, number & special character",
         )
         .required("Password is required"),
     otherwise: (schema) => schema.notRequired().optional(),
@@ -95,7 +95,7 @@ export const adminSchema = yup.object().shape({
               const closeDate = new Date(closeTime);
 
               return closeDate > openDate;
-            }
+            },
           ),
       })
       .required("Weekday hours are required"),
@@ -121,7 +121,7 @@ export const adminSchema = yup.object().shape({
               const closeDate = new Date(closeTime);
 
               return closeDate > openDate;
-            }
+            },
           ),
       })
       .required("Weekend hours are required"),

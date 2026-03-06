@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import {LoginSignup} from '../src/pages/login/LoginSignup'
-import {AppRoutes} from './routes/AppRoutes'
-import { queryClient } from './lib/queryClient';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { CacheProvider } from '@emotion/react';
-import rtlPlugin from 'stylis-plugin-rtl';
+import { useState } from "react";
+import { LoginSignup } from "../src/pages/login/LoginSignup";
+import { AppRoutes } from "./routes/AppRoutes";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { CacheProvider } from "@emotion/react";
+import rtlPlugin from "stylis-plugin-rtl";
 import createCache from "@emotion/cache";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import "./index.css"
+import "./index.css";
 import { OrderProvider } from "./context/OrderContext";
 
 const emotionCacheOptions = {
@@ -32,8 +32,8 @@ export function App() {
       <CacheProvider value={createCache(emotionCacheOptions.ltr)}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-             <OrderProvider>
-            <AppRoutes />
+            <OrderProvider>
+              <AppRoutes />
             </OrderProvider>
             <Toaster position="top-right" reverseOrder={false} />
             <ReactQueryDevtools initialIsOpen={false} />
@@ -41,6 +41,5 @@ export function App() {
         </QueryClientProvider>
       </CacheProvider>
     </>
-  )
+  );
 }
-
