@@ -1,4 +1,4 @@
-import { TextField, InputAdornment } from "@mui/material";
+import { TextField, InputAdornment, Autocomplete } from "@mui/material";
 
 export const InputField = ({
   field,
@@ -7,8 +7,42 @@ export const InputField = ({
   startIcon,
   endIcon,
   disabled = false,
+  isAutocomplete = false, // 🔥 NEW
+  options = [], // 🔥 NEW
+  getOptionLabel,
+  onOptionChange,
   ...props
 }) => {
+  if (isAutocomplete) {
+    return (
+      <Autocomplete
+        options={options}
+        getOptionLabel={getOptionLabel}
+        value={options.find((opt) => opt._id === field.value) || null}
+        onChange={(_, newValue) => {
+          onOptionChange?.(newValue);
+        }}
+        isOptionEqualToValue={(option, value) => option._id === value._id}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            fullWidth
+            size="small"
+            placeholder={props.placeholder}
+            error={!!error}
+            helperText={helperText}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+                bgcolor: "#F5EFE6",
+                "&:hover": { bgcolor: "#EFE5D8" },
+              },
+            }}
+          />
+        )}
+      />
+    );
+  }
   return (
     <TextField
       {...field}
@@ -28,7 +62,7 @@ export const InputField = ({
         startAdornment: startIcon ? (
           <InputAdornment position="start">{startIcon}</InputAdornment>
         ) : null,
-        endAdornment: endIcon ? (  // Add this
+        endAdornment: endIcon ? ( // Add this
           <InputAdornment position="end">{endIcon}</InputAdornment>
         ) : null,
       }}
@@ -36,5 +70,3 @@ export const InputField = ({
     />
   );
 };
-
-

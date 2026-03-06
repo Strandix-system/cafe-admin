@@ -14,7 +14,6 @@ import { MenuList } from "../pages/Menu/MenuList";
 import { Plan } from "../pages/login/Plan";
 import { CustomerList } from "../pages/customer-list/CustomerList";
 import { OrderManagementPage } from "../pages/OrderManagementPage";
-import { OrderHistoryList } from "../pages/OrderHistoryList";
 import { CafeTableManagement } from "../pages/CafeTableManagement";
 import { MyOrders } from "../pages/dashboard/MyOrders";
 import { ProfileLayout } from "../pages/Profile/ProfileLayout";
@@ -24,6 +23,7 @@ import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
 import SupportForm from "../pages/Support/SupportForm"
 import SupportTicketDashboard from "../pages/Support/SupportTicketList";
 
+import { Enquiries } from "../pages/Admin/AdminEnquire";
 
 export const AppRoutes = () => {
     return (
@@ -56,21 +56,24 @@ export const AppRoutes = () => {
                 <Route path="/table-management" element={<CafeTableManagement />} />
                 <Route path="/menu" element={<MenuList />} />
                 <Route path="/order-management" element={<OrderManagementPage />} />
-                <Route path="/order-history" element={<OrderHistoryList />} />
                 <Route path="/customer" element={<CustomerList />} />
                 <Route path="/my-orders/:userId" element={<MyOrders />} />
                 <Route path="support" element={<SupportForm />} />
                 <Route path="support-request" element={<SupportTicketDashboard />} />
-
+                <Route path="/enquiries" element={<Enquiries />} />
                 <Route path="/profile" element={<ProfileLayout />}>
-                    <Route index element={<ProfileUpdate />} />
-                    <Route path="change-password" element={<ChangePassword />} />
-
+                    {/* <Route index element={<ProfileUpdate />} />
+                    <Route path="change-password" element={<ChangePassword />} /> */}
                 </Route>
             </Route>
 
+            <Route path="/profile" element={<ProfileLayout />}>
+                <Route index element={<ProfileUpdate />} />
+                <Route path="change-password" element={<ChangePassword />} />
+
+            </Route>
             {/* CATCH ALL */}
             <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        </Routes >
     );
 };

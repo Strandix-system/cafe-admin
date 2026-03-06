@@ -1,7 +1,17 @@
-import { Box, Grid, Card, Typography, Avatar, Stack, CardMedia, Chip } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Card,
+  Typography,
+  Avatar,
+  Stack,
+  CardMedia,
+  Chip,
+} from "@mui/material";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
+import { formatAmount } from "../../utils/utils";
 
 const ItemCard = ({ name, qty, image, revenue, type }) => {
   const isTop = type === "top";
@@ -36,36 +46,25 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
       />
 
       {/* Content */}
-      <Box p={1.2}
+      <Box
+        p={1.2}
         sx={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-        }}>
-        <Typography
-          fontWeight={600}
-          fontSize={15}
-          noWrap
-          title={name}
-        >
+        }}
+      >
+        <Typography fontWeight={600} fontSize={15} noWrap title={name}>
           {name}
         </Typography>
 
         <div className="flex gap-4">
-          <Typography
-            color="text.secondary"
-            fontSize={13}
-            mt={0.3}
-          >
+          <Typography color="text.secondary" fontSize={13} mt={0.3}>
             Qty Sold: <strong>{qty}</strong>
           </Typography>
-          <Typography
-            color="text.secondary"
-            fontSize={13}
-            mt={0.3}
-          >
-            Revenue: <strong>{revenue}</strong>
+          <Typography color="text.secondary" fontSize={13} mt={0.3}>
+            Revenue: <strong>₹{formatAmount(revenue)}</strong>
           </Typography>
         </div>
 
@@ -86,79 +85,6 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
   );
 };
 
-// const ItemCard = ({ name, qty, image, revenue, type }) => {
-//   const isTop = type === "top";
-
-//   return (
-//     <Card
-//       sx={{
-//         borderRadius: 3,
-//         overflow: "hidden",
-//         boxShadow: "0 6px 20px rgba(0,0,0,0.05)",
-//         transition: "all 0.25s ease",
-//         "&:hover": {
-//           transform: "translateY(-4px)",
-//           boxShadow: "0 12px 28px rgba(0,0,0,0.08)",
-//         },
-//       }}
-//     >
-//       <CardMedia
-//         component="img"
-//         image={image || "/placeholder-food.png"}
-//         alt={name}
-//         sx={{
-//           height: 150,
-//           objectFit: "cover",
-//         }}
-//       />
-
-//       <Box p={2}>
-//         <Typography
-//           fontWeight={700}
-//           fontSize={16}
-//           gutterBottom
-//           noWrap
-//         >
-//           {name}
-//         </Typography>
-
-//         <Box
-//           sx={{
-//             display: "flex",
-//             justifyContent: "space-between",
-//             mt: 1,
-//           }}
-//         >
-//           <Box>
-//             <Typography fontSize={12} color="text.secondary">
-//               Qty Sold
-//             </Typography>
-//             <Typography fontWeight={600}>{qty}</Typography>
-//           </Box>
-
-//           <Box textAlign="right">
-//             <Typography fontSize={12} color="text.secondary">
-//               Revenue
-//             </Typography>
-//             <Typography fontWeight={600}>₹{revenue}</Typography>
-//           </Box>
-//         </Box>
-
-//         <Chip
-//           label={isTop ? "Top Seller" : "Low Seller"}
-//           size="small"
-//           sx={{
-//             mt: 2,
-//             fontWeight: 600,
-//             bgcolor: isTop ? "#E8F5E9" : "#FDECEA",
-//             color: isTop ? "#2E7D32" : "#C62828",
-//           }}
-//         />
-//       </Box>
-//     </Card>
-//   );
-// };
-
 export default function ItemCards({ overrideData, isViewingAdmin }) {
   const { user } = useAuth();
 
@@ -166,7 +92,7 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
     ["dashboard-items", user?._id],
     API_ROUTES.dashboardItems,
     {},
-    { enabled: !!user?._id && !isViewingAdmin }
+    { enabled: !!user?._id && !isViewingAdmin },
   );
 
   const top = overrideData?.topSelling ?? data?.result?.topSelling ?? null;
@@ -179,8 +105,7 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
     <Box>
       <Stack spacing={3}>
         {/* Top Selling */}
-        <Box  >
-
+        <Box>
           <Box
             // sx={{
             //   p: 1,
@@ -195,11 +120,7 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
               boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
             }}
           >
-            <Typography
-              fontWeight={600}
-              fontSize={18}
-              mb={1}
-            >
+            <Typography fontWeight={600} fontSize={18} mb={1}>
               Top Selling Item
             </Typography>
 
@@ -221,7 +142,6 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
 
         {/* Low Selling */}
         <Box>
-
           <Box
             // sx={{
             //   p: 1,
@@ -229,18 +149,14 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
             //   backgroundColor: "background.paper",
             //   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
             // }}
-              sx={{
+            sx={{
               p: 2,
               borderRadius: 3,
               backgroundColor: "#fff",
               boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
             }}
           >
-            <Typography
-              fontWeight={600}
-              fontSize={18}
-              mb={1}
-            >
+            <Typography fontWeight={600} fontSize={18} mb={1}>
               Low Selling Item
             </Typography>
             {low ? (
@@ -262,4 +178,3 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
     </Box>
   );
 }
-

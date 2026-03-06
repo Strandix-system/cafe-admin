@@ -20,14 +20,17 @@ export const useImageUpload = (setValue) => {
     [setValue],
   );
 
-  const handleRemoveImage = useCallback((fieldName, fieldOnChange) => {
-    setPreviews((prev) => ({
-      ...prev,
-      [fieldName]: null,
-    }));
-    fieldOnChange(null);
-    setValue(fieldName, null, { shouldValidate: true });
-  }, [setValue]);
+  const handleRemoveImage = useCallback(
+    (fieldName, fieldOnChange) => {
+      setPreviews((prev) => ({
+        ...prev,
+        [fieldName]: null,
+      }));
+      fieldOnChange(null);
+      setValue(fieldName, null, { shouldValidate: true });
+    },
+    [setValue],
+  );
 
   const handleReplaceImage = useCallback((fieldName) => {
     // Just clear the preview, but keep validation happy
@@ -50,6 +53,6 @@ export const useImageUpload = (setValue) => {
     handleImageChange,
     handleRemoveImage,
     setPreview,
-    handleReplaceImage
+    handleReplaceImage,
   };
 };

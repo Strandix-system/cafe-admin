@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Box, FormControlLabel, Checkbox, Link, Typography, IconButton } from "@mui/material";
+import {
+  Box,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -14,108 +21,119 @@ import { CommonButton } from "../../components/common/commonButton";
 import { CommonTextField } from "../../components/common/CommonTextField";
 
 const loginSchema = yup.object({
-    email: yup.string().email("Invalid email").required("Email is required"),
-    password: yup.string().required("Password is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup.string().required("Password is required"),
 });
 
 export const LoginForm = () => {
-    const { login } = useAuth();
-    const navigate = useNavigate();
-    const [rememberMe, setRememberMe] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    const {
-        control,
-        handleSubmit,
-        reset,
-        formState: { errors, isValid },
-    } = useForm({
-        resolver: yupResolver(loginSchema),
-        defaultValues: { email: "", password: "" },
-        mode: "all",
-    });
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+    mode: "all",
+  });
 
-    const { mutate: loginMutate, isPending: loginPending } = usePost(API_ROUTES.login, {
-        onSuccess: async (res) => {
-            await login(res.result.token);
-            reset();
-            toast.success("Logged in successfully!!");
-        },
-        onError: (error) => {
-            toast.error(error);
-        },
-    });
+  const { mutate: loginMutate, isPending: loginPending } = usePost(
+    API_ROUTES.login,
+    {
+      onSuccess: async (res) => {
+        await login(res.result.token);
+        reset();
+        toast.success("Logged in successfully!!");
+      },
+      onError: (error) => {
+        toast.error(error);
+      },
+    },
+  );
 
-    const onSubmit = (data) => {
-        loginMutate(data);
-    };
+  const onSubmit = (data) => {
+    loginMutate(data);
+  };
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ mt: 2, mb: 2 }}>
-                <CommonTextField
-                    name="email"
-                    control={control}
-                    placeholder="Email Address"
-                    errors={errors}
-                    helperText={errors.email?.message}
-                    startIcon={<Email fontSize="small" />}
-                />
-            </Box>
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <CommonTextField
+          name="email"
+          control={control}
+          placeholder="Email Address"
+          errors={errors}
+          helperText={errors.email?.message}
+          startIcon={<Email fontSize="small" />}
+        />
+      </Box>
 
-            <Box sx={{ mt: 2, mb: 2 }}>
-                <CommonTextField
-                    name="password"
-                    control={control}
-                    placeholder="Password"
-                    type={showPassword ? "text" : "password"}
-                    errors={errors}
-                    helperText={errors.password?.message}
-                    startIcon={<Lock fontSize="small" />}
-                    endIcon={
-                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                    }
-                />
-            </Box>
-
-            <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            size="small"
-                            checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)}
-                        />
-                    }
-                    label={<Typography variant="body2">Remember me</Typography>}
-                />
-                <Link
-                    component="button"
-                    type="button"
-                    variant="body2"
-                    onClick={() => navigate("/forgot-password")}
-                    sx={{
-                        color: "#6F4E37",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        "&:hover": { textDecoration: "underline" },
-                    }}
-                >
-                    Forgot password?
-                </Link>
-            </Box>
-
-            <CommonButton
-                fullWidth
-                type="submit"
-                loading={loginPending}
-                disabled={!isValid}
-                sx={{ mt: 3, mb: 2 }}
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <CommonTextField
+          name="password"
+          control={control}
+          placeholder="Password"
+          type={showPassword ? "text" : "password"}
+          errors={errors}
+          helperText={errors.password?.message}
+          startIcon={<Lock fontSize="small" />}
+          endIcon={
+            <IconButton
+              onClick={() => setShowPassword(!showPassword)}
+              edge="end"
             >
-                Log In
-            </CommonButton>
-        </form>
-    );
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          }
+        />
+      </Box>
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mt={1}
+      >
+        <FormControlLabel
+          control={
+            <Checkbox
+              size="small"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+          }
+          label={<Typography variant="body2">Remember me</Typography>}
+        />
+        <Link
+          component="button"
+          type="button"
+          variant="body2"
+          onClick={() => navigate("/forgot-password")}
+          sx={{
+            color: "#6F4E37",
+            fontWeight: 600,
+            textDecoration: "none",
+            "&:hover": { textDecoration: "underline" },
+          }}
+        >
+          Forgot password?
+        </Link>
+      </Box>
+
+      <CommonButton
+        fullWidth
+        type="submit"
+        loading={loginPending}
+        disabled={!isValid}
+        sx={{ mt: 3, mb: 2 }}
+      >
+        Log In
+      </CommonButton>
+    </form>
+  );
 };

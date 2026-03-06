@@ -3,20 +3,22 @@ import { create, get, update } from "lodash";
 export const API_ROUTES = {
     login: "auth/login",
     checkEmail: "signup/check-email",
+    getPlans: "signup/plans",
     createOrder: "signup/create-order",
-    verifySignup: "signup/verify-payment",
+    createSubscription: "signup/create-subscription",
+    verifySignup: "signup/verify-subscription",
     getMe: "auth/me",
     getUsers: "/admin/get-users",
 
     dashboardStats: "admin/dashboard/stats",
-    dashboardSales:"admin/dashboard/sales",
-    dashboardItems:'admin/dashboard/items-performance',
-    dashboardPeakTime:"admin/dashboard/peak-time",
-    dashboardTables:"admin/dashboard/tables",
-    dashboardTopCustomers:"admin/dashboard/top-customers",
-    dashboardTopCafes:"admin/dashboard/top-cafes",
-    dashboardPlatformSales:"admin/dashboard/platform-sales",
-    dashboardAdminAnalytics:"admin/dashboard/admin-analytics",
+    dashboardSales: "admin/dashboard/sales",
+    dashboardItems: "admin/dashboard/items-performance",
+    dashboardPeakTime: "admin/dashboard/peak-time",
+    dashboardTables: "admin/dashboard/tables",
+    dashboardTopCustomers: "admin/dashboard/top-customers",
+    dashboardTopCafes: "admin/dashboard/top-cafes",
+    dashboardPlatformSales: "admin/dashboard/platform-sales",
+    dashboardAdminAnalytics: "admin/dashboard/admin-analytics",
 
     getUserById: "admin/get-user",
     updateUsers: "admin/update",
@@ -52,7 +54,7 @@ export const API_ROUTES = {
     getCategoryById: "category/get-by-id",
     updateCategory: "category/update",
     deleteCategory: "category/delete",
-    getstates: "get-states",
+    getStates: "get-states",
 
     createAdmins: "admin/create",
 
@@ -77,8 +79,10 @@ export const API_ROUTES = {
     resetPassword: "auth/reset-password",
     changePassword: "auth/change-password",
 
-    createSupportTicket:"issue-reported/raise",
-     getSupportTickets:"issue-reported/all",
-      updateSupportTicket:"issue-reported/status",
+    createSupportTicket: "issue-reported/raise",
+    getSupportTickets: "issue-reported/all",
+    updateSupportTicket: "issue-reported/status",
+    adminRequest: "demo/all",
+    updateAdminRequestStatus: "demo/status",
 
 };

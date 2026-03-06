@@ -22,18 +22,17 @@ export function TopNavbar() {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const name = `${user?.firstName || "User"} ${" "} ${user?.lastName || ""}`;
-    // Routes that should show the back button
-    const showBackButtonRoutes = [
-        "/cafe/create-edit",
-        "/layouts/create-edit",
-        "/cafe/view-customers/",
-        "/categories/create",
-        "/order-history",
-        "/profile",
-        "/my-orders",
-        "/cafes/",
-        "/dashboard/", // for super admin viewing specific admin analytics
-    ];
+  // Routes that should show the back button
+  const showBackButtonRoutes = [
+    "/cafe/create-edit",
+    "/layouts/create-edit",
+    "/cafe/view-customers/",
+    "/categories/create",
+    "/profile",
+    "/my-orders",
+    "/cafes/",
+    "/dashboard/", // for super admin viewing specific admin analytics
+  ];
 
   // Check if current route should show back button
   const shouldShowBackButton = showBackButtonRoutes.some((route) =>
@@ -122,6 +121,8 @@ export function TopNavbar() {
           onClick={handleMenuOpen}
         >
           <Avatar
+            src={user?.profileImage}
+            alt={name}
             sx={{
               width: 40,
               height: 40,
@@ -130,7 +131,7 @@ export function TopNavbar() {
               fontSize: "0.9rem",
             }}
           >
-            {getInitials(name)}
+            {!user?.profileImage && getInitials(name)}
           </Avatar>
 
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
@@ -169,7 +170,7 @@ export function TopNavbar() {
             },
           }}
         >
-          {!isSuperAdmin && (
+          {
             <MenuItem
               onClick={() => {
                 handleMenuClose();
@@ -180,7 +181,7 @@ export function TopNavbar() {
               <PersonIcon fontSize="small" />
               <Typography variant="body2">My Profile</Typography>
             </MenuItem>
-          )}
+          }
 
           <Divider sx={{ my: 1 }} />
 

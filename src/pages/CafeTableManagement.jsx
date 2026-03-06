@@ -20,7 +20,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CommonButton } from "../components/common/commonButton";
 
-
 export const CafeTableManagement = () => {
   const { layoutId: urlLayoutId } = useParams();
   const navigate = useNavigate();
@@ -39,14 +38,13 @@ export const CafeTableManagement = () => {
     }
   }, [location.state, navigate]);
 
-
   const { data: qrCodesData, refetch } = useFetch(
     "get-qr-codes",
     API_ROUTES.getQRCodes,
     { adminId: user?.id },
     {
       enabled: !!user?.id,
-    }
+    },
   );
 
   // Create QR codes mutation
@@ -69,7 +67,7 @@ export const CafeTableManagement = () => {
       onError: (error) => {
         toast.error(error);
       },
-    }
+    },
   );
 
   const columns = useMemo(
@@ -117,7 +115,7 @@ export const CafeTableManagement = () => {
           }),
       },
     ],
-    []
+    [],
   );
 
   const actions = [
@@ -133,7 +131,7 @@ export const CafeTableManagement = () => {
           link.click();
           document.body.removeChild(link);
           toast.success(
-            `QR code for Table ${row.original.tableNumber} downloaded!`
+            `QR code for Table ${row.original.tableNumber} downloaded!`,
           );
         }
       },
@@ -163,7 +161,6 @@ export const CafeTableManagement = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
 
   const handleSubmit = () => {
     if (validateForm()) {
@@ -202,10 +199,7 @@ export const CafeTableManagement = () => {
         <Typography variant="h5" sx={{ color: "#6F4E37", fontWeight: 600 }}>
           Table Management
         </Typography>
-        <CommonButton
-          variant="contained"
-          onClick={handleOpenDialog}
-        >
+        <CommonButton variant="contained" onClick={handleOpenDialog}>
           Generate QR Codes
         </CommonButton>
       </Box>
@@ -323,7 +317,6 @@ export const CafeTableManagement = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
-
           <CommonButton
             variant="text"
             onClick={handleCloseDialog}
@@ -341,11 +334,8 @@ export const CafeTableManagement = () => {
           >
             Generate
           </CommonButton>
-
         </DialogActions>
       </Dialog>
     </div>
   );
 };
-
-

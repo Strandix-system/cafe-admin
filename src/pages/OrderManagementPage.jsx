@@ -14,239 +14,262 @@ import { queryClient } from "../lib/queryClient";
 import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 import { useLocation } from "react-router-dom";
 import { useOrders } from "../context/OrderContext";
+import { formatAmount } from "../utils/utils";
 
 function TabPanel({ children, value, index, ...other }) {
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`order-tabpanel-${index}`}
-            aria-labelledby={`order-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-        </div>
-    );
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`order-tabpanel-${index}`}
+      aria-labelledby={`order-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
 }
 
 export const OrderManagementPage = () => {
-    const navigate = useNavigate();
-    const { user } = useAuth();
-    const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const location = useLocation();
 
-    const queryParams = new URLSearchParams(location.search);
-    const initialTab = Number(queryParams.get("tab")) || 0;
+  const queryParams = new URLSearchParams(location.search);
+  const initialTab = Number(queryParams.get("tab")) || 0;
 
-    const [tabValue, setTabValue] = useState(initialTab);
-    // const [tabValue, setTabValue] = useState(0);
-    const [isBillOpen, setIsBillOpen] = useState(false);
-    const [selectedBillId, setSelectedBillId] = useState(null);
+  const [tabValue, setTabValue] = useState(initialTab);
+  // const [tabValue, setTabValue] = useState(0);
+  const [isBillOpen, setIsBillOpen] = useState(false);
+  const [selectedBillId, setSelectedBillId] = useState(null);
 
-    // const hasInitialized = useRef(false); // Track if we've initialized
+  // const hasInitialized = useRef(false); // Track if we've initialized
 
-    const handleOpenBill = (row) => {
-        setSelectedBillId(row._id);   // or row.billId depending on your backend
-        setIsBillOpen(true);
-    };
+  const handleOpenBill = (row) => {
+    setSelectedBillId(row._id); // or row.billId depending on your backend
+    setIsBillOpen(true);
+  };
 
-    const { pendingOrders, acceptedOrders, acceptOrder, completeOrder } = useOrders();
-    /* ---------------- ORDER HISTORY TABLE CONFIG ---------------- */
-    const historyColumns = useMemo(
-        () => [
-            {
-                id: "customerName",
-                header: "Customer Name",
-                Cell: ({ row }) => {
-                    const name = row.original.userId?.name || "";
-                    return name.charAt(0).toUpperCase() + name.slice(1);
-                },
-            },
-            {
-                id: "itemName",
-                header: "Item Name",
-                Cell: ({ row }) =>
-                    row.original.items?.map((item) => item.name).join(", "),
-            },
-            {
-                accessorKey: "totalAmount",
-                header: "Total Amount (₹)",
-            },
-            {
-                id: "orderStatus",
-                header: "Order Status",
-                Cell: ({ row }) => (
-                    <Chip
-                        label={row.original.orderStatus}
-                        size="small"
-                        sx={{
-                            backgroundColor:
-                                row.original.orderStatus === "pending"
-                                    ? "#FFF3CD"
-                                    : row.original.orderStatus === "accepted"
-                                        ? "#D1E7FF"
-                                        : "#D1FFBE",
-                            color:
-                                row.original.orderStatus === "pending"
-                                    ? "#856404"
-                                    : row.original.orderStatus === "accepted"
-                                        ? "#004085"
-                                        : "#3DB309",
-                        }}
-                    />
-                ),
-            },
-            {
-                id: "paymentStatus",
-                header: "Payment Status",
-                Cell: ({ row }) => (
-                    <Chip
-                        label={row.original.paymentStatus ? "Paid" : "Unpaid"}
-                        size="small"
-                        sx={{
-                            backgroundColor: row.original.paymentStatus
-                                ? "#D1FFBE"
-                                : "#FFDADA",
-                            color: row.original.paymentStatus ? "#3DB309" : "#FF0000",
-                        }}
-                    />
-                ),
-            },
-        ],
-        []
-    );
+  const { pendingOrders, acceptedOrders, acceptOrder, completeOrder } =
+    useOrders();
 
-    const historyActions = [
-        {
-            label: "View Bill",
-            icon: Eye,
-            onClick: (row) => handleOpenBill(row.original)
+  const { mutate: updatePaymentStatus } = usePatch(
+    API_ROUTES.updatePaymentStatus,
+    {
+      onSuccess: () => {
+        toast.success("Payment status updated to Paid!");
+        queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
+      },
+      onError: (error) => {
+        toast.error(error);
+        queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
+      },
+    },
+  );
+  /* ---------------- ORDER HISTORY TABLE CONFIG ---------------- */
+  const historyColumns = useMemo(
+    () => [
+      {
+        id: "customerName",
+        header: "Customer Name",
+        Cell: ({ row }) => {
+          const name = row.original.userId?.name || "";
+          return name.charAt(0).toUpperCase() + name.slice(1);
         },
-        {
-            label: "Mark as Paid",
-            icon: DollarSign,
-            onClick: (row) => {
-                if (!row.original.paymentStatus) {
-                    updatePaymentStatus({
-                        orderId: row.original._id,
-                        paymentStatus: true
-                    });
-                }
-            },
-            disabled: (row) => row.original.paymentStatus, // Disable if already paid
-        },
-    ];
+      },
+      {
+        id: "itemName",
+        header: "Item Name",
+        Cell: ({ row }) =>
+          row.original.items?.map((item) => item.name).join(", "),
+      },
+      {
+        accessorKey: "totalAmount",
+        header: "Total Amount (₹)",
+        Cell: ({ cell }) => `₹ ${formatAmount(cell.getValue())}`,
+      },
+      {
+        id: "orderStatus",
+        header: "Order Status",
+        Cell: ({ row }) => (
+          <Chip
+            label={row.original.orderStatus}
+            size="small"
+            sx={{
+              backgroundColor:
+                row.original.orderStatus === "pending"
+                  ? "#FFF3CD"
+                  : row.original.orderStatus === "accepted"
+                    ? "#D1E7FF"
+                    : "#D1FFBE",
+              color:
+                row.original.orderStatus === "pending"
+                  ? "#856404"
+                  : row.original.orderStatus === "accepted"
+                    ? "#004085"
+                    : "#3DB309",
+            }}
+          />
+        ),
+      },
+      {
+        id: "paymentStatus",
+        header: "Payment Status",
+        Cell: ({ row }) => (
+          <Chip
+            label={row.original.paymentStatus ? "Paid" : "Unpaid"}
+            size="small"
+            sx={{
+              backgroundColor: row.original.paymentStatus
+                ? "#D1FFBE"
+                : "#FFDADA",
+              color: row.original.paymentStatus ? "#3DB309" : "#FF0000",
+            }}
+          />
+        ),
+      },
+    ],
+    [],
+  );
 
-    const renderOrderCards = (orders, isPending) => (
-        <Grid container spacing={3}>
-            {orders.map(order => (
-                <Grid item xs={12} sm={6} md={4} key={order._id}>
-                    <OrderCard
-                        order={order}
-                        isPending={isPending}
-                        onAccept={acceptOrder}
-                        onComplete={completeOrder}
-                    />
-                </Grid>
-            ))}
+  const historyActions = [
+    {
+      label: "View Bill",
+      icon: Eye,
+      onClick: (row) => handleOpenBill(row.original),
+    },
+    {
+      label: "Mark as Paid",
+      icon: DollarSign,
+      onClick: (row) => {
+        if (!row.original.paymentStatus) {
+          updatePaymentStatus({
+            orderId: row.original._id,
+            paymentStatus: true,
+          });
+        }
+      },
+      disabled: (row) => row.original.paymentStatus, // Disable if already paid
+    },
+  ];
+
+  const renderOrderCards = (orders, isPending) => (
+    <Grid container spacing={3}>
+      {orders.map((order) => (
+        <Grid item xs={12} sm={6} md={4} key={order._id}>
+          <OrderCard
+            order={order}
+            isPending={isPending}
+            onAccept={acceptOrder}
+            onComplete={completeOrder}
+          />
         </Grid>
-    );
+      ))}
+    </Grid>
+  );
 
-    return (
-        <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
-            <Typography variant="h4" fontWeight={700} color="#6F4E37" mb={3}>
-                Order Management
-            </Typography>
+  return (
+    <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+      <Typography variant="h4" fontWeight={700} color="#6F4E37" mb={3}>
+        Order Management
+      </Typography>
 
-            <Tabs
-                value={tabValue}
-                onChange={(e, newValue) => setTabValue(newValue)}
-                aria-label="order management tabs"
+      <Tabs
+        value={tabValue}
+        onChange={(e, newValue) => setTabValue(newValue)}
+        aria-label="order management tabs"
+        sx={{
+          "& .MuiTab-root": {
+            color: "#6F4E37",
+            fontWeight: 600,
+            textTransform: "none",
+          },
+          "& .MuiTabs-indicator": { bgcolor: "#6F4E37" },
+        }}
+      >
+        <Tab
+          label={
+            <Box display="flex" alignItems="center" gap={1}>
+              <span>Pending Orders</span>
+              <Badge
+                badgeContent={pendingOrders.length}
+                color="error"
                 sx={{
-                    "& .MuiTab-root": { color: "#6F4E37", fontWeight: 600, textTransform: "none" },
-                    "& .MuiTabs-indicator": { bgcolor: "#6F4E37" },
+                  "& .MuiBadge-badge": {
+                    position: "relative",
+                    transform: "none",
+                  },
                 }}
-            >
-                <Tab
-                    label={
-                        <Box display="flex" alignItems="center" gap={1}>
-                            <span>Pending Orders</span>
-                            <Badge
-                                badgeContent={pendingOrders.length}
-                                color="error"
-                                sx={{
-                                    "& .MuiBadge-badge": {
-                                        position: "relative",
-                                        transform: "none",
-                                    },
-                                }}
-                            />
-                        </Box>
-                    }
-                />
-                <Tab
-                    label={
-                        <Box display="flex" alignItems="center" gap={1}>
-                            <span>Accepted Orders</span>
-                            <Badge
-                                badgeContent={acceptedOrders.length}
-                                color="primary"
-                                sx={{
-                                    "& .MuiBadge-badge": {
-                                        position: "relative",
-                                        transform: "none",
-                                    },
-                                }}
-                            />
-                        </Box>
-                    }
-                />
-                <Tab label="History" />
-            </Tabs>
+              />
+            </Box>
+          }
+        />
+        <Tab
+          label={
+            <Box display="flex" alignItems="center" gap={1}>
+              <span>Accepted Orders</span>
+              <Badge
+                badgeContent={acceptedOrders.length}
+                color="primary"
+                sx={{
+                  "& .MuiBadge-badge": {
+                    position: "relative",
+                    transform: "none",
+                  },
+                }}
+              />
+            </Box>
+          }
+        />
+        <Tab label="History" />
+      </Tabs>
 
-            <TabPanel value={tabValue} index={0}>
-                {pendingOrders.length > 0
-                    ? renderOrderCards(pendingOrders, true)
-                    : <Typography>No pending orders.</Typography>}
-            </TabPanel>
+      <TabPanel value={tabValue} index={0}>
+        {pendingOrders.length > 0 ? (
+          renderOrderCards(pendingOrders, true)
+        ) : (
+          <Typography>No pending orders.</Typography>
+        )}
+      </TabPanel>
 
-            <TabPanel value={tabValue} index={1}>
-                {acceptedOrders.length > 0
-                    ? renderOrderCards(acceptedOrders, false)
-                    : <Typography>No accepted orders.</Typography>}
-            </TabPanel>
+      <TabPanel value={tabValue} index={1}>
+        {acceptedOrders.length > 0 ? (
+          renderOrderCards(acceptedOrders, false)
+        ) : (
+          <Typography>No accepted orders.</Typography>
+        )}
+      </TabPanel>
 
-            <TabPanel value={tabValue} index={2}>
-                <Box>
-                    <Typography variant="h6" color="#6F4E37" mb={2}>
-                        Order History
-                    </Typography>
-                    <TableComponent
-                        slug="orders"
-                        columns={historyColumns}
-                        actions={historyActions}
-                        params={{
-                            populate: "userId",
-                        }}
-                        actionsType="menu"
-                        querykey="get-all-orders"
-                        getApiEndPoint="getAllOrders"
-                        deleteAction={false}
-                        enableExportTable={true}
-                    />
-                </Box>
-            </TabPanel>
-            {isBillOpen && selectedBillId && (
-                <OrderBillModal
-                    open={isBillOpen}
-                    onClose={() => {
-                        setIsBillOpen(false);
-                        setSelectedBillId(null);
-                    }}
-                    billId={selectedBillId}
-                />
-            )}
+      <TabPanel value={tabValue} index={2}>
+        <Box>
+          <Typography variant="h6" color="#6F4E37" mb={2}>
+            Order History
+          </Typography>
+          <TableComponent
+            slug="orders"
+            columns={historyColumns}
+            actions={historyActions}
+            params={{
+              populate: "userId",
+            }}
+            actionsType="menu"
+            querykey="get-all-orders"
+            getApiEndPoint="getAllOrders"
+            deleteAction={false}
+            enableExportTable={true}
+          />
         </Box>
-
-    );
+      </TabPanel>
+      {isBillOpen && selectedBillId && (
+        <OrderBillModal
+          open={isBillOpen}
+          onClose={() => {
+            setIsBillOpen(false);
+            setSelectedBillId(null);
+          }}
+          billId={selectedBillId}
+        />
+      )}
+    </Box>
+  );
 };
-

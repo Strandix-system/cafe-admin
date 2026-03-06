@@ -3,8 +3,8 @@ import { Box, Typography, Paper, Tabs, Tab } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import cafe1 from "../../assets/cafe1.jpg";
 import { api_enums } from "../../enums/api";
-import {LoginForm} from "./LoginForm";
-import {SignupForm} from "./SignupForm";
+import { LoginForm } from "./LoginForm";
+import { SignupForm } from "./SignupForm";
 
 export const LoginSignup = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -49,7 +49,9 @@ export const LoginSignup = () => {
             {tabValue === 0 ? "Login" : "Signup"}
           </Typography>
           <Typography variant="body2" sx={{ color: "#5D4037", mb: 2 }}>
-            {tabValue === 0 ? "Brew your way into the dashboard ☕" : "Join the coffee community ☕"}
+            {tabValue === 0
+              ? "Brew your way into the dashboard ☕"
+              : "Join the coffee community ☕"}
           </Typography>
         </Box>
 
@@ -70,4 +72,3 @@ export const LoginSignup = () => {
     </Box>
   );
 };
-

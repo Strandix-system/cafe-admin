@@ -4,7 +4,7 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
 
-export default function PeakTimeChart({ range , overrideData ,isViewingAdmin }) {
+export default function PeakTimeChart({ range, overrideData, isViewingAdmin }) {
   const { user } = useAuth();
 
   const { data } = useFetch(
@@ -14,7 +14,7 @@ export default function PeakTimeChart({ range , overrideData ,isViewingAdmin }) 
       ...(range.startDate && { startDate: range.startDate }),
       ...(range.endDate && { endDate: range.endDate }),
     },
-    { enabled: !!user?._id && !isViewingAdmin }
+    { enabled: !!user?._id && !isViewingAdmin },
   );
 
   // const peakData = data?.result ?? [];
@@ -36,7 +36,8 @@ export default function PeakTimeChart({ range , overrideData ,isViewingAdmin }) 
     },
     dataLabels: { enabled: false },
     stroke: {
-      curve: "smooth", width: 3,
+      curve: "smooth",
+      width: 3,
       colors: ["#6F4E37"],
     },
 

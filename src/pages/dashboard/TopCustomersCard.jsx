@@ -1,108 +1,107 @@
-
 import { Card, Box, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth } from "../../context/AuthContext";
+import { formatAmount } from "../../utils/utils";
 
 const THEME_COLOR = "#6F4E37";
 
 export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
-    const navigate = useNavigate();
-    const { user } = useAuth();
-    const { data } = useFetch(
-        ["top-customers", user?._id],
-        API_ROUTES.dashboardTopCustomers,
-        {},
-        { enabled: !!user?._id && !isViewingAdmin }
-    )
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data } = useFetch(
+    ["top-customers", user?._id],
+    API_ROUTES.dashboardTopCustomers,
+    {},
+    { enabled: !!user?._id && !isViewingAdmin },
+  );
 
-    // const customers = data?.result ?? [];
-    const customers = overrideData ?? data?.result ?? [];
+  // const customers = data?.result ?? [];
+  const customers = overrideData ?? data?.result ?? [];
 
-    if (customers.length === 0) {
-        return null; // 🚫 DO NOT RENDER
-    }
-    return (
-        <Card
+  if (customers.length === 0) {
+    return null; // 🚫 DO NOT RENDER
+  }
+  return (
+    <Card
+      sx={{
+        borderRadius: 3,
+        p: 2,
+        height: "fit-content",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
+      }}
+    >
+      {/* HEADER */}
+      <Box display="flex" alignItems="center" gap={1} mb={1.5}>
+        <PersonIcon sx={{ color: THEME_COLOR, fontSize: 22 }} />
+        <Typography fontSize={18} fontWeight={600}>
+          Top Customers
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          display: "grid",
+          // gridTemplateRows: `repeat(${customers.length}, 1fr)`,
+          gridAutoRows: "minmax(42px, auto)",
+          //   gap: "1px",
+          flex: 1,
+        }}
+      >
+        {customers.map((customer, index) => (
+          <Box
+            key={customer.customerId}
+            // onClick={() => navigate(`/my-orders/${customer.customerId}`)}
+            onClick={
+              isViewingAdmin
+                ? undefined
+                : () => navigate(`/my-orders/${customer.customerId}`)
+            }
             sx={{
-                borderRadius: 3,
-                p: 2,
-                height: "fit-content",
-                display: "flex",
-                flexDirection: "column",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
+              cursor: isViewingAdmin ? "default" : "pointer",
+              display: "grid",
+              gridTemplateColumns: "32px 1fr auto",
+              alignItems: "center",
+              gap: 1.2,
+              px: 1,
+              py: 0.75, // 🔑 reduced vertical padding
+              borderRadius: 1,
+              "&:hover": {
+                backgroundColor: `${THEME_COLOR}10`,
+              },
             }}
-        >
-            {/* HEADER */}
-            <Box display="flex" alignItems="center" gap={1} mb={1.5}>
-                <PersonIcon sx={{ color: THEME_COLOR, fontSize: 22 }} />
-                <Typography fontSize={18} fontWeight={600}>
-                    Top Customers
-                </Typography>
-            </Box>
-
-            <Box
-                sx={{
-                    display: "grid",
-                    // gridTemplateRows: `repeat(${customers.length}, 1fr)`,
-                    gridAutoRows: "minmax(42px, auto)",
-                    //   gap: "1px", 
-                    flex: 1,
-                }}
+          >
+            {/* RANK */}
+            <Avatar
+              sx={{
+                width: 22,
+                height: 22,
+                fontSize: 11,
+                bgcolor: THEME_COLOR,
+              }}
             >
-                {customers.map((customer, index) => (
-                    <Box
-                        key={customer.customerId}
-                        // onClick={() => navigate(`/my-orders/${customer.customerId}`)}
-                        onClick={
-                            isViewingAdmin
-                                ? undefined
-                                : () => navigate(`/my-orders/${customer.customerId}`)
-                        }
+              {index + 1}
+            </Avatar>
 
-                        sx={{
-                            cursor: isViewingAdmin ? "default" : "pointer",
-                            display: "grid",
-                            gridTemplateColumns: "32px 1fr auto",
-                            alignItems: "center",
-                            gap: 1.2,
-                            px: 1,
-                            py: 0.75,           // 🔑 reduced vertical padding
-                            borderRadius: 1,
-                            "&:hover": {
-                                backgroundColor: `${THEME_COLOR}10`,
-                            },
-                        }}
-                    >
-                        {/* RANK */}
-                        <Avatar
-                            sx={{
-                                width: 22,
-                                height: 22,
-                                fontSize: 11,
-                                bgcolor: THEME_COLOR,
-                            }}
-                        >
-                            {index + 1}
-                        </Avatar>
-
-                        <Box>
-                            <Typography fontSize={13.5} fontWeight={600} noWrap>
-                                {customer.name}
-                            </Typography>
-                            <Typography fontSize={11} color="text.secondary">
-                                Total Orders: {customer.totalOrders}
-                            </Typography>
-                        </Box>
-
-                        <Typography fontSize={13} fontWeight={600}>
-                            ₹{customer.totalAmount}
-                        </Typography>
-                    </Box>
-                ))}
+            <Box>
+              <Typography fontSize={13.5} fontWeight={600} noWrap>
+                {customer.name}
+              </Typography>
+              <Typography fontSize={11} color="text.secondary">
+                Total Orders: {customer.totalOrders}
+              </Typography>
             </Box>
-        </Card>
-    );
+
+            <Typography fontSize={13} fontWeight={600}>
+              ₹{formatAmount(customer.totalAmount)}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    </Card>
+  );
 }
