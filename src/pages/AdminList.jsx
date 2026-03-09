@@ -2,7 +2,7 @@ import { TableComponent } from "../components/TableComponent/TableComponent";
 import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { Edit, Power, Plus, User } from "lucide-react";
+import { Edit, Power, Plus, User, Receipt } from "lucide-react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
@@ -10,7 +10,6 @@ import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
 import { CommonButton } from "../components/common/commonButton";
 import { useLocation } from "react-router-dom";
-import { MdReceipt } from "react-icons/md";
 
 export const AdminList = () => {
   const navigate = useNavigate();
@@ -131,7 +130,7 @@ export const AdminList = () => {
     },
     {
       label: "View Payment History",
-      icon: MdReceipt,
+      icon: Receipt,
       onClick: (row) => {
         navigate(`/payment-history/${row.original._id}`);
       },

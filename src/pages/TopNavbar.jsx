@@ -11,10 +11,10 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { MdReceipt } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CommonButton } from "../components/common/commonButton";
+import { Receipt } from "lucide-react";
 
 export function TopNavbar() {
   const { user, logout, isSuperAdmin, isAdmin } = useAuth();
@@ -195,7 +195,7 @@ export function TopNavbar() {
             }}
             sx={{ gap: 1.5, py: 1.5 }}
           >
-            <MdReceipt style={{ marginRight: "8px" }} />
+            <Receipt style={{ marginRight: "8px" }} />
             <Typography variant="body2">Payment history</Typography>
           </MenuItem>
 
