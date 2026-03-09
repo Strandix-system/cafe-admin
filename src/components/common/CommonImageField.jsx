@@ -1,6 +1,7 @@
 import { Grid, FormLabel, Box } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { ImageUploadSection } from "./ImageUploadSection";
+import toast from "react-hot-toast";
 
 export const CommonImageField = ({
   name,
@@ -8,8 +9,6 @@ export const CommonImageField = ({
   inputId,
   control,
   errors,
-  setError,
-  clearErrors,
   /* preview handling */
   preview,
   setPreview,
@@ -54,13 +53,9 @@ export const CommonImageField = ({
 
                 const maxSize = 10 * 1024 * 1024; // 10MB
                 if (file.size > maxSize) {
-                  setError?.(name, {
-                    type: "manual",
-                    message: "Image size must be less than 10MB",
-                  });
+                  toast.error("Image size must be less than 10MB");
                   return;
                 }
-                clearErrors?.(name);
                 field.onChange(file);
                 setPreview?.(name, URL.createObjectURL(file));
               }}
