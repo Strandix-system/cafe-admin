@@ -11,12 +11,12 @@ import {
 import { CheckCircle } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import cafe1 from "../../assets/cafe1.jpg";
-import cafe_logo from "../../assets/cafe_logo.png";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useFetch, usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { CommonButton } from "../../components/common/commonButton";
+import { openRazorpayCheckout } from "../../utils/razorpayUtils";
 
 export const Plan = () => {
   const navigate = useNavigate();
@@ -51,37 +51,20 @@ export const Plan = () => {
 
   const selectedPlan = plans.find((plan) => plan.id === selectedPlanId);
 
-  const openRazorpayCheckout = (subscriptionId) => {
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      subscription_id: subscriptionId, // 🔥 THIS IS IMPORTANT
-      name: "Aeternis",
-      image: cafe_logo,
+  const handleSubscription = (subscriptionId) => {
+    openRazorpayCheckout({
+      subscriptionId, // dynamic
+      user: signupData, // { firstName, lastName, email, phoneNumber }
       description: "Premium Plan Subscription",
-
-      handler: (response) => {
+      onSuccess: (response) => {
         setIsLoading(false);
         handleSubscriptionSuccess(response);
       },
-
-      prefill: {
-        name: `${signupData.firstName} ${signupData.lastName}`,
-        email: signupData.email,
-        contact: signupData.phoneNumber,
+      onDismiss: () => {
+        setIsLoading(false);
+        toast.info("Payment cancelled");
       },
-
-      theme: { color: "#6F4E37" },
-
-      modal: {
-        ondismiss: () => {
-          setIsLoading(false);
-          toast.info("Payment cancelled");
-        },
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+    });
   };
 
   const { mutate: createSubscription } = usePost(
@@ -89,7 +72,7 @@ export const Plan = () => {
     {
       onSuccess: (res) => {
         const { subscription } = res.result;
-        openRazorpayCheckout(subscription.id);
+        handleSubscription(subscription.id);
       },
       onError: (error) => {
         setIsLoading(false);

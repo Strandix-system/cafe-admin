@@ -38,10 +38,8 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
   }, []);
 
   const title = useMemo(() => {
-    if (isExpired) return "Subscription Expired";
-    if (isExpiringSoon) return "Subscription Expiring Soon";
-    return "Subscription Alert";
-  }, [isExpired, isExpiringSoon]);
+    return isExpired ? "Subscription Expired" : "Subscription Expiring Soon";
+  }, [isExpired]);
 
   const alertSeverity = isExpired ? "error" : "warning";
 
@@ -66,25 +64,12 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
   );
 
   // Step 1b: Open Razorpay checkout with subscription ID
-  const openRazorpayCheckout = (subscriptionId) => {
-    if (!window.Razorpay) {
-      toast.error("Payment gateway not loaded. Please try again.");
-      return;
-    }
-
-    const rzp = new window.Razorpay({
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      subscription_id: subscriptionId,
-      name: "Aeternis",
-      image: cafeLogo,
+  const handleRenewSubscription = (subscriptionId) => {
+    openRazorpayCheckout({
+      subscriptionId, // dynamic
+      user: user,
       description: "Renew Subscription",
-      prefill: {
-        name: `${user?.firstName || ""} ${user?.lastName || ""}`.trim(),
-        email: user?.email,
-        contact: user?.phoneNumber ? String(user.phoneNumber) : "",
-      },
-      theme: { color: "#6F4E37" },
-      handler: ({
+      onSuccess: ({
         razorpay_payment_id,
         razorpay_subscription_id,
         razorpay_signature,
@@ -95,15 +80,13 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
           razorpay_signature,
         });
       },
-      modal: {
-        // Re-open dialog if user dismisses payment on expired state
-        ondismiss: () => isExpired && setIsOpen(true),
+      onDismiss: () => {
+        // Optional: re-open modal for expired subscription
+        if (isExpired) setIsOpen(true);
       },
+      isExpired: isExpired, // optional
     });
-
-    rzp.open();
   };
-
   // Step 1a: Initiate renewal → get subscription ID
   const { mutate: renewSubscription, isPending: renewPending } = usePost(
     API_ROUTES.renewSubscription,
@@ -114,7 +97,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
           toast.error("Subscription ID missing in response.");
           return;
         }
-        openRazorpayCheckout(subscriptionId);
+        handleRenewSubscription(subscriptionId);
       },
       onError: (error) => {
         toast.error(error);
@@ -122,7 +105,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
     },
   );
 
-  if (!alert) return null;
+  if (!alert) return;
 
   const isLoading = renewPending || verifyPending;
 
@@ -149,17 +132,13 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
           {alert?.message}
         </Alert>
 
-        {isExpired && (
-          <Typography variant="body2" color="text.secondary">
-            Your access has been suspended. Renew now to restore full access.
-          </Typography>
-        )}
-
-        {isExpiringSoon && (
-          <Typography variant="body2" color="text.secondary">
-            Renew early to avoid any interruption to your service.
-          </Typography>
-        )}
+        <p className="text-sm text-gray-500">
+          {isExpired
+            ? "Your access has been suspended. Renew now to restore full access."
+            : isExpiringSoon
+              ? "Renew early to avoid any interruption to your service."
+              : ""}
+        </p>
       </DialogContent>
 
       <DialogActions>
