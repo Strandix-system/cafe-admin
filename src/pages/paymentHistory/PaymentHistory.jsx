@@ -1,19 +1,25 @@
-import { TableComponent } from "../../components/TableComponent/TableComponent";
-import { Box, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { TableComponent } from "../../components/TableComponent/TableComponent";
+import { formatToLocalDateTime } from "../../utils/dateUtils";
 
 export const PaymentHistory = () => {
   const { adminId } = useParams();
+  const { isSuperAdmin } = useAuth();
 
   const columns = useMemo(
     () => [
-      {
-        id: "cafeName",
-        header: "Cafe Name",
-        Cell: ({ row }) => row.original.user?.cafeName || "-",
-      },
+      ...(isSuperAdmin && !adminId
+        ? [
+            {
+              id: "cafeName",
+              header: "Cafe Name",
+              Cell: ({ row }) => row.original.user?.cafeName || "-",
+            },
+          ]
+        : []),
+
       {
         accessorKey: "razorpayPaymentId",
         header: "Payment ID",
@@ -22,25 +28,19 @@ export const PaymentHistory = () => {
         accessorKey: "paidAt",
         header: "Payment Date",
         Cell: ({ row }) =>
-          row.original.subscriptionStartDate
-            ? new Date(row.original.subscriptionStartDate).toLocaleDateString()
-            : "-",
+          formatToLocalDateTime(row.original.subscriptionStartDate),
       },
       {
         id: "expiryDate",
         header: "Expiry Date",
         Cell: ({ row }) =>
-          row.original.subscriptionEndDate
-            ? new Date(row.original.subscriptionEndDate).toLocaleDateString()
-            : "-", // Not available from backend yet
+          formatToLocalDateTime(row.original.subscriptionEndDate),
       },
       {
         accessorKey: "amount",
         header: "Amount Paid",
         Cell: ({ row }) =>
-          row.original.amount
-            ? `₹ ${row.original.amount / 100}` // Razorpay amount is in paise
-            : "₹ 0",
+          row.original.amount ? `₹ ${row.original.amount / 100}` : "₹ 0",
       },
       {
         accessorKey: "status",
@@ -58,7 +58,7 @@ export const PaymentHistory = () => {
         ),
       },
     ],
-    [],
+    [isSuperAdmin, adminId],
   );
 
   const querykey = adminId ? `get-transactions-${adminId}` : "get-transactions";
@@ -66,31 +66,21 @@ export const PaymentHistory = () => {
   return (
     <div className="overflow-hidden">
       {/* Header */}
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography variant="h6" fontWeight={600} sx={{ color: "#333" }}>
-          Payment History
-        </Typography>
-      </Box>
+      <div className="flex items-center justify-between p-6 bg-white shadow-sm">
+        <h1 className="text-lg font-semibold text-gray-800">Payment History</h1>
+      </div>
 
-      {/* Table */}
-      <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
+      {/* Table Container */}
+      <div className="w-full bg-[#FAF7F2] min-h-screen p-6">
         <TableComponent
           columns={columns}
           querykey={querykey}
           getApiEndPoint="getTransactions"
           params={adminId ? { adminId } : {}}
           manualPagination={true}
-          serialNo={true}
           enableExportTable={true}
         />
-      </Box>
+      </div>
     </div>
   );
 };

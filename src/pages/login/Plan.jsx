@@ -166,12 +166,7 @@ export const Plan = () => {
     });
   };
 
-  if (plansLoading)
-    return (
-      <>
-        <Loader variant="fullscreen" />
-      </>
-    );
+  if (plansLoading) return <Loader variant="fullscreen" />;
 
   if (!signupData) {
     return; // Prevent rendering if no signup data
