@@ -173,7 +173,7 @@ export function TopNavbar() {
             },
           }}
         >
-          {!isSuperAdmin && (
+          {
             <MenuItem
               onClick={() => {
                 handleMenuClose();
@@ -184,7 +184,7 @@ export function TopNavbar() {
               <PersonIcon fontSize="small" />
               <Typography variant="body2">My Profile</Typography>
             </MenuItem>
-          )}
+          }
 
           <Divider sx={{ my: 1 }} />
 

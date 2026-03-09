@@ -1,4 +1,3 @@
-
 import { Card, CardContent, Typography, Box, Skeleton } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useEffect, useState } from "react";
@@ -48,8 +47,13 @@ const ICON_MAP = {
   "Total Demo Requests": AssignmentIcon,
 };
 
-export default function StatCard({ label, value, loading, path, disableClick }) {
-
+export default function StatCard({
+  label,
+  value,
+  loading,
+  path,
+  disableClick,
+}) {
   const navigate = useNavigate();
   const [displayValue, setDisplayValue] = useState(0);
   const [animate, setAnimate] = useState(false);
@@ -93,7 +97,7 @@ export default function StatCard({ label, value, loading, path, disableClick }) 
         position: "relative",
         overflow: "hidden",
         borderRadius: 4,
-        minHeight: 140, 
+        minHeight: 140,
         background: `
   linear-gradient(
     145deg,
@@ -144,7 +148,7 @@ export default function StatCard({ label, value, loading, path, disableClick }) 
           mb={2}
           height={40}
         >
-          <Box >
+          <Box>
             <IconComponent sx={{ fontSize: 18, color: "#5C3A26" }} />
           </Box>
 
@@ -160,8 +164,6 @@ export default function StatCard({ label, value, loading, path, disableClick }) 
           >
             {label}
           </Typography>
-
-
         </Box>
 
         {/* Value */}
@@ -187,6 +189,6 @@ export default function StatCard({ label, value, loading, path, disableClick }) 
           </Typography>
         )}
       </CardContent>
-    </Card >
+    </Card>
   );
 }

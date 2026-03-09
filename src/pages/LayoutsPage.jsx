@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
-import { Grid, Button, Box, Typography, Skeleton, Divider } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Box,
+  Typography,
+  Skeleton,
+  Divider,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDelete, useFetch, usePatch } from "../utils/hooks/api_hooks";
-import {LayoutPreviewCard} from "../components/layout/LayoutPreviewCard";
+import { LayoutPreviewCard } from "../components/layout/LayoutPreviewCard";
 import { API_ROUTES } from "../utils/api_constants";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
@@ -13,7 +20,7 @@ import {
   DialogActions,
   DialogTitle,
 } from "@mui/material";
-import {CommonButton} from "../components/common/commonButton";
+import { CommonButton } from "../components/common/commonButton";
 
 export function LayoutsPage() {
   const navigate = useNavigate();
@@ -23,7 +30,6 @@ export function LayoutsPage() {
   const [openQrModal, setOpenQrModal] = useState(false);
   const [deleteLayoutId, setDeleteLayoutId] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
 
   // Fetch default layouts (templates)
   const { data: defaultLayoutData, isLoading: isLoadingDefault } = useFetch(
@@ -46,10 +52,12 @@ export function LayoutsPage() {
     { adminId: user?.id },
     {
       enabled: !!user?.id,
-    }
+    },
   );
 
-  const hasNoQR = qrCodesData?.result?.totalResults === 0 && adminLayoutData?.result?.totalResults === 1;
+  const hasNoQR =
+    qrCodesData?.result?.totalResults === 0 &&
+    adminLayoutData?.result?.totalResults === 1;
 
   const cafeQrId = adminLayoutData?.result?.cafeQr?._id;
 
@@ -63,7 +71,7 @@ export function LayoutsPage() {
       onError: (error) => {
         toast.error(error);
       },
-    }
+    },
   );
 
   const defaultLayouts = defaultLayoutData?.result?.results || [];
@@ -82,7 +90,7 @@ export function LayoutsPage() {
       onError: (error) => {
         toast.error(error);
       },
-    }
+    },
   );
 
   const handleDelete = (layoutId) => {
@@ -197,8 +205,8 @@ export function LayoutsPage() {
                   isActive={false}
                   isSelected={selectedDefaultLayout === layout._id}
                   onSelect={setSelectedDefaultLayout}
-                  onSetActive={() => { }}
-                  onEdit={() => { }}
+                  onSetActive={() => {}}
+                  onEdit={() => {}}
                   onPreview={handlePreview}
                   showEditButton={false}
                 />
@@ -237,7 +245,6 @@ export function LayoutsPage() {
         >
           Customize
         </CommonButton>
-
       </Box>
 
       <Grid container spacing={3} px={3} mb={5}>
@@ -261,8 +268,8 @@ export function LayoutsPage() {
                 isActive={false}
                 isSelected={selectedDefaultLayout === layout._id}
                 onSelect={setSelectedDefaultLayout}
-                onSetActive={() => { }}
-                onEdit={() => { }}
+                onSetActive={() => {}}
+                onEdit={() => {}}
                 onPreview={handlePreview}
                 showEditButton={false}
               />
@@ -295,7 +302,10 @@ export function LayoutsPage() {
         container
         spacing={3}
         px={3}
-        sx={{ opacity: hasNoQR ? 0.5 : 1, pointerEvents: hasNoQR ? "none" : "auto" }}
+        sx={{
+          opacity: hasNoQR ? 0.5 : 1,
+          pointerEvents: hasNoQR ? "none" : "auto",
+        }}
       >
         {isLoadingAdmin ? (
           Array.from(new Array(6)).map((_, index) => (
@@ -335,44 +345,43 @@ export function LayoutsPage() {
         )}
       </Grid>
 
-      {hasNoQR && <Dialog
-        open={openQrModal}
-        disableEscapeKeyDown
-        onClose={() => { }}
-        PaperProps={{
-          sx: {
-            borderRadius: 3,
-            maxWidth: 420,
-            p: 1,
-          },
-        }}
-      >
-        <DialogTitle sx={{ fontWeight: 700 }}>
-          QR Code Required
-        </DialogTitle>
+      {hasNoQR && (
+        <Dialog
+          open={openQrModal}
+          disableEscapeKeyDown
+          onClose={() => {}}
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              maxWidth: 420,
+              p: 1,
+            },
+          }}
+        >
+          <DialogTitle sx={{ fontWeight: 700 }}>QR Code Required</DialogTitle>
 
-        <DialogContent>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            You haven’t created any QR codes for your cafe tables yet.
-          </Typography>
+          <DialogContent>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              You haven’t created any QR codes for your cafe tables yet.
+            </Typography>
 
-          <Typography variant="body2" color="text.secondary">
-            Without QR codes, none of the created layouts will work.
-            Please create QR codes first to activate and use layouts
-            properly.
-          </Typography>
-        </DialogContent>
+            <Typography variant="body2" color="text.secondary">
+              Without QR codes, none of the created layouts will work. Please
+              create QR codes first to activate and use layouts properly.
+            </Typography>
+          </DialogContent>
 
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <CommonButton
-            fullWidth
-            variant="contained"
-            onClick={() => navigate("/table-management")}
-          >
-            Create QR Codes
-          </CommonButton>
-        </DialogActions>
-      </Dialog>}
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <CommonButton
+              fullWidth
+              variant="contained"
+              onClick={() => navigate("/table-management")}
+            >
+              Create QR Codes
+            </CommonButton>
+          </DialogActions>
+        </Dialog>
+      )}
 
       <Dialog
         open={openDeleteDialog}
@@ -385,9 +394,7 @@ export function LayoutsPage() {
           },
         }}
       >
-        <DialogTitle sx={{ fontWeight: 700 }}>
-          Delete Layout?
-        </DialogTitle>
+        <DialogTitle sx={{ fontWeight: 700 }}>Delete Layout?</DialogTitle>
 
         <DialogContent>
           <Typography variant="body1">
@@ -400,7 +407,6 @@ export function LayoutsPage() {
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
-
           <CommonButton
             variant="outlined"
             onClick={() => setOpenDeleteDialog(false)}
@@ -419,7 +425,6 @@ export function LayoutsPage() {
           </CommonButton>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 }

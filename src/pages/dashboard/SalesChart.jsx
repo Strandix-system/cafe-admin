@@ -6,8 +6,8 @@ import DateRangeFilter from "./DateRangeFilter";
 import dayjs from "dayjs";
 import { useAuth } from "../../context/AuthContext";
 
-export default function SalesChart({range ,overrideData ,isViewingAdmin }){
-    const { user } = useAuth();
+export default function SalesChart({ range, overrideData, isViewingAdmin }) {
+  const { user } = useAuth();
 
   const { data } = useFetch(
     ["dashboard-sales", user?._id, range],
@@ -16,7 +16,7 @@ export default function SalesChart({range ,overrideData ,isViewingAdmin }){
       ...(range.startDate && { startDate: range.startDate }),
       ...(range.endDate && { endDate: range.endDate }),
     },
-    { enabled: !!user?._id && !isViewingAdmin }
+    { enabled: !!user?._id && !isViewingAdmin },
   );
 
   // const salesData = data?.result ?? [];
@@ -34,11 +34,10 @@ export default function SalesChart({range ,overrideData ,isViewingAdmin }){
     return dayjs(label).format("DD MMM");
   };
 
-
   const options = {
-    chart: { type: "area", toolbar: { show: false }, width: "100%", },
+    chart: { type: "area", toolbar: { show: false }, width: "100%" },
     colors: ["#6F4E37"],
-   
+
     xaxis: {
       categories: salesData.map((item) => formatLabel(item.label)),
       title: {
@@ -52,8 +51,7 @@ export default function SalesChart({range ,overrideData ,isViewingAdmin }){
     },
     tooltip: {
       x: {
-        formatter: (_, { dataPointIndex }) =>
-          salesData[dataPointIndex]?.label,
+        formatter: (_, { dataPointIndex }) => salesData[dataPointIndex]?.label,
       },
       y: {
         formatter: (value) => `₹${value.toLocaleString("en-IN")}`,
@@ -61,8 +59,9 @@ export default function SalesChart({range ,overrideData ,isViewingAdmin }){
     },
     dataLabels: { enabled: false },
     stroke: {
-      curve: "smooth", width: 3,
-      colors: ["#6F4E37"]
+      curve: "smooth",
+      width: 3,
+      colors: ["#6F4E37"],
     },
     markers: {
       size: 4,

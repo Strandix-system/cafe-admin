@@ -1,11 +1,11 @@
-import {TableComponent} from "../components/TableComponent/TableComponent";
+import { TableComponent } from "../components/TableComponent/TableComponent";
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Trash2, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import {CreateCategoryDialog} from "../components/categories/CreateCategoryDialog";
-import {CommonButton} from "../components/common/commonButton";
+import { CreateCategoryDialog } from "../components/categories/CreateCategoryDialog";
+import { CommonButton } from "../components/common/commonButton";
 
 export const CategoriesList = () => {
   // console.log("✅ CategoriesList component mounted" );
@@ -28,7 +28,7 @@ export const CategoriesList = () => {
       //     new Date(row.original.createdAt).toLocaleDateString(),
       // },
     ],
-    []
+    [],
   );
 
   const actions = [
@@ -69,7 +69,6 @@ export const CategoriesList = () => {
       </Box>
 
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
-
         <TableComponent
           slug="category"
           columns={columns}
@@ -91,4 +90,3 @@ export const CategoriesList = () => {
     </div>
   );
 };
-
