@@ -1,28 +1,57 @@
 import { useState, useMemo } from "react";
-import { usePut, useFetch, usePatch } from "../../utils/hooks/api_hooks";
-import { Typography, Grid, Chip, Box, Tabs, Tab } from "@mui/material";
-import { TableComponent } from "../../components/TableComponent/TableComponent";
-import { CheckCircle, XCircle, UserCog2 } from "lucide-react";
+import { usePatch } from "../../utils/hooks/api_hooks";
+import {
+    Typography,
+    Grid,
+    Chip,
+    Box,
+    Tabs,
+    Tab,
+    Dialog,
+    DialogContent,
+    IconButton,
+} from "@mui/material";
+import { TableComponent } from "../../components/TableComponent/TableComponent"
+import {
+    CheckCircle,
+    UserCog2,
+    ChevronLeft,
+    ChevronRight,
+    X,
+    ImageOff,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { QueryClient } from "@tanstack/react-query";
-// import { API_ROUTES } from "@/utils/constants";
 import { API_ROUTES } from "../../utils/api_constants";
+import { useAuth } from "../../context/AuthContext";
+import { useSearchParams } from "react-router-dom";
 import { queryClient } from "../../lib/queryClient";
+import { CommonButton } from "../../components/common/commonButton";
+import SupportForm from "./SupportForm";
 
-export default function SupportTicketDashboard() {
+export default function SupportTicketList() {
     const [selectedTicketId, setSelectedTicketId] = useState(null);
-    const [status, setStatus] = useState("pending");
+    const [sliderOpen, setSliderOpen] = useState(false);
+    const [sliderImages, setSliderImages] = useState([]);
+    const [sliderIndex, setSliderIndex] = useState(0);
 
-    const { data, isLoading } = useFetch(
-        ["get-support-ticket-list"],
-        API_ROUTES.getSupportTickets,
-    );
+    const { user, isSuperAdmin } = useAuth();
 
-    const filteredRows = useMemo(() => {
-        const allTickets = data?.result?.results || [];
-        return allTickets.filter((ticket) => ticket.status === status);
-    }, [data, status]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const status = searchParams.get("status") || "pending";
+    const [supportOpen, setSupportOpen] = useState(false);
 
+    const handleTabChange = (_, newStatus) => {
+        setSearchParams({ status: newStatus });
+    };
+
+    // const queryKey = isSuperAdmin
+    //     ? `get-support-tickets-${status}`
+    //     : `get-support-tickets-${user?.id}-${status}`;
+    const queryKey = ["support-tickets", status];
+    // const params = isSuperAdmin ? { status } : { userId: user?.id, status };
+
+    const params = { status }
     const { mutate: updateTicketStatus } = usePatch(
         selectedTicketId
             ? `${API_ROUTES.updateSupportTicket}/${selectedTicketId}`
@@ -30,14 +59,12 @@ export default function SupportTicketDashboard() {
         {
             onSuccess: (_, variables) => {
                 toast.success(
-                    `Ticket marked as ${{
-                        resolve: "Resolved",
-                        in_progress: "In Progress",
-                    }[variables.status]
+                    `Ticket marked as ${{ resolved: "Resolved", in_process: "In Process" }[
+                    variables.status
+                    ]
                     }`,
                 );
-
-                queryClient.invalidateQueries(["get-support-ticket-list"]);
+                queryClient.invalidateQueries({ queryKey: [queryKey] });
                 setSelectedTicketId(null);
             },
             onError: () => {
@@ -47,14 +74,21 @@ export default function SupportTicketDashboard() {
         },
     );
 
-    const handleStatusUpdate = (row, status) => {
+    const handleStatusUpdate = (row, newStatus) => {
         setSelectedTicketId(row.original.ticketId);
-        updateTicketStatus({ status });
+        updateTicketStatus({ status: newStatus });
+    };
+
+    const openSlider = (images) => {
+        setSliderImages(images || []);
+        setSliderIndex(0);
+        setSliderOpen(true);
     };
 
     const ticketColumns = useMemo(
         () => [
             { accessorKey: "ticketId", header: "Ticket ID" },
+            { accessorKey: "admin.email", header: "Raised By" },
             { accessorKey: "title", header: "Title" },
             {
                 accessorKey: "description",
@@ -67,26 +101,52 @@ export default function SupportTicketDashboard() {
                     ),
             },
             {
+                id: "images",
+                header: "Images",
+                Cell: ({ row }) => {
+                    const imgs = row.original.images || [];
+                    if (!imgs.length) {
+                        return (
+                            <span className="text-xs text-gray-400 flex items-center gap-1">
+                                <ImageOff size={14} /> No image
+                            </span>
+                        );
+                    }
+                    return (
+                        <Box
+                            className="flex items-center gap-1 cursor-pointer "
+                            onClick={() => openSlider(imgs)}
+                        >
+                            {imgs.slice(0, 3).map((src, i) => (
+                                <img
+                                    key={i}
+                                    src={src}
+                                    alt={`ticket-img-${i}`}
+                                    className="w-8 h-8 rounded-md object-cover border border-indigo-100"
+                                    style={{ marginLeft: i > 0 ? -10 : 0, zIndex: i }}
+                                />
+                            ))}
+                            <span className="text-xs text-indigo-500 ml-2">
+                                {imgs.length} {imgs.length === 1 ? "image" : "images"}
+                            </span>
+                        </Box>
+                    );
+                },
+            },
+            {
                 id: "status",
                 header: "Status",
                 Cell: ({ row }) => {
                     const map = {
                         pending: { bg: "#fff3cd", color: "#d19d06", label: "Pending" },
-                        resolve: {
-                            bg: "#d1ffbe",
-                            color: "#3db309",
-                            label: "Resolved",
-                        },
-
+                        resolve: { bg: "#d1ffbe", color: "#3db309", label: "Resolved" },
                         in_progress: {
                             bg: "#e3f2fd",
                             color: "#1976d2",
-                            label: "In Progress",
+                            label: "In Process",
                         },
                     };
-
                     const chip = map[row.original.status] || map.pending;
-
                     return (
                         <Chip
                             label={chip.label}
@@ -115,46 +175,188 @@ export default function SupportTicketDashboard() {
                 icon: (props) => (
                     <CheckCircle {...props} className="mr-3 text-green-600" />
                 ),
-                onClick: (row) => handleStatusUpdate(row, "resolve"),
+                onClick: (row) => handleStatusUpdate(row, "resolved"),
             },
             {
-                label: "In Progress",
+                label: "In Process",
                 icon: (props) => <UserCog2 {...props} className="mr-3 text-blue-600" />,
-                onClick: (row) => handleStatusUpdate(row, "in_progress"),
+                onClick: (row) => handleStatusUpdate(row, "in_process"),
             },
         ],
-        [],
+        [selectedTicketId],
     );
+    const filteredActions = useMemo(() => {
+        if (status === "in_process") {
+            return ticketActions.filter((action) => action.label !== "In Process");
+        }
+
+        if (status === "resolved") {
+            return ticketActions.filter((action) => action.label == "In Progress"); // no actions for resolved
+        }
+
+        return ticketActions;
+    }, [status, ticketActions]);
 
     return (
         <div className="min-h-full flex flex-col overflow-hidden p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
             <Grid container className="mb-4">
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Typography variant="h5" gutterBottom>
-                        Support Ticket
+                    <Typography variant="h5" fontWeight={700}>
+                        Support Tickets
                     </Typography>
                 </Grid>
-
+                <Grid size={{ xs: 12, sm: 6 }} className="flex justify-end">
+                    <CommonButton
+                        variant="contained"
+                        onClick={() => setSupportOpen(true)}
+                    >
+                        Support
+                    </CommonButton>
+                </Grid>
                 <Grid size={12}>
+
                     <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
-                        <Tabs value={status} onChange={(_, v) => setStatus(v)}>
+                        <Tabs value={status} onChange={handleTabChange}>
                             <Tab label="Pending" value="pending" />
-                            <Tab label="In Progress" value="in_progress" />
-                            <Tab label="Resolved" value="resolve" />
+                            <Tab label="In Progress" value="in_process" />
+                            <Tab label="Resolved" value="resolved" />
                         </Tabs>
                     </Box>
+
                 </Grid>
 
-                <Grid xs={12}>
+
+                <Grid size={12}>
+                    {/* ✅ Let TableComponent handle fetching internally like AdminList does */}
                     <TableComponent
-                        rows={filteredRows}
-                        isDataLoading={isLoading}
+                        slug="support-ticket"
                         columns={ticketColumns}
-                        actions={ticketActions}
+                        actions={filteredActions}
                         actionsType="menu"
+                        querykey={queryKey}
+                        getApiEndPoint="getSupportTickets"
+                        params={params}
                     />
                 </Grid>
             </Grid>
+
+            <SupportForm open={supportOpen} onClose={() => setSupportOpen(false)} />
+
+            {/* Image Slider Dialog */}
+            <Dialog
+                open={sliderOpen}
+                onClose={() => setSliderOpen(false)}
+                maxWidth="md"
+                fullWidth
+                PaperProps={{ sx: { borderRadius: 3, bgcolor: "#fff" } }}
+            >
+                <DialogContent sx={{ p: 0, position: "relative" }}>
+                    <IconButton
+                        onClick={() => setSliderOpen(false)}
+                        sx={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            zIndex: 10,
+                            color: "#fff",
+                            bgcolor: "rgba(0,0,0,0.4)",
+                        }}
+                    >
+                        <X size={18} />
+                    </IconButton>
+
+                    {sliderImages.length === 0 ? (
+                        <Box className="flex flex-col items-center justify-center py-16 gap-3 border border-red-600 rounded">
+                            <ImageOff size={40} color="#666" />
+                            <Typography sx={{ color: "#666" }}>
+                                No images available
+                            </Typography>
+                        </Box>
+                    ) : (
+                        <Box className="flex flex-col items-center">
+                            <Box
+                                className="relative flex items-center justify-center w-full"
+                                sx={{ minHeight: 400 }}
+                            >
+                                <img
+                                    src={sliderImages[sliderIndex]}
+                                    alt={`slide-${sliderIndex}`}
+                                    className="max-h-[70vh] max-w-full object-contain rounded"
+                                />
+                                {sliderImages.length > 1 && (
+                                    <>
+                                        <IconButton
+                                            onClick={() =>
+                                                setSliderIndex(
+                                                    (i) =>
+                                                        (i - 1 + sliderImages.length) % sliderImages.length,
+                                                )
+                                            }
+                                            sx={{
+                                                position: "absolute",
+                                                left: 8,
+                                                color: "#fff",
+                                                bgcolor: "rgba(0,0,0,0.5)",
+                                                "&:hover": { bgcolor: "rgba(0,0,0,0.8)" },
+                                            }}
+                                        >
+                                            <ChevronLeft />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={() =>
+                                                setSliderIndex((i) => (i + 1) % sliderImages.length)
+                                            }
+                                            sx={{
+                                                position: "absolute",
+                                                right: 8,
+                                                color: "#fff",
+                                                bgcolor: "rgba(0,0,0,0.5)",
+                                                "&:hover": { bgcolor: "rgba(0,0,0,0.8)" },
+                                            }}
+                                        >
+                                            <ChevronRight />
+                                        </IconButton>
+                                    </>
+                                )}
+                            </Box>
+
+                            {sliderImages.length > 1 && (
+                                <Box className="flex items-center gap-2 py-3">
+                                    {sliderImages.map((src, i) => (
+                                        <Box
+                                            key={i}
+                                            onClick={() => setSliderIndex(i)}
+                                            sx={{
+                                                width: i === sliderIndex ? 48 : 36,
+                                                height: i === sliderIndex ? 48 : 36,
+                                                borderRadius: 1,
+                                                overflow: "hidden",
+                                                border:
+                                                    i === sliderIndex
+                                                        ? "2px solid #4f6ef7"
+                                                        : "2px solid transparent",
+                                                cursor: "pointer",
+                                                transition: "all 0.2s",
+                                                opacity: i === sliderIndex ? 1 : 0.5,
+                                            }}
+                                        >
+                                            <img
+                                                src={src}
+                                                alt={`thumb-${i}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </Box>
+                                    ))}
+                                </Box>
+                            )}
+
+                            <Typography variant="caption" sx={{ color: "#888", pb: 2 }}>
+                                {sliderIndex + 1} / {sliderImages.length}
+                            </Typography>
+                        </Box>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

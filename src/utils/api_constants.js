@@ -80,7 +80,7 @@ export const API_ROUTES = {
     changePassword: "auth/change-password",
 
     createSupportTicket: "issue-reported/raise",
-    getSupportTickets: "issue-reported/all",
+    getSupportTickets: "issue-reported/get-tickets",
     updateSupportTicket: "issue-reported/status",
     adminRequest: "demo/all",
     updateAdminRequestStatus: "demo/status",

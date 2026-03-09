@@ -1,12 +1,12 @@
 // TopNavbar.jsx - With conditional back button
 import { useState } from "react";
 import {
-  Box,
-  Avatar,
-  Typography,
-  Menu,
-  MenuItem,
-  Divider,
+    Box,
+    Avatar,
+    Typography,
+    Menu,
+    MenuItem,
+    Divider,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
@@ -14,186 +14,208 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CommonButton } from "../components/common/commonButton";
+import { Heart } from "lucide-react";
+import SupportForm from "./Support/SupportForm";
 
 export function TopNavbar() {
-  const { user, logout, isSuperAdmin } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [anchorEl, setAnchorEl] = useState(null);
+    const { user, logout, isSuperAdmin } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [supportOpen, setSupportOpen] = useState(false);
 
-  const name = `${user?.firstName || "User"} ${" "} ${user?.lastName || ""}`;
-  // Routes that should show the back button
-  const showBackButtonRoutes = [
-    "/cafe/create-edit",
-    "/layouts/create-edit",
-    "/cafe/view-customers/",
-    "/categories/create",
-    "/profile",
-    "/my-orders",
-    "/cafes/",
-    "/dashboard/", // for super admin viewing specific admin analytics
-  ];
+    const name = `${user?.firstName || "User"} ${" "} ${user?.lastName || ""}`;
+    // Routes that should show the back button
+    const showBackButtonRoutes = [
+        "/cafe/create-edit",
+        "/layouts/create-edit",
+        "/cafe/view-customers/",
+        "/categories/create",
+        "/profile",
+        "/my-orders",
+        "/cafes/",
+        "/dashboard/", // for super admin viewing specific admin analytics
+    ];
 
-  // Check if current route should show back button
-  const shouldShowBackButton = showBackButtonRoutes.some((route) =>
-    location.pathname.includes(route),
-  );
+    // Check if current route should show back button
+    const shouldShowBackButton = showBackButtonRoutes.some((route) =>
+        location.pathname.includes(route),
+    );
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
-  const handleLogout = () => {
-    handleMenuClose();
-    logout();
-    navigate("/");
-  };
+    const handleLogout = () => {
+        handleMenuClose();
+        logout();
+        navigate("/");
+    };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+    const handleBack = () => {
+        navigate(-1);
+    };
 
-  // Get user initials for avatar
-  const getInitials = (name) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .substring(0, 2);
-  };
+    // Get user initials for avatar
+    const getInitials = (name) => {
+        return name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .substring(0, 2);
+    };
 
-  return (
-    <Box
-      sx={{
-        height: 70,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        px: 4,
-        bgcolor: "white",
-        borderBottom: "1px solid #e0e0e0",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-        width: "100%",
-      }}
-    >
-      {/* Left Side - Back Button (conditional) + Page Title */}
-      <Box display="flex" alignItems="center" gap={2}>
-        {shouldShowBackButton && (
-          <CommonButton
-            variant="text"
-            onClick={handleBack}
-            startIcon={<ArrowBackIcon />}
-            sx={{
-              color: "#6F4E37",
-              "&:hover": {
-                backgroundColor: "#F5EFE6",
-              },
-            }}
-          >
-            Back
-          </CommonButton>
-        )}
-      </Box>
-
-      {/* Right Side - Actions & Profile */}
-      <Box display="flex" alignItems="center" gap={2}>
-        {/* Divider */}
-        <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-
-        {/* User Profile */}
+    return (
         <Box
-          display="flex"
-          alignItems="center"
-          gap={1.5}
-          sx={{
-            cursor: "pointer",
-            px: 1.5,
-            py: 0.75,
-            borderRadius: 2,
-            transition: "background-color 0.2s",
-            "&:hover": { bgcolor: "#f5f5f5" },
-          }}
-          onClick={handleMenuOpen}
-        >
-          <Avatar
-            src={user?.profileImage}
-            alt={name}
             sx={{
-              width: 40,
-              height: 40,
-              bgcolor: isSuperAdmin ? "#5B4CFF" : "#6F4E37",
-              fontWeight: 600,
-              fontSize: "0.9rem",
+                height: 70,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                px: 4,
+                bgcolor: "white",
+                borderBottom: "1px solid #e0e0e0",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                width: "100%",
             }}
-          >
-            {!user?.profileImage && getInitials(name)}
-          </Avatar>
-
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
-              {name}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              lineHeight={1.2}
-            >
-              {isSuperAdmin ? "Super Admin" : "Admin"}
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Profile Menu */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          PaperProps={{
-            sx: {
-              mt: 1.5,
-              minWidth: 200,
-              borderRadius: 2,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-            },
-          }}
         >
-          {
-            <MenuItem
-              onClick={() => {
-                handleMenuClose();
-                navigate("/profile");
-              }}
-              sx={{ gap: 1.5, py: 1.5 }}
-            >
-              <PersonIcon fontSize="small" />
-              <Typography variant="body2">My Profile</Typography>
-            </MenuItem>
-          }
+            {/* Left Side - Back Button (conditional) + Page Title */}
+            <Box display="flex" alignItems="center" gap={2}>
+                {shouldShowBackButton && (
+                    <CommonButton
+                        variant="text"
+                        onClick={handleBack}
+                        startIcon={<ArrowBackIcon />}
+                        sx={{
+                            color: "#6F4E37",
+                            "&:hover": {
+                                backgroundColor: "#F5EFE6",
+                            },
+                        }}
+                    >
+                        Back
+                    </CommonButton>
+                )}
+            </Box>
 
-          <Divider sx={{ my: 1 }} />
+            {/* Right Side - Actions & Profile */}
+            <Box display="flex" alignItems="center" gap={2}>
+                {/* Divider */}
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
 
-          <MenuItem
-            onClick={handleLogout}
-            sx={{ gap: 1.5, py: 1.5, color: "error.main" }}
-          >
-            <LogoutIcon fontSize="small" />
-            <Typography variant="body2">Logout</Typography>
-          </MenuItem>
-        </Menu>
-      </Box>
-    </Box>
-  );
+                {/* User Profile */}
+                <Box
+                    display="flex"
+                    alignItems="center"
+                    gap={1.5}
+                    sx={{
+                        cursor: "pointer",
+                        px: 1.5,
+                        py: 0.75,
+                        borderRadius: 2,
+                        transition: "background-color 0.2s",
+                        "&:hover": { bgcolor: "#f5f5f5" },
+                    }}
+                    onClick={handleMenuOpen}
+                >
+                    <Avatar
+                        src={user?.profileImage}
+                        alt={name}
+                        sx={{
+                            width: 40,
+                            height: 40,
+                            bgcolor: isSuperAdmin ? "#5B4CFF" : "#6F4E37",
+                            fontWeight: 600,
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        {!user?.profileImage && getInitials(name)}
+                    </Avatar>
+
+                    <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                        <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                            {name}
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            lineHeight={1.2}
+                        >
+                            {isSuperAdmin ? "Super Admin" : "Admin"}
+                        </Typography>
+                    </Box>
+                </Box>
+
+                {/* Profile Menu */}
+                <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                    }}
+                    PaperProps={{
+                        sx: {
+                            mt: 1.5,
+                            minWidth: 200,
+                            borderRadius: 2,
+                            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                        },
+                    }}
+                >
+
+                    <MenuItem
+                        onClick={() => {
+                            handleMenuClose();
+                            navigate("/profile");
+                        }}
+                        sx={{ gap: 1.5, py: 1.5 }}
+                    >
+                        <PersonIcon fontSize="small" />
+                        <Typography variant="body2">My Profile</Typography>
+                    </MenuItem>
+                    <Divider sx={{ my: 1 }} />
+                    <MenuItem
+                        onClick={handleLogout}
+                        sx={{ gap: 1.5, py: 1.5, color: "error.main" }}
+                    >
+                        <LogoutIcon fontSize="small" />
+                        <Typography variant="body2">Logout</Typography>
+                    </MenuItem>
+                    {/* <MenuItem
+                        sx={{ gap: 1.5, py: 1.5 }}
+                    >
+                        <Heart fontSize="small" />
+                        <Typography variant="body2">Help
+                            <SupportForm open={supportOpen} onClose={() => setSupportOpen(false)} />
+                        </Typography>
+                    </MenuItem> */}
+                    {/* <MenuItem
+                        onClick={() => {
+                            handleMenuClose();
+                            setSupportOpen(true);
+                        }}
+                        sx={{ gap: 1.5, py: 1.5 }}
+                    >
+                        <Heart size={16} />
+                        <Typography variant="body2">Help</Typography>
+                    </MenuItem> */}
+                    {/* <SupportForm
+                        open={supportOpen}
+                        onClose={() => setSupportOpen(false)}
+                    /> */}
+                </Menu>
+            </Box>
+        </Box>
+    );
 }
