@@ -115,11 +115,7 @@ export const CustomerList = () => {
                   />
                 )}
                 {customerStatus === "new" && (
-                  <CommonChip
-                    label="New"
-                    bgColor="#E5E7EB"
-                    textColor="#374151"
-                  />
+                  <CommonChip label="New" bgColor="#89CFEF" textColor="#000" />
                 )}
 
                 {/* VIP Badge */}
