@@ -21,7 +21,6 @@ import {
 import toast from "react-hot-toast";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-// import { queryClient } from "@tanstack/react-query";
 import { InputField } from "../../components/common/InputField";
 import { queryClient } from "../../lib/queryClient";
 
@@ -239,8 +238,13 @@ export default function SupportForm({ open, onClose }) {
                                                 position: "absolute",
                                                 top: 4,
                                                 right: 4,
-                                                bgcolor: "rgba(239,68,68,0.1)",
-                                                color: "#ef4444",
+                                                opacity: 0,
+                                                color: "#fff",
+                                                bgcolor: "rgba(0,0,0,0.5)",
+                                                "&:hover": {
+                                                    opacity: 1,
+                                                    bgcolor: "rgba(0,0,0,0.7)"
+                                                }
                                             }}
                                         >
                                             <X size={12} />

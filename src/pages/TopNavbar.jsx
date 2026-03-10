@@ -192,28 +192,6 @@ export function TopNavbar() {
                         <LogoutIcon fontSize="small" />
                         <Typography variant="body2">Logout</Typography>
                     </MenuItem>
-                    {/* <MenuItem
-                        sx={{ gap: 1.5, py: 1.5 }}
-                    >
-                        <Heart fontSize="small" />
-                        <Typography variant="body2">Help
-                            <SupportForm open={supportOpen} onClose={() => setSupportOpen(false)} />
-                        </Typography>
-                    </MenuItem> */}
-                    {/* <MenuItem
-                        onClick={() => {
-                            handleMenuClose();
-                            setSupportOpen(true);
-                        }}
-                        sx={{ gap: 1.5, py: 1.5 }}
-                    >
-                        <Heart size={16} />
-                        <Typography variant="body2">Help</Typography>
-                    </MenuItem> */}
-                    {/* <SupportForm
-                        open={supportOpen}
-                        onClose={() => setSupportOpen(false)}
-                    /> */}
                 </Menu>
             </Box>
         </Box>

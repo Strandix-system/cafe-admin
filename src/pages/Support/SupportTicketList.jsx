@@ -21,7 +21,7 @@ import {
     ImageOff,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { QueryClient } from "@tanstack/react-query";
+// import { QueryClient } from "@tanstack/react-query";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
@@ -88,8 +88,10 @@ export default function SupportTicketList() {
     const ticketColumns = useMemo(
         () => [
             { accessorKey: "ticketId", header: "Ticket ID" },
-            { accessorKey: "admin.email", header: "Raised By" },
+            ...(isSuperAdmin ? [{ accessorKey: "admin.email", header: "Raised By" }] : []),
+
             { accessorKey: "title", header: "Title" },
+
             {
                 accessorKey: "description",
                 header: "Description",
@@ -139,8 +141,8 @@ export default function SupportTicketList() {
                 Cell: ({ row }) => {
                     const map = {
                         pending: { bg: "#fff3cd", color: "#d19d06", label: "Pending" },
-                        resolve: { bg: "#d1ffbe", color: "#3db309", label: "Resolved" },
-                        in_progress: {
+                        resolved: { bg: "#d1ffbe", color: "#3db309", label: "Resolved" },
+                        in_process: {
                             bg: "#e3f2fd",
                             color: "#1976d2",
                             label: "In Process",
@@ -165,7 +167,7 @@ export default function SupportTicketList() {
                         : "N/A",
             },
         ],
-        [],
+        [isSuperAdmin],
     );
 
     const ticketActions = useMemo(
@@ -191,7 +193,7 @@ export default function SupportTicketList() {
         }
 
         if (status === "resolved") {
-            return ticketActions.filter((action) => action.label == "In Progress"); // no actions for resolved
+            return ticketActions.filter((action) => action.label == "In Process"); // no actions for resolved
         }
 
         return ticketActions;
@@ -206,19 +208,20 @@ export default function SupportTicketList() {
                     </Typography>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }} className="flex justify-end">
-                    <CommonButton
+                    {<CommonButton
                         variant="contained"
                         onClick={() => setSupportOpen(true)}
                     >
                         Support
                     </CommonButton>
+                    }
                 </Grid>
                 <Grid size={12}>
 
                     <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
                         <Tabs value={status} onChange={handleTabChange}>
                             <Tab label="Pending" value="pending" />
-                            <Tab label="In Progress" value="in_process" />
+                            <Tab label="In Process" value="in_process" />
                             <Tab label="Resolved" value="resolved" />
                         </Tabs>
                     </Box>
@@ -231,7 +234,7 @@ export default function SupportTicketList() {
                     <TableComponent
                         slug="support-ticket"
                         columns={ticketColumns}
-                        actions={filteredActions}
+                        actions={isSuperAdmin ? filteredActions : []}
                         actionsType="menu"
                         querykey={queryKey}
                         getApiEndPoint="getSupportTickets"
