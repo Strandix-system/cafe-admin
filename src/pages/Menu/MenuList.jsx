@@ -16,6 +16,7 @@ import { CreateEditMenuModal } from "./CreateEditMenuModal";
 import { CommonButton } from "../../components/common/commonButton";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { formatAmount } from "../../utils/utils";
+import { CommonHeader } from "../../components/common/CommonHeader";
 
 export const MenuList = () => {
   const navigate = useNavigate();
@@ -83,29 +84,15 @@ export const MenuList = () => {
   return (
     <div className="overflow-hidden">
       {/* Header */}
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+      <CommonHeader
+        title="Menu Management"
+        buttonText="Create Menu"
+        buttonIcon={<Plus size={18} />}
+        onButtonClick={() => {
+          setMenuId(null);
+          setOpen(true);
         }}
-      >
-        <Typography variant="h6" fontWeight={600}>
-          Menu Management
-        </Typography>
-
-        <CommonButton
-          variant="contained"
-          startIcon={<Plus size={18} />}
-          onClick={() => {
-            setMenuId(null); // create mode
-            setOpen(true);
-          }}
-        >
-          Create Menu
-        </CommonButton>
-      </Box>
+      />
 
       <CreateEditMenuModal
         open={open}

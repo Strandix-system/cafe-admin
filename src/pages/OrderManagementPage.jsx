@@ -15,6 +15,7 @@ import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 import { useLocation } from "react-router-dom";
 import { useOrders } from "../context/OrderContext";
 import { formatAmount } from "../utils/utils";
+import { CommonHeader } from "../components/common/CommonHeader";
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -170,9 +171,7 @@ export const OrderManagementPage = () => {
 
   return (
     <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
-      <Typography variant="h4" fontWeight={700} color="#6F4E37" mb={3}>
-        Order Management
-      </Typography>
+      <CommonHeader title="Order Management" />
 
       <Tabs
         value={tabValue}

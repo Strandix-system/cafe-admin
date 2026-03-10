@@ -10,6 +10,7 @@ import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
 import { CommonButton } from "../components/common/commonButton";
 import { useLocation } from "react-router-dom";
+import { CommonHeader } from "../components/common/CommonHeader";
 
 export const AdminList = () => {
   const navigate = useNavigate();
@@ -155,31 +156,12 @@ export const AdminList = () => {
 
   return (
     <div className="overflow-hidden">
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography variant="h6" fontWeight={600}>
-          {/* Cafe Management */}
-          {adminId ? "Customer Management" : "Cafe Management"}
-        </Typography>
-
-        <Box display="flex" gap={2}>
-          {isSuperAdmin && !adminId && (
-            <CommonButton
-              variant="contained"
-              startIcon={<Plus size={18} />}
-              onClick={() => navigate("/cafe/create-edit")}
-            >
-              Create Cafe
-            </CommonButton>
-          )}
-        </Box>
-      </Box>
+      <CommonHeader
+        title={adminId ? "Customer Management" : "Cafe Management"}
+        buttonText={isSuperAdmin && !adminId ? "Create Cafe" : null}
+        buttonIcon={<Plus size={18} />}
+        onButtonClick={() => navigate("/cafe/create-edit")}
+      />
 
       {!adminId && (
         <Box sx={{ px: 3, mb: 2 }}>

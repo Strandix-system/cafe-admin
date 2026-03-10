@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { CreateCategoryDialog } from "../components/categories/CreateCategoryDialog";
 import { CommonButton } from "../components/common/commonButton";
+import { CommonHeader } from "../components/common/CommonHeader";
 
 export const CategoriesList = () => {
   // console.log("✅ CategoriesList component mounted" );
@@ -49,24 +50,15 @@ export const CategoriesList = () => {
 
   return (
     <div>
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          justifyContent: "flex-end",
+      <CommonHeader
+        title="Categories"
+        buttonText="Create Category"
+        buttonIcon={<Plus size={18} />}
+        onButtonClick={() => {
+          setSelectedCategory(null);
+          setOpenDialog(true);
         }}
-      >
-        <CommonButton
-          variant="contained"
-          startIcon={<Plus size={18} />}
-          onClick={() => {
-            setSelectedCategory(null);
-            setOpenDialog(true);
-          }}
-        >
-          Create Category
-        </CommonButton>
-      </Box>
+      />
 
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
         <TableComponent
