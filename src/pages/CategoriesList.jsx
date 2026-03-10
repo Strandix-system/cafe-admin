@@ -1,15 +1,13 @@
 import { TableComponent } from "../components/TableComponent/TableComponent";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { CreateCategoryDialog } from "../components/categories/CreateCategoryDialog";
-import { CommonButton } from "../components/common/commonButton";
 import { CommonHeader } from "../components/common/CommonHeader";
 
 export const CategoriesList = () => {
-  // console.log("✅ CategoriesList component mounted" );
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -22,12 +20,6 @@ export const CategoriesList = () => {
         accessorKey: "name",
         header: "Category",
       },
-      // {
-      //   accessorKey: "createdAt",
-      //   header: "Created At",
-      //   Cell: ({ row }) =>
-      //     new Date(row.original.createdAt).toLocaleDateString(),
-      // },
     ],
     [],
   );
