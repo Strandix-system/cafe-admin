@@ -80,4 +80,8 @@ export const API_ROUTES = {
   changePassword: "auth/change-password",
   adminRequest: "demo/all",
   updateAdminRequestStatus: "demo/status",
+
+  getFeedback: "admin/get-feedback",
+  deleteFeedback: "admin/delete-feedback",
+  selectFeedback: "admin/feedback-selection",
 };

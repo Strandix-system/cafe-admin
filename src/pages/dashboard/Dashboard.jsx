@@ -222,18 +222,17 @@ export function Dashboard() {
           </Grid>
 
           <Grid container spacing={3} mt={4} alignItems="stretch">
-            <Grid item size={{ xs: 12, md: 4 }}>
-              <ItemsCard
-                overrideData={isViewingAdmin ? analyticsResult?.items : null}
-                isViewingAdmin={isViewingAdmin}
-              />
-            </Grid>
-
-            <Grid item size={{ xs: 12, md: 8 }}>
+            <Grid item size={{ xs: 12, md: 6 }}>
               <TopCustomersCard
                 overrideData={
                   isViewingAdmin ? analyticsResult?.topCustomers : null
                 }
+                isViewingAdmin={isViewingAdmin}
+              />
+            </Grid>
+            <Grid item size={{ xs: 12, md: 6 }}>
+              <ItemsCard
+                overrideData={isViewingAdmin ? analyticsResult?.items : null}
                 isViewingAdmin={isViewingAdmin}
               />
             </Grid>

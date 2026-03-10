@@ -6,6 +6,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import Restaurant from "@mui/icons-material/Restaurant";
+import FeedbackIcon from "@mui/icons-material/Feedback";
 import { QrCode } from "lucide-react";
 
 export const sideBarItems = {
@@ -90,6 +91,13 @@ export const sideBarItems = {
       icon: QrCode,
       path: "/table-management",
       tab: "table-management",
+    },
+    {
+      key: "feedback",
+      label: "Customer Feedbacks",
+      icon: FeedbackIcon,
+      path: "/feedback",
+      tab: "feedback",
     },
   ],
 };

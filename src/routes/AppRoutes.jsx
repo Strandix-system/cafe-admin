@@ -21,6 +21,7 @@ import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
 import { Enquiries } from "../pages/Admin/AdminEnquire";
+import { FeedbackList } from "../pages/feedback/FeedbackList";
 
 export const AppRoutes = () => {
   return (
@@ -60,6 +61,7 @@ export const AppRoutes = () => {
           <Route index element={<ProfileUpdate />} />
           <Route path="change-password" element={<ChangePassword />} />
         </Route>
+        <Route path="/feedback" element={<FeedbackList />} />
       </Route>
 
       {/* CATCH ALL */}
