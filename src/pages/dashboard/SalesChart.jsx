@@ -19,7 +19,6 @@ export default function SalesChart({ range, overrideData, isViewingAdmin }) {
     { enabled: !!user?._id && !isViewingAdmin },
   );
 
-  // const salesData = data?.result ?? [];
   const salesData = overrideData ?? data?.result ?? [];
 
   /* ---------------- LABEL FORMATTER ---------------- */
@@ -80,10 +79,6 @@ export default function SalesChart({ range, overrideData, isViewingAdmin }) {
 
   return (
     <div className="w-full">
-      {/* <div className="flex flex-end mb-2">
-        <DateRangeFilter onChange={setRange} />
-      </div> */}
-
       <Chart options={options} series={series} height={380} width="100%" />
     </div>
   );

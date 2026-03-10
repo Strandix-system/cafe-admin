@@ -21,12 +21,6 @@ export const CategoriesList = () => {
         accessorKey: "name",
         header: "Category",
       },
-      // {
-      //   accessorKey: "createdAt",
-      //   header: "Created At",
-      //   Cell: ({ row }) =>
-      //     new Date(row.original.createdAt).toLocaleDateString(),
-      // },
     ],
     [],
   );

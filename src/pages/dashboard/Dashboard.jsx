@@ -75,11 +75,6 @@ export function Dashboard() {
   const analyticsResult = adminAnalyticsData?.result ?? null;
   const cafeName = cafeNameFromState || "";
 
-  // const statsData = data?.result ?? {};
-
-  // const stats = isSuperAdmin
-  //     ? getSuperAdminStats(statsData)
-  //     : getAdminStats(statsData);
   const statsData = isViewingAdmin
     ? analyticsResult?.stats
     : (data?.result ?? {});
@@ -111,7 +106,6 @@ export function Dashboard() {
             xs: 12,
             sm: 12,
             md: pendingOrders.length > 0 ? 6 : 12,
-            // md: 2
           }}
         >
           <Grid container spacing={2}>
@@ -121,7 +115,6 @@ export function Dashboard() {
                   xs: 12,
                   sm: 6,
                   md: isAdmin && pendingOrders.length > 0 ? 6 : 2,
-                  // md: 2
                 }}
                 key={stat.label}
               >
