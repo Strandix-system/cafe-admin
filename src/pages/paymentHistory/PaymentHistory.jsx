@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { TableComponent } from "../../components/TableComponent/TableComponent";
-import { formatToLocalDateTime } from "../../utils/dateUtils";
+import { formatToLocalDateTime } from "../../utils/utils";
 
 export const PaymentHistory = () => {
   const { adminId } = useParams();
