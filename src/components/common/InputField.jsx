@@ -11,6 +11,7 @@ export const InputField = ({
   options = [], // 🔥 NEW
   getOptionLabel,
   onOptionChange,
+  sx = {},
   ...props
 }) => {
   if (isAutocomplete) {
@@ -37,6 +38,7 @@ export const InputField = ({
                 bgcolor: "#F5EFE6",
                 "&:hover": { bgcolor: "#EFE5D8" },
               },
+              ...sx,
             }}
           />
         )}

@@ -75,11 +75,6 @@ export function Dashboard() {
   const analyticsResult = adminAnalyticsData?.result ?? null;
   const cafeName = cafeNameFromState || "";
 
-  // const statsData = data?.result ?? {};
-
-  // const stats = isSuperAdmin
-  //     ? getSuperAdminStats(statsData)
-  //     : getAdminStats(statsData);
   const statsData = isViewingAdmin
     ? analyticsResult?.stats
     : (data?.result ?? {});
@@ -243,7 +238,7 @@ export function Dashboard() {
 
       {isSuperAdmin && !isViewingAdmin && (
         <Grid container spacing={3} mt={6}>
-          <Grid item size={{ xs: 12, md: 8 }}>
+          <Grid item size={{ xs: 12, md: 6 }}>
             <ChartCard
               title="Platform Sales Overview"
               action={<DateRangeFilter onChange={setPlatformSalesRange} />}
@@ -252,7 +247,7 @@ export function Dashboard() {
             </ChartCard>
           </Grid>
 
-          <Grid item size={{ xs: 12, md: 4 }}>
+          <Grid item size={{ xs: 12, md: 6 }}>
             <TopCafesCard />
           </Grid>
         </Grid>

@@ -4,26 +4,41 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth } from "../../context/AuthContext";
+import { Chip, Stack } from "@mui/material";
 import { formatAmount } from "../../utils/utils";
+import { InputField } from "../../components/common/InputField";
+import { useState } from "react";
+import { Crown } from "lucide-react";
 
 const THEME_COLOR = "#6F4E37";
 
 export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [filter, setFilter] = useState("orders");
+
   const { data } = useFetch(
-    ["top-customers", user?._id],
+    ["top-customers", user?._id, filter],
     API_ROUTES.dashboardTopCustomers,
-    {},
+    { sortBy: filter },
     { enabled: !!user?._id && !isViewingAdmin },
   );
 
-  // const customers = data?.result ?? [];
   const customers = overrideData ?? data?.result ?? [];
 
   if (customers.length === 0) {
     return null; // 🚫 DO NOT RENDER
   }
+  const filterOptions = [
+    { _id: "order", name: "By Orders" },
+    { _id: "amount", name: "By Amount" },
+  ];
+
+  const rankColors = [
+    "#FFD700", // 🥇 Gold
+    "#C0C0C0", // 🥈 Silver
+    "#CD7F32", // 🥉 Bronze
+  ];
   return (
     <Card
       sx={{
@@ -35,27 +50,48 @@ export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
         boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
       }}
     >
-      {/* HEADER */}
-      <Box display="flex" alignItems="center" gap={1} mb={1.5}>
-        <PersonIcon sx={{ color: THEME_COLOR, fontSize: 22 }} />
-        <Typography fontSize={18} fontWeight={600}>
-          Top Customers
-        </Typography>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={1.5}
+      >
+        <Box display="flex" alignItems="center" gap={1}>
+          <PersonIcon sx={{ color: THEME_COLOR, fontSize: 22 }} />
+          <Typography fontSize={18} fontWeight={600}>
+            Top Customers
+          </Typography>
+        </Box>
+
+        <Box sx={{ width: 180 }}>
+          <InputField
+            isAutocomplete
+            options={filterOptions}
+            getOptionLabel={(option) => option.name}
+            field={{ value: filter }}
+            onOptionChange={(value) => setFilter(value?._id || "")}
+            placeholder="Sort By"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                bgcolor: "#fff",
+                height: 32, // ↓ reduce height
+                fontSize: "15px",
+              },
+            }}
+          />
+        </Box>
       </Box>
 
       <Box
         sx={{
           display: "grid",
-          // gridTemplateRows: `repeat(${customers.length}, 1fr)`,
           gridAutoRows: "minmax(42px, auto)",
-          //   gap: "1px",
           flex: 1,
         }}
       >
         {customers.map((customer, index) => (
           <Box
             key={customer.customerId}
-            // onClick={() => navigate(`/my-orders/${customer.customerId}`)}
             onClick={
               isViewingAdmin
                 ? undefined
@@ -67,36 +103,94 @@ export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
               gridTemplateColumns: "32px 1fr auto",
               alignItems: "center",
               gap: 1.2,
-              px: 1,
-              py: 0.75, // 🔑 reduced vertical padding
-              borderRadius: 1,
+              px: 1.2,
+              py: 1,
+              borderRadius: 2,
+              transition: "all 0.2s ease",
               "&:hover": {
-                backgroundColor: `${THEME_COLOR}10`,
+                backgroundColor: `${THEME_COLOR}12`,
+                transform: "translateX(3px)",
               },
             }}
           >
-            {/* RANK */}
             <Avatar
               sx={{
-                width: 22,
-                height: 22,
-                fontSize: 11,
-                bgcolor: THEME_COLOR,
+                width: 24,
+                height: 24,
+                fontSize: 12,
+                fontWeight: 700,
+                bgcolor: rankColors[index] || THEME_COLOR,
+                color: index < 3 ? "#000" : "#fff",
               }}
             >
               {index + 1}
             </Avatar>
 
             <Box>
-              <Typography fontSize={13.5} fontWeight={600} noWrap>
-                {customer.name}
-              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                <Typography fontSize={13.5} fontWeight={600} noWrap>
+                  {customer.name}
+                </Typography>
+
+                {customer.customerStatus === "frequent" && (
+                  <Chip
+                    label="Frequent"
+                    size="small"
+                    sx={{
+                      height: 18,
+                      fontSize: "9px",
+                      fontWeight: 600,
+                      bgcolor: "#1B5E20",
+                      color: "#fff",
+                      borderRadius: "10px",
+                      "& .MuiChip-label": { px: 0.6 },
+                    }}
+                  />
+                )}
+
+                {customer.customerStatus === "new" && (
+                  <Chip
+                    label="New"
+                    size="small"
+                    sx={{
+                      height: 18,
+                      fontSize: "9px",
+                      bgcolor: "#E5E7EB",
+                      color: "#374151",
+                      borderRadius: "10px",
+                      "& .MuiChip-label": { px: 0.6 },
+                    }}
+                  />
+                )}
+
+                {customer.customerStatus === "vip" && (
+                  <Chip
+                    label="VIP"
+                    icon={<Crown size={12} />}
+                    size="small"
+                    sx={{
+                      height: 18,
+                      fontSize: "9px",
+                      fontWeight: 700,
+                      bgcolor: "#F59E0B",
+                      color: "#000",
+                      borderRadius: "10px",
+                      "& .MuiChip-label": { px: 0.6 },
+                    }}
+                  />
+                )}
+              </Box>
+
               <Typography fontSize={11} color="text.secondary">
                 Total Orders: {customer.totalOrders}
               </Typography>
             </Box>
 
-            <Typography fontSize={13} fontWeight={600}>
+            <Typography
+              fontSize={13}
+              fontWeight={700}
+              sx={{ color: "#111827" }}
+            >
               ₹{formatAmount(customer.totalAmount)}
             </Typography>
           </Box>
