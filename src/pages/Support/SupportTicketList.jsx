@@ -45,7 +45,6 @@ export default function SupportTicketList() {
   const queryKey = isSuperAdmin
     ? `get-support-tickets-${status}`
     : `get-support-tickets-${user?.id}-${status}`;
-  // const queryKey = ["support-tickets", status];
   const params = isSuperAdmin ? { status } : { userId: user?.id, status };
 
   const { mutate: updateTicketStatus } = usePatch(
