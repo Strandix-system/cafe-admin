@@ -51,3 +51,15 @@ export const formatAmount = (amount) => {
   if (amount === null || amount === undefined) return "0";
   return Number(amount).toLocaleString("en-IN");
 };
+
+export const formatToLocalDateTime = (dateInput) => {
+  if (!dateInput) return "-";
+
+  const date = new Date(dateInput);
+
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+};

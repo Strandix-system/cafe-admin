@@ -2,8 +2,12 @@ import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { TopNavbar } from "../TopNavbar";
+import { useAuth } from "../../context/AuthContext";
+import { SubscriptionAlertDialog } from "../../components/common/SubscriptionAlertDialog";
 
 export function DashboardLayout() {
+  const { user, isAdmin } = useAuth();
+
   return (
     <Box
       display="flex"
@@ -39,6 +43,12 @@ export function DashboardLayout() {
         >
           <Outlet />
         </Box>
+        {isAdmin && (
+          <SubscriptionAlertDialog
+            user={user}
+            alert={user?.subscriptionAlert}
+          />
+        )}
       </Box>
     </Box>
   );

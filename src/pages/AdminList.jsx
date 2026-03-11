@@ -2,7 +2,7 @@ import { TableComponent } from "../components/TableComponent/TableComponent";
 import { Box, Button, Chip, Typography, Tabs, Tab } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { Edit, Power, Plus, User } from "lucide-react";
+import { Edit, Power, Plus, User, Receipt } from "lucide-react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../utils/api_constants";
@@ -126,6 +126,13 @@ export const AdminList = () => {
       icon: User,
       onClick: (row) => {
         navigate(`/cafes/${row.original._id}`);
+      },
+    },
+    {
+      label: "View Payment History",
+      icon: Receipt,
+      onClick: (row) => {
+        navigate(`/payment-history/${row.original._id}`);
       },
     },
     {
