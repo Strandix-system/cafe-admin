@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { DialogTitle } from "@mui/material";
 import {
     Box,
     Typography,
@@ -9,14 +8,12 @@ import {
     CircularProgress,
     Tooltip,
     Dialog,
-    DialogContent,
 } from "@mui/material";
 import {
     ImagePlus,
     X,
     FileText,
     Send,
-    Headphones,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { usePost } from "../../utils/hooks/api_hooks";
@@ -56,21 +53,46 @@ export default function SupportForm({ open, onClose }) {
             },
         }
     );
+    // const addFiles = useCallback((files) => {
+    //     const valid = files.filter((f) => f.type.startsWith("image/"));
+    //     setImages((prev) => [...prev, ...valid]);
+
+    //     valid.forEach((file) => {
+    //         const reader = new FileReader();
+    //         reader.onload = (e) =>
+    //             setPreviews((prev) => [
+    //                 ...prev,
+    //                 { src: e.target.result, name: file.name },
+    //             ]);
+    //         reader.readAsDataURL(file);
+    //     });
+    // }, []);
+
+
+    const isAtLimit = images.length >= 3;
 
     const addFiles = useCallback((files) => {
-        const valid = files.filter((f) => f.type.startsWith("image/"));
-        setImages((prev) => [...prev, ...valid]);
+        if (isAtLimit) return;
 
-        valid.forEach((file) => {
-            const reader = new FileReader();
-            reader.onload = (e) =>
-                setPreviews((prev) => [
-                    ...prev,
-                    { src: e.target.result, name: file.name },
-                ]);
-            reader.readAsDataURL(file);
+        const valid = files
+            .filter((f) => f.type.startsWith("image/"))
+            .slice(0, 3 - images.length);
+
+        if (!valid.length) return;
+
+        const readFile = (file) =>
+            new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) =>
+                    resolve({ src: e.target.result, name: file.name });
+                reader.readAsDataURL(file);
+            });
+
+        Promise.all(valid.map(readFile)).then((newPreviews) => {
+            setImages((prev) => [...prev, ...valid]);
+            setPreviews((prev) => [...prev, ...newPreviews]);
         });
-    }, []);
+    }, [images, isAtLimit]);
 
     const removeImage = (idx) => {
         setImages((prev) => prev.filter((_, i) => i !== idx));
@@ -106,18 +128,15 @@ export default function SupportForm({ open, onClose }) {
                     <Typography sx={{ color: "#64748b", fontSize: 14, mb: 2 }}>
                         Submit your issue and our team will assist you shortly.
                     </Typography>
-
                 </Box>
                 <Box
                 >
-
                 </Box>
             </Box>
             <Box
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-6"
-            >
+                className="flex flex-col gap-6">
                 {/* Title */}
                 <Controller
                     name="title"
@@ -280,7 +299,6 @@ export default function SupportForm({ open, onClose }) {
                 </Button>
             </Box>
         </Box>
-        // </Box>
     );
 
     if (typeof open === "boolean") {
@@ -292,8 +310,7 @@ export default function SupportForm({ open, onClose }) {
                 fullWidth
                 PaperProps={{ sx: { borderRadius: 3, } }}
             >
-                {/* <DialogContent sx={{ p: 0, position: "relative" }}> */}
-                <IconButton IconButton
+                <IconButton
                     onClick={onClose}
                     sx={{
                         position: "absolute",
@@ -307,7 +324,6 @@ export default function SupportForm({ open, onClose }) {
                     <X size={16} />
                 </IconButton >
                 {formContent}
-                {/* </DialogContent> */}
             </Dialog >
         );
     }

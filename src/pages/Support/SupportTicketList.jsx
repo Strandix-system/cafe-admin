@@ -21,22 +21,19 @@ import {
     ImageOff,
 } from "lucide-react";
 import toast from "react-hot-toast";
-// import { QueryClient } from "@tanstack/react-query";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
 import { queryClient } from "../../lib/queryClient";
 import { CommonButton } from "../../components/common/commonButton";
 import SupportForm from "./SupportForm";
-
 export default function SupportTicketList() {
     const [selectedTicketId, setSelectedTicketId] = useState(null);
     const [sliderOpen, setSliderOpen] = useState(false);
     const [sliderImages, setSliderImages] = useState([]);
     const [sliderIndex, setSliderIndex] = useState(0);
-
+    
     const { user, isSuperAdmin } = useAuth();
-
     const [searchParams, setSearchParams] = useSearchParams();
     const status = searchParams.get("status") || "pending";
     const [supportOpen, setSupportOpen] = useState(false);
@@ -84,7 +81,6 @@ export default function SupportTicketList() {
         setSliderIndex(0);
         setSliderOpen(true);
     };
-
     const ticketColumns = useMemo(
         () => [
             { accessorKey: "ticketId", header: "Ticket ID" },
@@ -225,12 +221,8 @@ export default function SupportTicketList() {
                             <Tab label="Resolved" value="resolved" />
                         </Tabs>
                     </Box>
-
                 </Grid>
-
-
                 <Grid size={12}>
-                    {/* ✅ Let TableComponent handle fetching internally like AdminList does */}
                     <TableComponent
                         slug="support-ticket"
                         columns={ticketColumns}
@@ -242,9 +234,7 @@ export default function SupportTicketList() {
                     />
                 </Grid>
             </Grid>
-
             <SupportForm open={supportOpen} onClose={() => setSupportOpen(false)} />
-
             {/* Image Slider Dialog */}
             <Dialog
                 open={sliderOpen}
@@ -267,7 +257,6 @@ export default function SupportTicketList() {
                     >
                         <X size={18} />
                     </IconButton>
-
                     {sliderImages.length === 0 ? (
                         <Box className="flex flex-col items-center justify-center py-16 gap-3 border border-red-600 rounded">
                             <ImageOff size={40} color="#666" />
