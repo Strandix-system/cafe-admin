@@ -6,100 +6,103 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import Restaurant from "@mui/icons-material/Restaurant";
-import { Clock, ClockPlus, MessageCircle, MessageCircleCode, QrCode } from "lucide-react";
+import {
+  Clock,
+  ClockPlus,
+  MessageCircle,
+  MessageCircleCode,
+  QrCode,
+} from "lucide-react";
 
 export const sideBarItems = {
-    superAdmin: [
-        {
-            key: "stats",
-            label: "Statistics",
-            icon: DashboardIcon,
-            path: "/dashboard",
-            tab: "stats",
-        },
-        {
-            key: "cafes",
-            label: "Cafes",
-            icon: PeopleIcon,
-            path: "/cafes",
-            tab: "cafes",
-        },
-        {
-            key: "layouts",
-            label: "Layouts",
-            icon: ViewListIcon,
-            path: "/layouts",
-            tab: "layouts",
-        },
-        {
-            key: "categories",
-            label: "Categories",
-            icon: CategoryIcon,
-            path: "/categories",
-            tab: "categories",
-        },
-        {
-            key: "support-request",
-            label: "Support",
-            icon: ClockPlus,
-            path: "/support-request",
-            tab: "support-request",
-        },
-
-
-    ],
-    admin: [
-        {
-            key: "stats",
-            label: "Statistics",
-            icon: DashboardIcon,
-            path: "/dashboard",
-            tab: "stats",
-        },
-        {
-            key: "layouts",
-            label: "Layouts",
-            icon: ViewQuiltIcon,
-            path: "/layouts",
-            tab: "layouts",
-
-        },
-        {
-            key: "Menu",
-            label: "Menu",
-            icon: MenuBookIcon,
-            path: "/menu",
-            tab: "menu",
-        },
-        {
-            key: "customerData",
-            label: "Customer Management",
-            icon: SupervisedUserCircleIcon,
-            path: "/customer",
-            tab: "customer-data",
-        },
-        {
-            key: "categories",
-            label: " QR Management",
-            key: "OrderManagement",
-            label: "Order Management",
-            icon: Restaurant,
-            path: "/order-management",
-            tab: "order-management",
-        },
-        {
-            key: "qr-code",
-            label: "Generate QR-Code",
-            icon: QrCode,
-            path: "/table-management",
-            tab: "table-management",
-        },
-        {
-            key: "support-request",
-            label: "Support",
-            icon: MessageCircle,
-            path: "/support-request",
-            tab: "support-request",
-        },
-    ],
+  superAdmin: [
+    {
+      key: "stats",
+      label: "Statistics",
+      icon: DashboardIcon,
+      path: "/dashboard",
+      tab: "stats",
+    },
+    {
+      key: "cafes",
+      label: "Cafes",
+      icon: PeopleIcon,
+      path: "/cafes",
+      tab: "cafes",
+    },
+    {
+      key: "layouts",
+      label: "Layouts",
+      icon: ViewListIcon,
+      path: "/layouts",
+      tab: "layouts",
+    },
+    {
+      key: "categories",
+      label: "Categories",
+      icon: CategoryIcon,
+      path: "/categories",
+      tab: "categories",
+    },
+    {
+      key: "support-request",
+      label: "Support",
+      icon: ClockPlus,
+      path: "/support-request",
+      tab: "support-request",
+    },
+  ],
+  admin: [
+    {
+      key: "stats",
+      label: "Statistics",
+      icon: DashboardIcon,
+      path: "/dashboard",
+      tab: "stats",
+    },
+    {
+      key: "layouts",
+      label: "Layouts",
+      icon: ViewQuiltIcon,
+      path: "/layouts",
+      tab: "layouts",
+    },
+    {
+      key: "Menu",
+      label: "Menu",
+      icon: MenuBookIcon,
+      path: "/menu",
+      tab: "menu",
+    },
+    {
+      key: "customerData",
+      label: "Customer Management",
+      icon: SupervisedUserCircleIcon,
+      path: "/customer",
+      tab: "customer-data",
+    },
+    {
+      key: "categories",
+      label: " QR Management",
+      key: "OrderManagement",
+      label: "Order Management",
+      icon: Restaurant,
+      path: "/order-management",
+      tab: "order-management",
+    },
+    {
+      key: "qr-code",
+      label: "Generate QR-Code",
+      icon: QrCode,
+      path: "/table-management",
+      tab: "table-management",
+    },
+    {
+      key: "support-request",
+      label: "Support",
+      icon: MessageCircle,
+      path: "/support-request",
+      tab: "support-request",
+    },
+  ],
 };
