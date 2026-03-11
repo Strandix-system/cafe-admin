@@ -7,6 +7,8 @@ export const API_ROUTES = {
   createOrder: "signup/create-order",
   createSubscription: "signup/create-subscription",
   verifySignup: "signup/verify-subscription",
+  renewSubscription: "signup/renew-subscription",
+  verifyRenewSubscription: "signup/verify-renew-subscription",
   getMe: "auth/me",
   getUsers: "/admin/get-users",
 
