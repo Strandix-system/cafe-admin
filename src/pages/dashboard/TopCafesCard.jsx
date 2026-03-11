@@ -17,7 +17,7 @@ export default function TopCafesCard() {
   const { user } = useAuth();
   const [filter, setFilter] = useState("orders");
 
-  const { data } = useFetch(
+  const { data, isLoading } = useFetch(
     ["top-cafes", user?._id, filter],
     API_ROUTES.dashboardTopCafes,
     { sortBy: filter },
@@ -60,17 +60,15 @@ export default function TopCafesCard() {
 
         <Box sx={{ width: 180 }}>
           <InputField
-            isAutocomplete
+            isSelect
             options={filterOptions}
-            getOptionLabel={(option) => option.name}
             field={{ value: filter }}
-            onOptionChange={(value) => setFilter(value?._id || "")}
-            placeholder="Sort By"
+            onChange={(e) => setFilter(e.target.value)}
             sx={{
               "& .MuiOutlinedInput-root": {
                 bgcolor: "#fff",
-                height: 32, // ↓ reduce height
-                fontSize: "15px",
+                height: 32,
+                fontSize: "14px",
               },
             }}
           />
@@ -84,74 +82,85 @@ export default function TopCafesCard() {
           flex: 1,
         }}
       >
-        {cafes.map((cafe, index) => (
+        {isLoading ? (
           <Box
-            key={cafe.cafeId}
-            onClick={() =>
-              navigate(`/dashboard/${cafe.cafeId}`, {
-                state: { cafeName: cafe.cafeName },
-              })
-            }
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "32px 1fr auto",
-              alignItems: "center",
-              gap: 1.2,
-              cursor: "pointer",
-              px: 1,
-              py: 0.6,
-              borderRadius: 1,
-              "&:hover": {
-                backgroundColor: `${THEME_COLOR}10`,
-              },
-            }}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            py={3}
           >
-            {/* RANK */}
-            <Avatar
+            <CircularProgress size={22} />
+          </Box>
+        ) : (
+          cafes.map((cafe, index) => (
+            <Box
+              key={cafe.cafeId}
+              onClick={() =>
+                navigate(`/dashboard/${cafe.cafeId}`, {
+                  state: { cafeName: cafe.cafeName },
+                })
+              }
               sx={{
-                width: 22,
-                height: 22,
-                fontSize: 11,
-                bgcolor: THEME_COLOR,
+                display: "grid",
+                gridTemplateColumns: "32px 1fr auto",
+                alignItems: "center",
+                gap: 1.2,
+                cursor: "pointer",
+                px: 1,
+                py: 0.6,
+                borderRadius: 1,
+                "&:hover": {
+                  backgroundColor: `${THEME_COLOR}10`,
+                },
               }}
             >
-              {index + 1}
-            </Avatar>
+              {/* RANK */}
+              <Avatar
+                sx={{
+                  width: 22,
+                  height: 22,
+                  fontSize: 11,
+                  bgcolor: THEME_COLOR,
+                }}
+              >
+                {index + 1}
+              </Avatar>
 
-            <Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
-                <Typography fontSize={13.5} fontWeight={600} noWrap>
-                  {cafe.cafeName}
+              <Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
+                  <Typography fontSize={13.5} fontWeight={600} noWrap>
+                    {cafe.cafeName}
+                  </Typography>
+
+                  {cafe.averageRating && (
+                    <Chip
+                      icon={<StarIcon sx={{ fontSize: 14 }} />}
+                      label={cafe.averageRating}
+                      size="small"
+                      sx={{
+                        height: 18,
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        bgcolor: "#FEF3C7",
+                        color: "#92400E",
+                        borderRadius: "10px",
+                        "& .MuiChip-label": { px: 0.6 },
+                      }}
+                    />
+                  )}
+                </Box>
+
+                <Typography fontSize={11} color="text.secondary">
+                  Orders: {cafe.totalOrders}
                 </Typography>
-
-                {cafe.averageRating && (
-                  <Chip
-                    icon={<StarIcon sx={{ fontSize: 14 }} />}
-                    label={cafe.averageRating}
-                    size="small"
-                    sx={{
-                      height: 18,
-                      fontSize: "10px",
-                      fontWeight: 600,
-                      bgcolor: "#FEF3C7",
-                      color: "#92400E",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": { px: 0.6 },
-                    }}
-                  />
-                )}
               </Box>
 
-              <Typography fontSize={11} color="text.secondary">
-                Orders: {cafe.totalOrders}
+              <Typography fontSize={13} fontWeight={600}>
+                ₹{formatAmount(cafe.totalAmount)}
               </Typography>
             </Box>
-
-            <Typography fontSize={13} fontWeight={600}>
-              ₹{formatAmount(cafe.totalAmount)}
-            </Typography>
-          </Box>
-        ))}
+          ))
+        )}
 
         {cafes.length === 0 && (
           <Typography

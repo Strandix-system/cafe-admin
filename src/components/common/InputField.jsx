@@ -1,4 +1,9 @@
-import { TextField, InputAdornment, Autocomplete } from "@mui/material";
+import {
+  TextField,
+  InputAdornment,
+  Autocomplete,
+  MenuItem,
+} from "@mui/material";
 
 export const InputField = ({
   field,
@@ -8,6 +13,7 @@ export const InputField = ({
   endIcon,
   disabled = false,
   isAutocomplete = false, // 🔥 NEW
+  isSelect = false,
   options = [], // 🔥 NEW
   getOptionLabel,
   onOptionChange,
@@ -45,6 +51,36 @@ export const InputField = ({
       />
     );
   }
+
+  if (isSelect) {
+    return (
+      <TextField
+        {...field}
+        select
+        fullWidth
+        size="small"
+        disabled={disabled}
+        error={!!error}
+        helperText={helperText}
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            borderRadius: 2,
+            bgcolor: "#F5EFE6",
+            "&:hover": { bgcolor: "#EFE5D8" },
+          },
+          ...sx,
+        }}
+        {...props}
+      >
+        {options.map((option) => (
+          <MenuItem key={option._id} value={option._id}>
+            {option.name}
+          </MenuItem>
+        ))}
+      </TextField>
+    );
+  }
+
   return (
     <TextField
       {...field}
