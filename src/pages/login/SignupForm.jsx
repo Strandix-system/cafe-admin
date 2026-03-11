@@ -73,7 +73,8 @@ export const SignupForm = () => {
   });
 
   const onSubmit = (data) => {
-    checkEmail(data);
+    const { confirmPassword, ...rest } = data;
+    checkEmail(rest);
   };
 
   return (
