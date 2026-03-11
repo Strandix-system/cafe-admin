@@ -42,13 +42,12 @@ export default function SupportTicketList() {
     setSearchParams({ status: newStatus });
   };
 
-  // const queryKey = isSuperAdmin
-  //     ? `get-support-tickets-${status}`
-  //     : `get-support-tickets-${user?.id}-${status}`;
-  const queryKey = ["support-tickets", status];
-  // const params = isSuperAdmin ? { status } : { userId: user?.id, status };
+  const queryKey = isSuperAdmin
+    ? `get-support-tickets-${status}`
+    : `get-support-tickets-${user?.id}-${status}`;
+  // const queryKey = ["support-tickets", status];
+  const params = isSuperAdmin ? { status } : { userId: user?.id, status };
 
-  const params = { status };
   const { mutate: updateTicketStatus } = usePatch(
     selectedTicketId
       ? `${API_ROUTES.updateSupportTicket}/${selectedTicketId}`
@@ -84,7 +83,7 @@ export default function SupportTicketList() {
     () => [
       { accessorKey: "ticketId", header: "Ticket ID" },
       ...(isSuperAdmin
-        ? [{ accessorKey: "admin.email", header: "Raised By" }]
+        ? [{ accessorKey: "adminId.email", header: "Raised By" }]
         : []),
 
       { accessorKey: "title", header: "Title" },
@@ -205,14 +204,14 @@ export default function SupportTicketList() {
           </Typography>
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }} className="flex justify-end">
-          {
+          {!isSuperAdmin && (
             <CommonButton
               variant="contained"
               onClick={() => setSupportOpen(true)}
             >
               Support
             </CommonButton>
-          }
+          )}
         </Grid>
         <Grid size={12}>
           <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
@@ -231,7 +230,7 @@ export default function SupportTicketList() {
             actionsType="menu"
             querykey={queryKey}
             getApiEndPoint="getSupportTickets"
-            params={params}
+            params={{ status, populate: "adminId" }}
           />
         </Grid>
       </Grid>
