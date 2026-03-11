@@ -30,7 +30,7 @@ export default function TopCafesCard() {
   }
 
   const filterOptions = [
-    { _id: "order", name: "By Orders" },
+    { _id: "orders", name: "By Orders" },
     { _id: "amount", name: "By Income" },
     { _id: "rating", name: "By Ratings" },
   ];
