@@ -1,11 +1,12 @@
 import { TableComponent } from "../../components/TableComponent/TableComponent";
-import { Box, Typography, Rating } from "@mui/material";
+import { Box, Typography, Rating, IconButton, Switch } from "@mui/material";
 import { useMemo, useState } from "react";
 import { usePatch } from "../../utils/hooks/api_hooks";
 import { queryClient } from "../../lib/queryClient";
 import { Eye, EyeOff, Star } from "lucide-react";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../../utils/api_constants";
+import { Chip, Stack } from "@mui/material";
 
 export const FeedbackList = () => {
   const columns = useMemo(
@@ -13,7 +14,32 @@ export const FeedbackList = () => {
       {
         accessorKey: "name",
         header: "Customer Name",
-        Cell: ({ row }) => row?.original?.customerId?.name || "-",
+        Cell: ({ row }) => {
+          const name = row?.original?.customerId?.name || "-";
+          const isFeatured = row?.original?.isPortfolioFeatured;
+
+          return (
+            <Stack direction="row" spacing={1} alignItems="center">
+              <span>{name}</span>
+              {isFeatured && (
+                <Chip
+                  icon={<Star size={10} />}
+                  label="Featured"
+                  size="small"
+                  color="warning"
+                  sx={{
+                    height: 20,
+                    fontSize: "10px",
+                    fontWeight: 600,
+                    bgcolor: "#f97316",
+                    color: "#fff",
+                    "& .MuiChip-icon": { fontSize: "12px", ml: "4px" },
+                  }}
+                />
+              )}
+            </Stack>
+          );
+        },
       },
       {
         accessorKey: "rate",
@@ -29,6 +55,21 @@ export const FeedbackList = () => {
       {
         accessorKey: "description",
         header: "Feedback",
+      },
+      {
+        id: "featuredToggle",
+        header: "Featured",
+        Cell: ({ row }) => {
+          const isFeatured = row.original.isPortfolioFeatured;
+          return (
+            <Switch
+              checked={isFeatured}
+              color="warning"
+              size="small"
+              onChange={() => handleSelectFeedback(row)}
+            />
+          );
+        },
       },
     ],
     [],
@@ -96,13 +137,12 @@ export const FeedbackList = () => {
         <TableComponent
           slug="feedback"
           columns={columns}
-          actions={actions}
-          actionsType="menu"
           querykey="feedback-list"
           getApiEndPoint="getFeedback"
           deleteApiEndPoint="deleteFeedback"
           deleteAction={true}
           enableExportTable={true}
+          params={{ sortBy: "isPortfolioFeatured:desc" }}
         />
       </Box>
     </div>
