@@ -59,7 +59,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
         setIsOpen(false);
       },
       onError: (error) => {
-        toast.error(error);
+        toast.error(error?.message);
       },
     },
   );
