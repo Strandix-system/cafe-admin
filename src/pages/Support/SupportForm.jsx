@@ -35,7 +35,7 @@ export default function SupportForm({ open, onClose }) {
     API_ROUTES.createSupportTicket,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["support-tickets"] });
+        queryClient.invalidateQueries("get-support-tickets");
         toast.success("Ticket submitted successfully");
         reset();
         setImages([]);
@@ -48,21 +48,6 @@ export default function SupportForm({ open, onClose }) {
       },
     },
   );
-  // const addFiles = useCallback((files) => {
-  //     const valid = files.filter((f) => f.type.startsWith("image/"));
-  //     setImages((prev) => [...prev, ...valid]);
-
-  //     valid.forEach((file) => {
-  //         const reader = new FileReader();
-  //         reader.onload = (e) =>
-  //             setPreviews((prev) => [
-  //                 ...prev,
-  //                 { src: e.target.result, name: file.name },
-  //             ]);
-  //         reader.readAsDataURL(file);
-  //     });
-  // }, []);
-
   const isAtLimit = images.length >= 3;
 
   const addFiles = useCallback(
@@ -191,6 +176,10 @@ export default function SupportForm({ open, onClose }) {
               border: `2px dashed ${
                 isDragOver ? "rgba(79,110,247,0.5)" : "rgba(79,110,247,0.2)"
               }`,
+              opacity: isAtLimit ? 0.5 : 1,
+              filter: isAtLimit ? "blur(1px)" : "none",
+              pointerEvents: isAtLimit ? "none" : "auto",
+              transition: "all 0.3s ease",
             }}
             onDragOver={(e) => {
               e.preventDefault();
@@ -207,6 +196,7 @@ export default function SupportForm({ open, onClose }) {
               type="file"
               multiple
               accept="image/*"
+              disabled={isAtLimit}
               onChange={(e) => addFiles(Array.from(e.target.files))}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />

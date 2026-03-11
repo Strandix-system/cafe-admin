@@ -209,7 +209,7 @@ export default function SupportTicketList() {
               variant="contained"
               onClick={() => setSupportOpen(true)}
             >
-              Support
+              Raise Ticket
             </CommonButton>
           )}
         </Grid>
