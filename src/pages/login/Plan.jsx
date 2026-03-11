@@ -55,7 +55,7 @@ export const Plan = () => {
   const openRazorpayCheckout = (subscriptionId) => {
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      subscription_id: subscriptionId, //
+      subscription_id: subscriptionId,
       name: "Aeternis",
       image: cafe_logo,
       description: "Premium Plan Subscription",
