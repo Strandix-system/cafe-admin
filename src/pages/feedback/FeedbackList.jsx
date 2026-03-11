@@ -3,7 +3,7 @@ import { Box, Typography, Rating } from "@mui/material";
 import { useMemo, useState } from "react";
 import { usePatch } from "../../utils/hooks/api_hooks";
 import { queryClient } from "../../lib/queryClient";
-import { Eye, Star } from "lucide-react";
+import { Eye, EyeOff, Star } from "lucide-react";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../../utils/api_constants";
 
@@ -33,36 +33,46 @@ export const FeedbackList = () => {
     ],
     [],
   );
-  // throw new Error("Test error boundary");
-  const [selectedFeedbackId, setSelectedFeedbackId] = useState(null);
 
+  const [selectedFeedbackId, setSelectedFeedbackId] = useState(null);
   const { mutate: selectFeedback } = usePatch(
-    selectedFeedbackId
-      ? `${API_ROUTES.selectFeedback}/${selectedFeedbackId}`
-      : null,
+    `${API_ROUTES.selectFeedback}/${selectedFeedbackId}`,
     {
+      enabled: !!selectedFeedbackId,
       onSuccess: () => {
-        toast.success("Feedback added to portfolio");
+        toast.success("Feedback selection updated");
         queryClient.invalidateQueries({ queryKey: ["feedback-list"] });
+        setSelectedFeedbackId(null);
       },
-      // onError: (error) => toast.error(error?.message || "Failed"),
       onError: (error) => {
-        toast.error(error || "Failed");
+        console.log("error", error);
+        toast.error(error || error?.message || "Failed");
       },
     },
   );
 
   const handleSelectFeedback = (row) => {
     const feedbackId = row.original._id;
+    const isSelected = !row.original.isPortfolioFeatured;
 
     setSelectedFeedbackId(feedbackId);
-    selectFeedback({});
+
+    selectFeedback({
+      isPortfolioFeatured: isSelected,
+    });
   };
 
   const actions = [
     {
       label: "Add to Portfolio",
       icon: Star,
+      isDisabled: (row) => row.original.isPortfolioFeatured === true,
+      onClick: handleSelectFeedback,
+    },
+    {
+      label: "Remove from Portfolio",
+      icon: EyeOff,
+      isDisabled: (row) => row.original.isPortfolioFeatured === false,
       onClick: handleSelectFeedback,
     },
   ];
