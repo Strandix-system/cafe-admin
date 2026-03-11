@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { CommonButton } from "../../components/common/commonButton";
 import { openRazorpayCheckout, RAZORPAY_SRC } from "../../utils/razorpayUtils";
+import { Loader } from "../../components/common/Loader";
 
 export const Plan = () => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ export const Plan = () => {
 
   const formatBillingText = (interval, period) => {
     if (interval === 1) return `Renews every ${period}`;
-    return `Renews every ${interval} ${period}s`;
+    return `Renews ${interval} ${period}s`;
   };
 
   const { data: plansData, isLoading: plansLoading } = useFetch(
@@ -147,6 +148,8 @@ export const Plan = () => {
       phoneNumber: signupData.phoneNumber,
     });
   };
+
+  if (plansLoading) return <Loader variant="fullscreen" />;
 
   if (!signupData) {
     return; // Prevent rendering if no signup data
