@@ -101,7 +101,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
         handleRenewSubscription(subscriptionId);
       },
       onError: (error) => {
-        toast.error(error);
+        toast.error(error?.message);
       },
     },
   );
