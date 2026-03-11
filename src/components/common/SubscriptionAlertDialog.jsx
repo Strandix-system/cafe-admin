@@ -13,6 +13,7 @@ import { queryClient } from "../../lib/queryClient";
 import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { CommonButton } from "./commonButton";
+import { RAZORPAY_SRC } from "../../utils/razorpayUtils";
 
 export const SubscriptionAlertDialog = ({ user, alert }) => {
   const isExpired = alert?.type === "expired";
@@ -31,7 +32,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
   // Reload Razorpay script once on mount
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.src = RAZORPAY_SRC;
     script.async = true;
     document.body.appendChild(script);
     return () => document.body.removeChild(script);

@@ -16,7 +16,7 @@ import { useFetch, usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { CommonButton } from "../../components/common/commonButton";
-import { openRazorpayCheckout } from "../../utils/razorpayUtils";
+import { openRazorpayCheckout, RAZORPAY_SRC } from "../../utils/razorpayUtils";
 
 export const Plan = () => {
   const navigate = useNavigate();
@@ -111,7 +111,7 @@ export const Plan = () => {
 
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.src = RAZORPAY_SRC;
     script.async = true;
     document.body.appendChild(script);
 

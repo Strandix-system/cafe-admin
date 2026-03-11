@@ -1,6 +1,8 @@
 import { toast } from "react-hot-toast";
 import cafe_logo from "../assets/cafe_logo.png";
 
+export const RAZORPAY_SRC = "https://checkout.razorpay.com/v1/checkout.js";
+
 export const openRazorpayCheckout = ({
   subscriptionId,
   user,
