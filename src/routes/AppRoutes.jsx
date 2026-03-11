@@ -10,7 +10,7 @@ import { CategoriesList } from "../pages/CategoriesList";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { AddEditAdmin } from "../pages/addEditAdmin/AddEditAdmin";
 import { AddEditLayout } from "../pages/addEditLayout/AddEditLayout";
-import { MenuList } from "../pages/Menu/MenuList";
+import { MenuList } from "../pages/menu/MenuList";
 import { Plan } from "../pages/login/Plan";
 import { CustomerList } from "../pages/customer-list/CustomerList";
 import { OrderManagementPage } from "../pages/OrderManagementPage";
@@ -20,6 +20,7 @@ import { ProfileLayout } from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
+import { PaymentHistory } from "../pages/paymentHistory/PaymentHistory";
 import { Enquiries } from "../pages/Admin/AdminEnquire";
 import { FeedbackList } from "../pages/feedback/FeedbackList";
 
@@ -42,6 +43,7 @@ export const AppRoutes = () => {
       >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/:adminId" element={<Dashboard />} />
+        <Route path="/payment-history/:adminId?" element={<PaymentHistory />} />
         <Route path="/cafes" element={<AdminList />} />
         <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
         <Route path="/cafes/:adminId?" element={<AdminList />} />
