@@ -15,7 +15,7 @@ export const PaymentHistory = () => {
             {
               id: "cafeName",
               header: "Cafe Name",
-              Cell: ({ row }) => row.original.user?.cafeName || "-",
+              Cell: ({ row }) => row.original.user?.cafeName ?? "-",
             },
           ]
         : []),

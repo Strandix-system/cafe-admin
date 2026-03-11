@@ -20,7 +20,7 @@ import { ProfileLayout } from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
-import { PaymentHistory } from "../pages/paymentHistory/paymentHistory";
+import { PaymentHistory } from "../pages/paymentHistory/PaymentHistory";
 import { Enquiries } from "../pages/Admin/AdminEnquire";
 
 export const AppRoutes = () => {
@@ -42,7 +42,6 @@ export const AppRoutes = () => {
       >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/:adminId" element={<Dashboard />} />
-        <Route path="/payment-history" element={<PaymentHistory />} />
         <Route path="/payment-history/:adminId?" element={<PaymentHistory />} />
         <Route path="/cafes" element={<AdminList />} />
         <Route path="/cafe/create-edit/:userId?" element={<AddEditAdmin />} />
