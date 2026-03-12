@@ -12,10 +12,14 @@ import { Crown } from "lucide-react";
 
 const THEME_COLOR = "#6F4E37";
 
-export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
+export default function TopCustomersCard({
+  overrideData,
+  isViewingAdmin,
+  filter,
+  setFilter,
+}) {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [filter, setFilter] = useState("order");
 
   const { data, isLoading } = useFetch(
     ["top-customers", user?._id, filter],
@@ -26,9 +30,8 @@ export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
 
   const customers = overrideData ?? data?.result ?? [];
 
-  if (customers.length === 0) {
-    return null; // 🚫 DO NOT RENDER
-  }
+  if (!customers?.length) return null;
+
   const filterOptions = [
     { _id: "order", name: "By Orders" },
     { _id: "amount", name: "By Amount" },

@@ -49,6 +49,8 @@ export function Dashboard() {
     endDate: null,
   });
 
+  const [topCustomerFilter, setTopCustomerFilter] = useState("order");
+
   const roleReady = isSuperAdmin || isAdmin;
 
   const { data, isLoading } = useFetch(
@@ -60,10 +62,11 @@ export function Dashboard() {
 
   const { data: adminAnalyticsData, isLoading: adminAnalyticsLoading } =
     useFetch(
-      ["admin-analytics", adminId, adminRange],
+      ["admin-analytics", adminId, adminRange, topCustomerFilter],
       API_ROUTES.dashboardAdminAnalytics, // point this to api/admin/dashboard/admin-analytics
       {
         adminId,
+        sortBy: topCustomerFilter,
         ...(adminRange.startDate && { startDate: adminRange.startDate }),
         ...(adminRange.endDate && { endDate: adminRange.endDate }),
       },
@@ -221,6 +224,8 @@ export function Dashboard() {
                   isViewingAdmin ? analyticsResult?.topCustomers : null
                 }
                 isViewingAdmin={isViewingAdmin}
+                filter={topCustomerFilter}
+                setFilter={setTopCustomerFilter}
               />
             </Grid>
             <Grid item size={{ xs: 12, md: 6 }}>
