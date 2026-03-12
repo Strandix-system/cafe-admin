@@ -73,8 +73,14 @@ export const SignupForm = () => {
   });
 
   const onSubmit = (data) => {
-    const { confirmPassword, ...rest } = data;
-    checkEmail(rest);
+    const { confirmPassword, phoneNumber, ...rest } = data;
+
+    const payload = {
+      ...rest,
+      phoneNumber: Number(phoneNumber), // convert to number
+    };
+
+    checkEmail(payload);
   };
 
   return (

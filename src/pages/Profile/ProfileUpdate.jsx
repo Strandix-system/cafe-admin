@@ -33,6 +33,7 @@ export function ProfileUpdate() {
     delete data.createdAt;
     delete data.updatedAt;
     delete data.role;
+    delete data.subscriptionAlert;
 
     const formattedData = {
       ...data,
