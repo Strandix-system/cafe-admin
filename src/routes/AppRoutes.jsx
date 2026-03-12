@@ -10,7 +10,7 @@ import { CategoriesList } from "../pages/CategoriesList";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import { AddEditAdmin } from "../pages/addEditAdmin/AddEditAdmin";
 import { AddEditLayout } from "../pages/addEditLayout/AddEditLayout";
-import { MenuList } from "../pages/menu/MenuList";
+import { MenuList } from "../pages/Menu/MenuList";
 import { Plan } from "../pages/login/Plan";
 import { CustomerList } from "../pages/customer-list/CustomerList";
 import { OrderManagementPage } from "../pages/OrderManagementPage";
