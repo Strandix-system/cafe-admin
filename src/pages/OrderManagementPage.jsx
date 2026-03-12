@@ -91,25 +91,20 @@ export const OrderManagementPage = () => {
       {
         id: "orderStatus",
         header: "Order Status",
-        Cell: ({ row }) => (
-          <CommonChip
-            label={row.original.orderStatus}
-            bgColor={
-              row.original.orderStatus === "pending"
-                ? "#FFF3CD"
-                : row.original.orderStatus === "accepted"
-                  ? "#D1E7FF"
-                  : "#D1FFBE"
-            }
-            textColor={
-              row.original.orderStatus === "pending"
-                ? "#856404"
-                : row.original.orderStatus === "accepted"
-                  ? "#004085"
-                  : "#3DB309"
-            }
-          />
-        ),
+        Cell: ({ row }) => {
+          const orderVariant = {
+            pending: "warning",
+            accepted: "info",
+            completed: "success",
+          };
+
+          return (
+            <CommonChip
+              label={row.original.orderStatus}
+              variant={orderVariant[row.original.orderStatus]}
+            />
+          );
+        },
       },
       {
         id: "paymentStatus",
@@ -117,8 +112,7 @@ export const OrderManagementPage = () => {
         Cell: ({ row }) => (
           <CommonChip
             label={row.original.paymentStatus ? "Paid" : "Unpaid"}
-            bgColor={row.original.paymentStatus ? "#D1FFBE" : "#FFDADA"}
-            textColor={row.original.paymentStatus ? "#3DB309" : "#FF0000"}
+            variant={row.original.paymentStatus ? "success" : "error"}
           />
         ),
       },

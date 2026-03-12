@@ -110,21 +110,19 @@ export const CustomerList = () => {
                 {customerStatus === "frequent" && (
                   <CommonChip
                     label="Frequent"
-                    bgColor="#1B5E20"
-                    textColor="#fff"
+                    variant="dark"
                     fontWeight={600}
                   />
                 )}
                 {customerStatus === "new" && (
-                  <CommonChip label="New" bgColor="#89CFEF" textColor="#000" />
+                  <CommonChip label="New" variant="info" />
                 )}
 
                 {/* VIP Badge */}
                 {customerStatus === "vip" && (
                   <CommonChip
                     label="VIP"
-                    bgColor="#F59E0B"
-                    textColor="#000"
+                    variant="vip"
                     fontWeight={700}
                     icon={<Crown size={14} />}
                   />

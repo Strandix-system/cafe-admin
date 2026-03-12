@@ -71,9 +71,7 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
 
         <CommonChip
           label={isTop ? "Top Seller" : "Low Seller"}
-          bgColor={isTop ? "#E8F5E9" : "#FDECEA"}
-          textColor={isTop ? "#2E7D32" : "#C62828"}
-          fontWeight={500}
+          variant={isTop ? "success" : "error"}
         />
       </Box>
     </Card>

@@ -104,7 +104,7 @@ export const MyOrders = () => {
           return (
             <CommonChip
               label={status}
-              color={colorMap[status] || "default"}
+              variant={colorMap[status] ?? "neutral"}
               fontWeight={600}
             />
           );
