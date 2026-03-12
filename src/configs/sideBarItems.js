@@ -7,14 +7,14 @@ import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import Restaurant from "@mui/icons-material/Restaurant";
 import {
-  Clock,
+  //   Clock,
   ClockPlus,
   MessageCircle,
-  MessageCircleCode,
+  //   MessageCircleCode,
   QrCode,
 } from "lucide-react";
 import FeedbackIcon from "@mui/icons-material/Feedback";
-import { QrCode } from "lucide-react";
+// import { QrCode } from "lucide-react";
 
 export const sideBarItems = {
   superAdmin: [

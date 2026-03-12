@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Typography,
@@ -9,12 +11,28 @@ import {
   Tooltip,
   Dialog,
 } from "@mui/material";
-import { ImagePlus, X, FileText, Send } from "lucide-react";
+import { ImagePlus, X, Send } from "lucide-react";
 import toast from "react-hot-toast";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import { InputField } from "../../components/common/InputField";
 import { queryClient } from "../../lib/queryClient";
+import { CommonTextField } from "../../components/common/CommonTextField";
+
+const schema = yup.object({
+  title: yup
+    .string()
+    .trim()
+    .required("Title is required")
+    .min(5, "Title must be at least 5 characters")
+    .max(100, "Title cannot exceed 100 characters"),
+
+  description: yup
+    .string()
+    .trim()
+    .required("Description is required")
+    .min(10, "Description must be at least 10 characters")
+    .max(1000, "Description cannot exceed 1000 characters"),
+});
 
 export function SupportForm({ open, onClose }) {
   const [images, setImages] = useState([]);
@@ -26,11 +44,18 @@ export function SupportForm({ open, onClose }) {
     handleSubmit,
     control,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
+    resolver: yupResolver(schema),
     defaultValues: { title: "", description: "" },
+    mode: "onChange",
   });
 
+  const title = watch("title");
+  const description = watch("description");
+
+  const isFormFilled = title?.trim() && description?.trim();
   const { mutate: createTicket, isPending } = usePost(
     API_ROUTES.createSupportTicket,
     {
@@ -44,7 +69,7 @@ export function SupportForm({ open, onClose }) {
         if (open) onClose?.();
       },
       onError: (err) => {
-        toast.error(err?.message || "Something went wrong");
+        toast.error(err);
       },
     },
   );
@@ -82,6 +107,7 @@ export function SupportForm({ open, onClose }) {
   };
 
   const onSubmit = (data) => {
+    console.log("form data", data);
     const formData = new FormData();
 
     formData.append("title", data.title);
@@ -115,57 +141,25 @@ export function SupportForm({ open, onClose }) {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-6"
       >
-        {/* Title */}
-        <Controller
+        <CommonTextField
           name="title"
+          label="Title"
+          placeholder="Describe your issue"
+          // multiline={true}
+          rows={5}
           control={control}
-          rules={{ required: "Please enter a title" }}
-          render={({ field }) => (
-            <InputField
-              {...field}
-              label="Issue Title"
-              error={errors.title}
-              helperText={errors.title?.message}
-              startIcon={<FileText size={16} />}
-            />
-          )}
+          errors={errors}
+          onChange={(e) => setDescLen(e.target.value.length)}
         />
-
-        {/* Description */}
-        <Controller
+        <CommonTextField
           name="description"
+          label="Description"
+          placeholder="Describe your issue"
+          multiline={true}
+          rows={5}
           control={control}
-          rules={{
-            required: "Please describe your issue",
-            maxLength: { value: 1000, message: "Max 1000 characters" },
-          }}
-          render={({ field }) => (
-            <Box>
-              <InputField
-                {...field}
-                label="Description"
-                multiline
-                rows={5}
-                error={errors.description}
-                helperText={errors.description?.message}
-                onChange={(e) => {
-                  field.onChange(e);
-                  setDescLen(e.target.value.length);
-                }}
-              />
-              <Typography
-                variant="caption"
-                sx={{
-                  display: "block",
-                  textAlign: "right",
-                  mt: 1,
-                  color: descLen > 900 ? "#ef4444" : "#9ca3af",
-                }}
-              >
-                {descLen} / 1000
-              </Typography>
-            </Box>
-          )}
+          errors={errors}
+          onChange={(e) => setDescLen(e.target.value.length)}
         />
 
         {/* Image Upload */}
@@ -256,7 +250,7 @@ export function SupportForm({ open, onClose }) {
         <Button
           type="submit"
           fullWidth
-          disabled={isPending}
+          disabled={!isFormFilled || isPending}
           startIcon={
             isPending ? (
               <CircularProgress size={15} sx={{ color: "#fff" }} />
