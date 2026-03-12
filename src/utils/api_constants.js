@@ -85,4 +85,8 @@ export const API_ROUTES = {
   getTransactions: "signup/transactions",
   adminRequest: "demo/all",
   updateAdminRequestStatus: "demo/status",
+
+  getFeedback: "admin/get-feedback",
+  deleteFeedback: "admin/delete-feedback",
+  selectFeedback: "admin/feedback-selection",
 };

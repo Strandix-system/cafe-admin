@@ -21,6 +21,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { CommonButton } from "../components/common/commonButton";
+import { CommonHeader } from "../components/common/CommonHeader";
 
 export function LayoutsPage() {
   const navigate = useNavigate();
@@ -165,24 +166,12 @@ export function LayoutsPage() {
   if (isSuperAdmin) {
     return (
       <>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          m={3}
-        >
-          <Typography variant="h5" fontWeight={700}>
-            Default Layouts
-          </Typography>
-
-          <CommonButton
-            variant="contained"
-            onClick={handleCustomizeDefault}
-            disabled={!selectedDefaultLayout}
-          >
-            Customize
-          </CommonButton>
-        </Box>
+        <CommonHeader
+          title="Default Layouts"
+          buttonText="Customize"
+          buttonDisabled={!selectedDefaultLayout}
+          onButtonClick={handleCustomizeDefault}
+        />
 
         <Grid container spacing={3} px={3}>
           {isLoadingDefault ? (
@@ -228,24 +217,12 @@ export function LayoutsPage() {
   return (
     <div className="py-4">
       {/* Default Layouts Section */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        m={3}
-      >
-        <Typography variant="h5" fontWeight={700}>
-          Default Layouts
-        </Typography>
-
-        <CommonButton
-          variant="contained"
-          onClick={handleCustomizeDefault}
-          disabled={!selectedDefaultLayout}
-        >
-          Customize
-        </CommonButton>
-      </Box>
+      <CommonHeader
+        title="Default Layouts"
+        buttonText="Customize"
+        buttonDisabled={!selectedDefaultLayout}
+        onButtonClick={handleCustomizeDefault}
+      />
 
       <Grid container spacing={3} px={3} mb={5}>
         {isLoadingDefault ? (
@@ -287,16 +264,7 @@ export function LayoutsPage() {
       <Divider sx={{ mx: 3, my: 4 }} />
 
       {/* Admin's Custom Layouts Section */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        m={3}
-      >
-        <Typography variant="h5" fontWeight={700}>
-          My Layouts
-        </Typography>
-      </Box>
+      <CommonHeader title="My Layouts" />
 
       <Grid
         container

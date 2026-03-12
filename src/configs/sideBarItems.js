@@ -13,6 +13,8 @@ import {
   MessageCircleCode,
   QrCode,
 } from "lucide-react";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import { QrCode } from "lucide-react";
 
 export const sideBarItems = {
   superAdmin: [
@@ -111,6 +113,13 @@ export const sideBarItems = {
       icon: MessageCircle,
       path: "/support-request",
       tab: "support-request",
+    },
+    {
+      key: "feedback",
+      label: "Customer Feedbacks",
+      icon: FeedbackIcon,
+      path: "/feedback",
+      tab: "feedback",
     },
   ],
 };

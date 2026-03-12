@@ -141,7 +141,6 @@ export default function StatCard({
         {/* Header */}
         <Box
           display="flex"
-          // justifyContent="space-between"
           justifyContent="start"
           alignItems="center"
           gap={1}

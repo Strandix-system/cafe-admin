@@ -13,7 +13,7 @@ import { queryClient } from "../../lib/queryClient";
 import { API_ROUTES } from "../../utils/api_constants";
 import { usePost } from "../../utils/hooks/api_hooks";
 import { CommonButton } from "./commonButton";
-import { RAZORPAY_SRC } from "../../utils/razorpayUtils";
+import { openRazorpayCheckout, RAZORPAY_SRC } from "../../utils/razorpayUtils";
 
 export const SubscriptionAlertDialog = ({ user, alert }) => {
   const isExpired = alert?.type === "expired";
@@ -59,7 +59,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
         setIsOpen(false);
       },
       onError: (error) => {
-        toast.error(error);
+        toast.error(error?.message);
       },
     },
   );
@@ -101,7 +101,7 @@ export const SubscriptionAlertDialog = ({ user, alert }) => {
         handleRenewSubscription(subscriptionId);
       },
       onError: (error) => {
-        toast.error(error);
+        toast.error(error?.message);
       },
     },
   );

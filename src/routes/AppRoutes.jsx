@@ -24,6 +24,7 @@ import { SupportTicketDashboard } from "../pages/Support/SupportTicketList";
 import { PaymentHistory } from "../pages/paymentHistory/PaymentHistory";
 import { Enquiries } from "../pages/Admin/AdminEnquire";
 import { SupportForm } from "../pages/Support/SupportForm";
+import { FeedbackList } from "../pages/feedback/FeedbackList";
 
 export const AppRoutes = () => {
   return (
@@ -66,6 +67,7 @@ export const AppRoutes = () => {
           <Route index element={<ProfileUpdate />} />
           <Route path="change-password" element={<ChangePassword />} />
         </Route>
+        <Route path="/feedback" element={<FeedbackList />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

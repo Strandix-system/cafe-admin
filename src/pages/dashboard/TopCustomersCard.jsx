@@ -18,7 +18,6 @@ export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
     { enabled: !!user?._id && !isViewingAdmin },
   );
 
-  // const customers = data?.result ?? [];
   const customers = overrideData ?? data?.result ?? [];
 
   if (customers.length === 0) {
@@ -46,16 +45,13 @@ export default function TopCustomersCard({ overrideData, isViewingAdmin }) {
       <Box
         sx={{
           display: "grid",
-          // gridTemplateRows: `repeat(${customers.length}, 1fr)`,
           gridAutoRows: "minmax(42px, auto)",
-          //   gap: "1px",
           flex: 1,
         }}
       >
         {customers.map((customer, index) => (
           <Box
             key={customer.customerId}
-            // onClick={() => navigate(`/my-orders/${customer.customerId}`)}
             onClick={
               isViewingAdmin
                 ? undefined
