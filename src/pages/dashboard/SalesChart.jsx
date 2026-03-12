@@ -1,8 +1,6 @@
-import { useState } from "react";
 import Chart from "react-apexcharts";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import DateRangeFilter from "./DateRangeFilter";
 import dayjs from "dayjs";
 import { useAuth } from "../../context/AuthContext";
 
