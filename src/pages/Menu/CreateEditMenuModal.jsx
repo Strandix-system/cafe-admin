@@ -14,11 +14,9 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-hot-toast";
-
 import { useFetch, usePost, usePatch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { queryClient } from "../../lib/queryClient";
-
 import { InputField } from "../../components/common/InputField";
 import { CommonTextField } from "../../components/common/CommonTextField";
 import { CommonImageField } from "../../components/common/CommonImageField";

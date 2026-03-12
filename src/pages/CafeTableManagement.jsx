@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   Box,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -19,6 +18,7 @@ import { useAuth } from "../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CommonButton } from "../components/common/commonButton";
+import { CommonHeader } from "../components/common/CommonHeader";
 
 export const CafeTableManagement = () => {
   const { layoutId: urlLayoutId } = useParams();
@@ -188,21 +188,12 @@ export const CafeTableManagement = () => {
 
   return (
     <div>
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography variant="h5" sx={{ color: "#6F4E37", fontWeight: 600 }}>
-          Table Management
-        </Typography>
-        <CommonButton variant="contained" onClick={handleOpenDialog}>
-          Generate QR Codes
-        </CommonButton>
-      </Box>
+      <CommonHeader
+        title="Table Management"
+        titleClass="text-xl font-semibold text-[#6F4E37]"
+        buttonText="Generate QR Codes"
+        onButtonClick={handleOpenDialog}
+      />
 
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
         <TableComponent
