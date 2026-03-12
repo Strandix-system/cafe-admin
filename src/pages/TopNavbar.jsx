@@ -1,4 +1,3 @@
-// TopNavbar.jsx - With conditional back button
 import { useState } from "react";
 import {
   Box,
@@ -14,9 +13,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CommonButton } from "../components/common/commonButton";
+import { Receipt } from "lucide-react";
 
 export function TopNavbar() {
-  const { user, logout, isSuperAdmin } = useAuth();
+  const { user, logout, isSuperAdmin, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,10 +28,12 @@ export function TopNavbar() {
     "/layouts/create-edit",
     "/cafe/view-customers/",
     "/categories/create",
+    "/order-history",
     "/profile",
     "/my-orders",
     "/cafes/",
     "/dashboard/", // for super admin viewing specific admin analytics
+    "/payment-history/",
   ];
 
   // Check if current route should show back button
@@ -182,6 +184,19 @@ export function TopNavbar() {
               <Typography variant="body2">My Profile</Typography>
             </MenuItem>
           }
+
+          <Divider sx={{ my: 1 }} />
+
+          <MenuItem
+            onClick={() => {
+              handleMenuClose();
+              navigate("/payment-history");
+            }}
+            sx={{ gap: 1.5, py: 1.5 }}
+          >
+            <Receipt style={{ marginRight: "8px" }} />
+            <Typography variant="body2">Payment history</Typography>
+          </MenuItem>
 
           <Divider sx={{ my: 1 }} />
 

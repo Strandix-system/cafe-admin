@@ -8,8 +8,6 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
-import { Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -19,6 +17,7 @@ import { usePost } from "../../utils/hooks/api_hooks";
 import toast from "react-hot-toast";
 import { CommonButton } from "../../components/common/commonButton";
 import { CommonTextField } from "../../components/common/CommonTextField";
+import { useNavigate } from "react-router-dom";
 
 const loginSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),

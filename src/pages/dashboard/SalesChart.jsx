@@ -1,8 +1,6 @@
-import { useState } from "react";
 import Chart from "react-apexcharts";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
-import DateRangeFilter from "./DateRangeFilter";
 import dayjs from "dayjs";
 import { useAuth } from "../../context/AuthContext";
 
@@ -19,7 +17,6 @@ export default function SalesChart({ range, overrideData, isViewingAdmin }) {
     { enabled: !!user?._id && !isViewingAdmin },
   );
 
-  // const salesData = data?.result ?? [];
   const salesData = overrideData ?? data?.result ?? [];
 
   /* ---------------- LABEL FORMATTER ---------------- */
@@ -80,10 +77,6 @@ export default function SalesChart({ range, overrideData, isViewingAdmin }) {
 
   return (
     <div className="w-full">
-      {/* <div className="flex flex-end mb-2">
-        <DateRangeFilter onChange={setRange} />
-      </div> */}
-
       <Chart options={options} series={series} height={380} width="100%" />
     </div>
   );
