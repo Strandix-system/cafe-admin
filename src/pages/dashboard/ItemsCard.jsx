@@ -40,7 +40,7 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
         alt={name}
         sx={{
           width: { xs: 96, md: "100%" },
-          height: { xs: 96, md: 110 },
+          height: { xs: 96, md: 180 },
           objectFit: "cover",
           flexShrink: 0,
         }}
@@ -98,16 +98,9 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
   }
   return (
     <Box>
-      <Stack spacing={3}>
-        {/* Top Selling */}
-        <Box>
+      <Grid container spacing={3}>
+        <Grid item size={{ xs: 12, md: 6 }}>
           <Box
-            // sx={{
-            //   p: 1,
-            //   borderRadius: 3,
-            //   backgroundColor: "background.paper",
-            //   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
-            // }}
             sx={{
               p: 2,
               borderRadius: 3,
@@ -133,17 +126,10 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
               </Typography>
             )}
           </Box>
-        </Box>
+        </Grid>
 
-        {/* Low Selling */}
-        <Box>
+        <Grid item size={{ xs: 12, md: 6 }}>
           <Box
-            // sx={{
-            //   p: 1,
-            //   borderRadius: 3,
-            //   backgroundColor: "background.paper",
-            //   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
-            // }}
             sx={{
               p: 2,
               borderRadius: 3,
@@ -168,8 +154,8 @@ export default function ItemCards({ overrideData, isViewingAdmin }) {
               </Typography>
             )}
           </Box>
-        </Box>
-      </Stack>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

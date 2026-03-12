@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Box, Tabs, Tab, Typography, Grid, Badge, Chip } from "@mui/material";
-import { useFetch, usePatch } from "../utils/hooks/api_hooks";
-import { Loader } from "../components/common/Loader";
+import { usePatch } from "../utils/hooks/api_hooks";
 import { OrderCard } from "../components/OrderComponent/OrderCard";
 import { TableComponent } from "../components/TableComponent/TableComponent";
 import { API_ROUTES } from "../utils/api_constants";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
-import { socket } from "../utils/socket";
 import { DollarSign, Eye } from "lucide-react";
 import { queryClient } from "../lib/queryClient";
 import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
@@ -16,6 +14,7 @@ import { useLocation } from "react-router-dom";
 import { useOrders } from "../context/OrderContext";
 import { formatAmount } from "../utils/utils";
 import { CommonChip } from "../components/common/CommonChip";
+import { CommonHeader } from "../components/common/CommonHeader";
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -165,9 +164,7 @@ export const OrderManagementPage = () => {
 
   return (
     <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
-      <Typography variant="h4" fontWeight={700} color="#6F4E37" mb={3}>
-        Order Management
-      </Typography>
+      <CommonHeader title="Order Management" />
 
       <Tabs
         value={tabValue}

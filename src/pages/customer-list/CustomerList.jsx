@@ -25,6 +25,7 @@ import { X } from "lucide-react";
 import { InputField } from "../../components/common/InputField";
 import { formatAmount } from "../../utils/utils";
 import { CommonChip } from "../../components/common/CommonChip";
+import { CommonHeader } from "../../components/common/CommonHeader";
 
 const StatCard = ({ title, value, highlight = false, large = false }) => {
   return (
@@ -188,30 +189,16 @@ export const CustomerList = () => {
   return (
     <div className="overflow-hidden">
       {/* Header */}
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+      <CommonHeader
+        title="Customer Management"
+        buttonText="Create User"
+        buttonIcon={<Plus size={18} />}
+        onButtonClick={() => {
+          setMode("create");
+          setSelectedUser(null);
+          setOpen(true);
         }}
-      >
-        <Typography variant="h6" fontWeight={600} sx={{ color: "#333" }}>
-          Customer Management
-        </Typography>
-
-        <CommonButton
-          variant="contained"
-          startIcon={<Plus size={18} />}
-          onClick={() => {
-            setMode("create");
-            setSelectedUser(null);
-            setOpen(true);
-          }}
-        >
-          Create User
-        </CommonButton>
-      </Box>
+      />
 
       {/* Table */}
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>

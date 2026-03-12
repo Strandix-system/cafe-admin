@@ -17,7 +17,6 @@ export default function PeakTimeChart({ range, overrideData, isViewingAdmin }) {
     { enabled: !!user?._id && !isViewingAdmin },
   );
 
-  // const peakData = data?.result ?? [];
   const peakData = overrideData ?? data?.result ?? [];
 
   const options = {
