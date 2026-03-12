@@ -15,7 +15,7 @@ export const FeedbackList = () => {
         accessorKey: "name",
         header: "Customer Name",
         Cell: ({ row }) => {
-          const name = row?.original?.customerId?.name || "-";
+          const name = row?.original?.customerId?.name ?? "-";
           const isFeatured = row?.original?.isPortfolioFeatured;
 
           return (
@@ -46,7 +46,7 @@ export const FeedbackList = () => {
         header: "Rating",
         Cell: ({ row }) => (
           <Rating
-            value={Number(row.original.rate) || 0}
+            value={Number(row.original.rate ?? 0)}
             readOnly
             size="small"
           />
@@ -102,21 +102,6 @@ export const FeedbackList = () => {
       isPortfolioFeatured: isSelected,
     });
   };
-
-  const actions = [
-    {
-      label: "Add to Portfolio",
-      icon: Star,
-      isDisabled: (row) => row.original.isPortfolioFeatured === true,
-      onClick: handleSelectFeedback,
-    },
-    {
-      label: "Remove from Portfolio",
-      icon: EyeOff,
-      isDisabled: (row) => row.original.isPortfolioFeatured === false,
-      onClick: handleSelectFeedback,
-    },
-  ];
 
   return (
     <div className="overflow-hidden">
