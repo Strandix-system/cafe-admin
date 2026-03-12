@@ -16,7 +16,7 @@ import { API_ROUTES } from "../../utils/api_constants";
 import { InputField } from "../../components/common/InputField";
 import { queryClient } from "../../lib/queryClient";
 
-export default function SupportForm({ open, onClose }) {
+export function SupportForm({ open, onClose }) {
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [isDragOver, setIsDragOver] = useState(false);

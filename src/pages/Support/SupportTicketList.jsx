@@ -26,8 +26,8 @@ import { useAuth } from "../../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
 import { queryClient } from "../../lib/queryClient";
 import { CommonButton } from "../../components/common/commonButton";
-import SupportForm from "./SupportForm";
-export default function SupportTicketList() {
+import { SupportForm } from "./SupportForm";
+export function SupportTicketDashboard() {
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [sliderOpen, setSliderOpen] = useState(false);
   const [sliderImages, setSliderImages] = useState([]);
@@ -48,9 +48,7 @@ export default function SupportTicketList() {
   const params = isSuperAdmin ? { status } : { userId: user?.id, status };
 
   const { mutate: updateTicketStatus } = usePatch(
-    selectedTicketId
-      ? `${API_ROUTES.updateSupportTicket}/${selectedTicketId}`
-      : null,
+    `${API_ROUTES.updateSupportTicket}/${selectedTicketId}`,
     {
       onSuccess: (_, variables) => {
         toast.success(
@@ -61,8 +59,11 @@ export default function SupportTicketList() {
         queryClient.invalidateQueries({ queryKey: [queryKey] });
         setSelectedTicketId(null);
       },
-      onError: () => {
-        toast.error("Something went wrong while updating ticket status");
+      onError: (error) => {
+        toast.error(
+          error?.response?.data?.message ??
+            "something went wrong while updating ticket status",
+        );
         setSelectedTicketId(null);
       },
     },

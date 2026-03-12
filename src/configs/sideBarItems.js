@@ -51,6 +51,14 @@ export const sideBarItems = {
       path: "/support-request",
       tab: "support-request",
     },
+
+    {
+      key: "enquiries",
+      label: "Enquiries",
+      icon: SupervisedUserCircleIcon,
+      path: "/enquiries",
+      tab: "enquiries",
+    },
   ],
   admin: [
     {

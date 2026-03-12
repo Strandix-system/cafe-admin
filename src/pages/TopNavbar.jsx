@@ -13,8 +13,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CommonButton } from "../components/common/commonButton";
-import { Heart } from "lucide-react";
-import SupportForm from "./Support/SupportForm";
 import { Receipt } from "lucide-react";
 
 export function TopNavbar() {
@@ -22,7 +20,6 @@ export function TopNavbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [supportOpen, setSupportOpen] = useState(false);
 
   const name = `${user?.firstName || "User"} ${" "} ${user?.lastName || ""}`;
   // Routes that should show the back button

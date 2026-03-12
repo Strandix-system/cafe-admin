@@ -20,10 +20,10 @@ import { ProfileLayout } from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
-import SupportTicketDashboard from "../pages/Support/SupportTicketList";
+import { SupportTicketDashboard } from "../pages/Support/SupportTicketList";
 import { PaymentHistory } from "../pages/paymentHistory/PaymentHistory";
 import { Enquiries } from "../pages/Admin/AdminEnquire";
-import SupportForm from "../pages/Support/SupportForm";
+import { SupportForm } from "../pages/Support/SupportForm";
 
 export const AppRoutes = () => {
   return (
