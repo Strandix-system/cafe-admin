@@ -9,6 +9,7 @@ import { API_ROUTES } from "../utils/api_constants";
 import { usePatch } from "../utils/hooks/api_hooks";
 import { queryClient } from "../lib/queryClient";
 import { useLocation } from "react-router-dom";
+import { CommonChip } from "../components/common/CommonChip";
 import { CommonHeader } from "../components/common/CommonHeader";
 
 export const AdminList = () => {
@@ -96,10 +97,9 @@ export const AdminList = () => {
         Cell: ({ row }) => {
           const isActive = row.original.isActive;
           return (
-            <Chip
+            <CommonChip
               label={isActive ? "Active" : "Inactive"}
-              color={isActive ? "success" : "failure"}
-              size="small"
+              color={isActive ? "success" : "error"}
             />
           );
         },

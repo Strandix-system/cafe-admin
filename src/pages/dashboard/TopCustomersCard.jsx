@@ -1,4 +1,4 @@
-import { Avatar, Chip, CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { formatAmount } from "../../utils/utils";
 import { InputField } from "../../components/common/InputField";
 import { Crown } from "lucide-react";
+import { CommonChip } from "../../components/common/CommonChip";
 
 const THEME_COLOR = "#6F4E37";
 
@@ -105,50 +106,19 @@ export function TopCustomersCard({
                 </span>
 
                 {customer.customerStatus === "frequent" && (
-                  <Chip
-                    label="Frequent"
-                    size="small"
-                    sx={{
-                      height: 18,
-                      fontSize: "9px",
-                      fontWeight: 600,
-                      bgcolor: "#1B5E20",
-                      color: "#fff",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": { px: 0.6 },
-                    }}
-                  />
+                  <CommonChip label="Frequent" size="small" variant="dark" />
                 )}
 
                 {customer.customerStatus === "new" && (
-                  <Chip
-                    label="New"
-                    size="small"
-                    sx={{
-                      height: 18,
-                      fontSize: "9px",
-                      bgcolor: "#E5E7EB",
-                      color: "#374151",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": { px: 0.6 },
-                    }}
-                  />
+                  <CommonChip label="New" size="small" />
                 )}
 
                 {customer.customerStatus === "vip" && (
-                  <Chip
+                  <CommonChip
                     label="VIP"
-                    icon={<Crown size={12} />}
-                    size="small"
-                    sx={{
-                      height: 18,
-                      fontSize: "9px",
-                      fontWeight: 700,
-                      bgcolor: "#F59E0B",
-                      color: "#000",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": { px: 0.6 },
-                    }}
+                    variant="vip"
+                    fontWeight={700}
+                    icon={<Crown size={14} />}
                   />
                 )}
               </div>

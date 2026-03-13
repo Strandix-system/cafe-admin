@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { queryClient } from "../../lib/queryClient";
 import dayjs from "dayjs";
 import { TableComponent } from "../../components/TableComponent/TableComponent";
+import { CommonChip } from "../../components/common/CommonChip";
 
 const STATUS_TABS = [
   { label: "Requested", value: "requested" },
@@ -58,10 +59,9 @@ export const Enquiries = () => {
             not_interested: "error",
           };
           return (
-            <Chip
+            <CommonChip
               label={labelMap[status] || status}
               color={colorMap[status] || "default"}
-              size="small"
             />
           );
         },
