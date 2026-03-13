@@ -113,12 +113,16 @@ export const MyOrders = () => {
       {
         accessorKey: "paymentStatus",
         header: "Payment",
-        Cell: ({ cell }) =>
-          cell.getValue() ? (
-            <Chip label="Paid" color="success" size="small" />
-          ) : (
-            <Chip label="Pending" color="warning" size="small" />
-          ),
+        Cell: ({ cell }) => {
+          const isPaid = cell.getValue();
+          return (
+            <CommonChip
+              label={isPaid ? "Paid" : "Pending"}
+              variant={isPaid ? "success" : "warning"}
+              size="small"
+            />
+          );
+        },
       },
       {
         accessorKey: "createdAt",

@@ -16,6 +16,7 @@ import {
 } from "@mui/icons-material";
 import { CommonButton } from "../common/commonButton";
 import { useAuth } from "../../context/AuthContext";
+import { CommonChip } from "../common/CommonChip";
 
 export const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
   const handleAction = () => {
@@ -135,17 +136,7 @@ export const OrderCard = memo(({ order, isPending, onAccept, onComplete }) => {
               <LocalDining sx={{ fontSize: 16 }} />
               Items:
             </Typography>
-            <Chip
-              label={order.orderStatus.toUpperCase()}
-              size="small"
-              sx={{
-                bgcolor: isPending ? "#FFF3E0" : "#E8F5E9",
-                color: isPending ? "#F57C00" : "#2E7D32",
-                fontWeight: 600,
-                fontSize: "0.7rem",
-                height: 24,
-              }}
-            />
+            <CommonChip label={order.orderStatus.toUpperCase()} size="small" />
           </Box>
           {order.items?.map((item, idx) => (
             <Box
