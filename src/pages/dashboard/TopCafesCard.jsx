@@ -1,4 +1,4 @@
-import { Card, Box, Typography, Avatar } from "@mui/material";
+import { Avatar, Chip, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
@@ -7,25 +7,25 @@ import { useAuth } from "../../context/AuthContext";
 import { formatAmount } from "../../utils/utils";
 import { useState } from "react";
 import { InputField } from "../../components/common/InputField";
-import { Chip } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
 const THEME_COLOR = "#6F4E37";
 
-export default function TopCafesCard() {
+export function TopCafesCard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [filter, setFilter] = useState("orders");
 
-  const { data, isLoading } = useFetch(
+  const { data, isLoading, isFetching } = useFetch(
     ["top-cafes", user?._id, filter],
     API_ROUTES.dashboardTopCafes,
     { sortBy: filter },
-    { enabled: !!user?._id },
+    { enabled: !!user?._id, placeholderData: (previousData) => previousData },
   );
 
   const cafes = data?.result ?? [];
-  if (cafes.length === 0) {
+
+  if (!isLoading && cafes.length === 0) {
     return null;
   }
 
@@ -34,31 +34,24 @@ export default function TopCafesCard() {
     { _id: "amount", name: "By Income" },
     { _id: "rating", name: "By Ratings" },
   ];
-  return (
-    <Card
-      sx={{
-        borderRadius: 3,
-        p: 2,
-        height: "fit-content",
-        display: "flex",
-        flexDirection: "column",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
-      }}
-    >
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={1.5}
-      >
-        <Box display="flex" alignItems="center" gap={1}>
-          <StoreIcon sx={{ color: THEME_COLOR, fontSize: 22 }} />
-          <Typography fontSize={18} fontWeight={600}>
-            Top Cafes
-          </Typography>
-        </Box>
 
-        <Box sx={{ width: 180 }}>
+  const getRankColor = (index) => {
+    if (index === 0) return "#FFD700"; // Gold
+    if (index === 1) return "#C0C0C0"; // Silver
+    if (index === 2) return "#CD7F32"; // Bronze
+    return THEME_COLOR; // default
+  };
+
+  return (
+    <div className="rounded-xl p-4 flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.06)] bg-white">
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <StoreIcon sx={{ color: THEME_COLOR, fontSize: 22 }} />
+          <span className="text-[18px] font-semibold">Top Cafes</span>
+        </div>
+
+        <div className="w-45">
           <InputField
             isSelect
             options={filterOptions}
@@ -72,47 +65,25 @@ export default function TopCafesCard() {
               },
             }}
           />
-        </Box>
-      </Box>
+        </div>
+      </div>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridAutoRows: "minmax(42px, auto)",
-          flex: 1,
-        }}
-      >
-        {isLoading ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            py={3}
-          >
+      {/* LIST */}
+      <div className="grid auto-rows-[minmax(42px,auto)] flex-1">
+        {isFetching ? (
+          <div className="flex justify-center items-center py-3">
             <CircularProgress size={22} />
-          </Box>
+          </div>
         ) : (
           cafes.map((cafe, index) => (
-            <Box
+            <div
               key={cafe.cafeId}
               onClick={() =>
                 navigate(`/dashboard/${cafe.cafeId}`, {
                   state: { cafeName: cafe.cafeName },
                 })
               }
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "32px 1fr auto",
-                alignItems: "center",
-                gap: 1.2,
-                cursor: "pointer",
-                px: 1,
-                py: 0.6,
-                borderRadius: 1,
-                "&:hover": {
-                  backgroundColor: `${THEME_COLOR}10`,
-                },
-              }}
+              className="grid grid-cols-[32px_1fr_auto] items-center gap-2 cursor-pointer px-2 py-1.5 rounded hover:bg-[#6F4E3710]"
             >
               {/* RANK */}
               <Avatar
@@ -120,19 +91,22 @@ export default function TopCafesCard() {
                   width: 22,
                   height: 22,
                   fontSize: 11,
-                  bgcolor: THEME_COLOR,
+                  bgcolor: getRankColor(index),
+                  color: index < 3 ? "#000" : "#fff",
+                  fontWeight: 600,
                 }}
               >
                 {index + 1}
               </Avatar>
 
-              <Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
-                  <Typography fontSize={13.5} fontWeight={600} noWrap>
+              {/* CAFE INFO */}
+              <div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[13.5px] font-semibold truncate">
                     {cafe.cafeName}
-                  </Typography>
+                  </span>
 
-                  {cafe.averageRating && (
+                  {Number(cafe.averageRating) > 0 && (
                     <Chip
                       icon={<StarIcon sx={{ fontSize: 14 }} />}
                       label={cafe.averageRating}
@@ -148,31 +122,21 @@ export default function TopCafesCard() {
                       }}
                     />
                   )}
-                </Box>
+                </div>
 
-                <Typography fontSize={11} color="text.secondary">
+                <p className="text-[11px] text-gray-500">
                   Orders: {cafe.totalOrders}
-                </Typography>
-              </Box>
+                </p>
+              </div>
 
-              <Typography fontSize={13} fontWeight={600}>
+              {/* AMOUNT */}
+              <span className="text-[13px] font-semibold">
                 ₹{formatAmount(cafe.totalAmount)}
-              </Typography>
-            </Box>
+              </span>
+            </div>
           ))
         )}
-
-        {cafes.length === 0 && (
-          <Typography
-            fontSize={13}
-            color="text.secondary"
-            textAlign="center"
-            mt={2}
-          >
-            No data available
-          </Typography>
-        )}
-      </Box>
-    </Card>
+      </div>
+    </div>
   );
 }

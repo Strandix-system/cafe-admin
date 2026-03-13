@@ -20,6 +20,23 @@ export const InputField = ({
   sx = {},
   ...props
 }) => {
+  const commonTextFieldProps = {
+    ...field,
+    fullWidth: true,
+    size: "small",
+    disabled,
+    error: !!error,
+    helperText,
+    sx: {
+      "& .MuiOutlinedInput-root": {
+        borderRadius: 2,
+        bgcolor: "#F5EFE6",
+        "&:hover": { bgcolor: "#EFE5D8" },
+      },
+      ...sx,
+    },
+  };
+
   if (isAutocomplete) {
     return (
       <Autocomplete
@@ -33,19 +50,8 @@ export const InputField = ({
         renderInput={(params) => (
           <TextField
             {...params}
-            fullWidth
-            size="small"
+            {...commonTextFieldProps}
             placeholder={props.placeholder}
-            error={!!error}
-            helperText={helperText}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                bgcolor: "#F5EFE6",
-                "&:hover": { bgcolor: "#EFE5D8" },
-              },
-              ...sx,
-            }}
           />
         )}
       />
@@ -54,24 +60,7 @@ export const InputField = ({
 
   if (isSelect) {
     return (
-      <TextField
-        {...field}
-        select
-        fullWidth
-        size="small"
-        disabled={disabled}
-        error={!!error}
-        helperText={helperText}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 2,
-            bgcolor: "#F5EFE6",
-            "&:hover": { bgcolor: "#EFE5D8" },
-          },
-          ...sx,
-        }}
-        {...props}
-      >
+      <TextField select {...commonTextFieldProps} {...props}>
         {options.map((option) => (
           <MenuItem key={option._id} value={option._id}>
             {option.name}
@@ -83,24 +72,12 @@ export const InputField = ({
 
   return (
     <TextField
-      {...field}
-      fullWidth
-      size="small"
-      disabled={disabled}
-      error={!!error}
-      helperText={helperText}
-      sx={{
-        "& .MuiOutlinedInput-root": {
-          borderRadius: 2,
-          bgcolor: "#F5EFE6",
-          "&:hover": { bgcolor: "#EFE5D8" },
-        },
-      }}
+      {...commonTextFieldProps}
       InputProps={{
         startAdornment: startIcon ? (
           <InputAdornment position="start">{startIcon}</InputAdornment>
         ) : null,
-        endAdornment: endIcon ? ( // Add this
+        endAdornment: endIcon ? (
           <InputAdornment position="end">{endIcon}</InputAdornment>
         ) : null,
       }}
