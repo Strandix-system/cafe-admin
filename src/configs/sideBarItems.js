@@ -6,8 +6,8 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import Restaurant from "@mui/icons-material/Restaurant";
+import { ClockPlus, MessageCircle, QrCode } from "lucide-react";
 import FeedbackIcon from "@mui/icons-material/Feedback";
-import { QrCode } from "lucide-react";
 
 export const sideBarItems = {
   superAdmin: [
@@ -39,6 +39,14 @@ export const sideBarItems = {
       path: "/categories",
       tab: "categories",
     },
+    {
+      key: "support-request",
+      label: "Support",
+      icon: ClockPlus,
+      path: "/support-request",
+      tab: "support-request",
+    },
+
     {
       key: "enquiries",
       label: "Enquiries",
@@ -91,6 +99,13 @@ export const sideBarItems = {
       icon: QrCode,
       path: "/table-management",
       tab: "table-management",
+    },
+    {
+      key: "support-request",
+      label: "Support",
+      icon: MessageCircle,
+      path: "/support-request",
+      tab: "support-request",
     },
     {
       key: "feedback",

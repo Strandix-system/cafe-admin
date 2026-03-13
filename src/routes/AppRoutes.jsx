@@ -20,8 +20,10 @@ import { ProfileLayout } from "../pages/Profile/ProfileLayout";
 import { ProfileUpdate } from "../pages/Profile/ProfileUpdate";
 import { ChangePassword } from "../pages/Profile/ChangePassword";
 import { ResetPassword } from "../pages/forgotPassword/ResetPassword";
+import { SupportTicketDashboard } from "../pages/Support/SupportTicketList";
 import { PaymentHistory } from "../pages/paymentHistory/PaymentHistory";
 import { Enquiries } from "../pages/Admin/AdminEnquire";
+import { SupportForm } from "../pages/Support/SupportForm";
 import { FeedbackList } from "../pages/feedback/FeedbackList";
 
 export const AppRoutes = () => {
@@ -58,6 +60,8 @@ export const AppRoutes = () => {
         <Route path="/order-management" element={<OrderManagementPage />} />
         <Route path="/customer" element={<CustomerList />} />
         <Route path="/my-orders/:userId" element={<MyOrders />} />
+        <Route path="/support-request" element={<SupportTicketDashboard />} />
+        <Route path="/support" element={<SupportForm />} />
         <Route path="/enquiries" element={<Enquiries />} />
         <Route path="/profile" element={<ProfileLayout />}>
           <Route index element={<ProfileUpdate />} />
@@ -65,8 +69,6 @@ export const AppRoutes = () => {
         </Route>
         <Route path="/feedback" element={<FeedbackList />} />
       </Route>
-
-      {/* CATCH ALL */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

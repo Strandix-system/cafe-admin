@@ -227,7 +227,7 @@ export const TableComponent = (props) => {
       },
       "mrt-row-numbers": {
         muiTableHeadCellProps: {
-          children: "S. No.",
+          children: "S.No.",
         },
         size: 50,
         minSize: 80,
