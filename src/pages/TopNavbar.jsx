@@ -33,6 +33,7 @@ export function TopNavbar() {
     "/my-orders",
     "/cafes/",
     "/dashboard/", // for super admin viewing specific admin analytics
+    "/payment-history",
     "/payment-history/",
   ];
 
