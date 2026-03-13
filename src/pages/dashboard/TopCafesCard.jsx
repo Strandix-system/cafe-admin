@@ -1,4 +1,4 @@
-import { Avatar, Chip, CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
@@ -8,6 +8,7 @@ import { formatAmount } from "../../utils/utils";
 import { useState } from "react";
 import { InputField } from "../../components/common/InputField";
 import StarIcon from "@mui/icons-material/Star";
+import { CommonChip } from "../../components/common/CommonChip";
 
 const THEME_COLOR = "#6F4E37";
 
@@ -107,19 +108,10 @@ export function TopCafesCard() {
                   </span>
 
                   {Number(cafe.averageRating) > 0 && (
-                    <Chip
-                      icon={<StarIcon sx={{ fontSize: 14 }} />}
+                    <CommonChip
                       label={cafe.averageRating}
                       size="small"
-                      sx={{
-                        height: 18,
-                        fontSize: "10px",
-                        fontWeight: 600,
-                        bgcolor: "#FEF3C7",
-                        color: "#92400E",
-                        borderRadius: "10px",
-                        "& .MuiChip-label": { px: 0.6 },
-                      }}
+                      icon={<StarIcon size={14} />}
                     />
                   )}
                 </div>
