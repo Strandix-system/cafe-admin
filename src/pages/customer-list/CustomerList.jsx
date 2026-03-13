@@ -24,6 +24,7 @@ import {
 import { X } from "lucide-react";
 import { InputField } from "../../components/common/InputField";
 import { formatAmount } from "../../utils/utils";
+import { CommonChip } from "../../components/common/CommonChip";
 import { CommonHeader } from "../../components/common/CommonHeader";
 
 const StatCard = ({ title, value, highlight = false, large = false }) => {
@@ -107,57 +108,22 @@ export const CustomerList = () => {
                 }}
               >
                 {customerStatus === "frequent" && (
-                  <Chip
+                  <CommonChip
                     label="Frequent"
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: "10px",
-                      fontWeight: 600,
-                      bgcolor: "#1B5E20",
-                      color: "#fff",
-                      // right: -40,
-                      borderRadius: "10px",
-                      "& .MuiChip-label": {
-                        px: 0.8,
-                      },
-                    }}
+                    variant="dark"
+                    fontWeight={600}
                   />
                 )}
                 {customerStatus === "new" && (
-                  <Chip
-                    label="New"
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: "10px",
-                      fontWeight: 500,
-                      bgcolor: "#E5E7EB",
-                      color: "#374151",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": {
-                        px: 0.8,
-                      },
-                    }}
-                  />
+                  <CommonChip label="New" variant="info" />
                 )}
 
                 {/* VIP Badge */}
                 {customerStatus === "vip" && (
-                  <Chip
+                  <CommonChip
                     label="VIP"
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: "10px",
-                      fontWeight: 700,
-                      bgcolor: "#F59E0B",
-                      color: "#000",
-                      borderRadius: "10px",
-                      "& .MuiChip-label": {
-                        px: 0.8,
-                      },
-                    }}
+                    variant="vip"
+                    fontWeight={700}
                     icon={<Crown size={14} />}
                   />
                 )}
@@ -242,6 +208,12 @@ export const CustomerList = () => {
             field={{ value: selectedStatus }}
             onOptionChange={(value) => setSelectedStatus(value?._id || "")}
             placeholder="Filter by Status"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                bgcolor: "#ffffff",
+                "&:hover": { bgcolor: "#f2f2f2" },
+              },
+            }}
           />
         </Box>
 

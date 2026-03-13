@@ -10,8 +10,8 @@ import PeakTimeChart from "./PeakTimeChart";
 import ItemsCard from "./ItemsCard";
 import ChartCard from "./ChartCard";
 import DateRangeFilter from "./DateRangeFilter";
-import TopCustomersCard from "./TopCustomersCard";
-import TopCafesCard from "./TopCafesCard";
+import { TopCustomersCard } from "./TopCustomersCard";
+import { TopCafesCard } from "./TopCafesCard";
 import PlatformSalesChart from "./PlatformSalesChart";
 import { useNavigate } from "react-router-dom";
 import { useOrders } from "../../context/OrderContext";
@@ -49,6 +49,8 @@ export function Dashboard() {
     endDate: null,
   });
 
+  const [topCustomerFilter, setTopCustomerFilter] = useState("order");
+
   const roleReady = isSuperAdmin || isAdmin;
 
   const { data, isLoading } = useFetch(
@@ -60,10 +62,11 @@ export function Dashboard() {
 
   const { data: adminAnalyticsData, isLoading: adminAnalyticsLoading } =
     useFetch(
-      ["admin-analytics", adminId, adminRange],
+      ["admin-analytics", adminId, adminRange, topCustomerFilter],
       API_ROUTES.dashboardAdminAnalytics, // point this to api/admin/dashboard/admin-analytics
       {
         adminId,
+        sortBy: topCustomerFilter,
         ...(adminRange.startDate && { startDate: adminRange.startDate }),
         ...(adminRange.endDate && { endDate: adminRange.endDate }),
       },
@@ -221,6 +224,8 @@ export function Dashboard() {
                   isViewingAdmin ? analyticsResult?.topCustomers : null
                 }
                 isViewingAdmin={isViewingAdmin}
+                filter={topCustomerFilter}
+                setFilter={setTopCustomerFilter}
               />
             </Grid>
             <Grid item size={{ xs: 12, md: 6 }}>
@@ -235,7 +240,7 @@ export function Dashboard() {
 
       {isSuperAdmin && !isViewingAdmin && (
         <Grid container spacing={3} mt={6}>
-          <Grid item size={{ xs: 12, md: 8 }}>
+          <Grid item size={{ xs: 12, md: 6 }}>
             <ChartCard
               title="Platform Sales Overview"
               action={<DateRangeFilter onChange={setPlatformSalesRange} />}
@@ -244,7 +249,7 @@ export function Dashboard() {
             </ChartCard>
           </Grid>
 
-          <Grid item size={{ xs: 12, md: 4 }}>
+          <Grid item size={{ xs: 12, md: 6 }}>
             <TopCafesCard />
           </Grid>
         </Grid>

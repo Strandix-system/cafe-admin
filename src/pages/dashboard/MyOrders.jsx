@@ -5,6 +5,7 @@ import { Box, Chip, Typography, Paper } from "@mui/material";
 import { Eye } from "lucide-react";
 import { OrderBillModal } from "../../components/OrderComponent/OrderBillModal";
 import { useAuth } from "../../context/AuthContext";
+import { CommonChip } from "../../components/common/CommonChip";
 
 export const MyOrders = () => {
   const { isAdmin } = useAuth();
@@ -71,11 +72,7 @@ export const MyOrders = () => {
                   }}
                 >
                   <Typography fontSize={13}>{item.name}</Typography>
-                  <Chip
-                    label={`x${item.quantity}`}
-                    size="small"
-                    sx={{ fontWeight: 600 }}
-                  />
+                  <CommonChip label={`x${item.quantity}`} fontWeight={600} />
                 </Box>
               ))}
             </Box>
@@ -105,11 +102,10 @@ export const MyOrders = () => {
           };
 
           return (
-            <Chip
+            <CommonChip
               label={status}
-              color={colorMap[status] || "default"}
-              size="small"
-              sx={{ fontWeight: 600 }}
+              variant={colorMap[status] ?? "neutral"}
+              fontWeight={600}
             />
           );
         },
@@ -117,12 +113,16 @@ export const MyOrders = () => {
       {
         accessorKey: "paymentStatus",
         header: "Payment",
-        Cell: ({ cell }) =>
-          cell.getValue() ? (
-            <Chip label="Paid" color="success" size="small" />
-          ) : (
-            <Chip label="Pending" color="warning" size="small" />
-          ),
+        Cell: ({ cell }) => {
+          const isPaid = cell.getValue();
+          return (
+            <CommonChip
+              label={isPaid ? "Paid" : "Pending"}
+              variant={isPaid ? "success" : "warning"}
+              size="small"
+            />
+          );
+        },
       },
       {
         accessorKey: "createdAt",

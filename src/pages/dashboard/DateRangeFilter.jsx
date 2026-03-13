@@ -16,6 +16,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { CommonChip } from "../../components/common/CommonChip";
 
 const THEME_COLOR = "#6F4E37";
 
@@ -148,14 +149,10 @@ export default function DateRangeFilter({ onChange }) {
               <List dense>
                 {shortcuts.map((item) => (
                   <ListItem key={item.label} disablePadding sx={{ mb: 1 }}>
-                    <Chip
+                    <CommonChip
                       label={item.label}
-                      size="small"
-                      sx={{
-                        width: "100%",
-                        justifyContent: "flex-start",
-                        bgcolor: `${THEME_COLOR}10`,
-                      }}
+                      width="100%"
+                      bgColor={`${THEME_COLOR}10`}
                       onClick={() => {
                         const [s, e] = item.getRange();
                         setTempStart(s);

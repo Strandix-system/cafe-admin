@@ -7,6 +7,8 @@ import { Eye, EyeOff, Star } from "lucide-react";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../../utils/api_constants";
 import { Chip, Stack } from "@mui/material";
+import { CommonHeader } from "../../components/common/CommonHeader";
+import { CommonChip } from "../../components/common/CommonChip";
 
 export const FeedbackList = () => {
   const columns = useMemo(
@@ -22,19 +24,12 @@ export const FeedbackList = () => {
             <Stack direction="row" spacing={1} alignItems="center">
               <span>{name}</span>
               {isFeatured && (
-                <Chip
-                  icon={<Star size={10} />}
+                <CommonChip
                   label="Featured"
-                  size="small"
-                  color="warning"
-                  sx={{
-                    height: 20,
-                    fontSize: "10px",
-                    fontWeight: 600,
-                    bgcolor: "#f97316",
-                    color: "#fff",
-                    "& .MuiChip-icon": { fontSize: "12px", ml: "4px" },
-                  }}
+                  variant="orange"
+                  icon={<Star size={10} />}
+                  fontWeight={600}
+                  sx={{ "& .MuiChip-icon": { fontSize: "12px", ml: "4px" } }}
                 />
               )}
             </Stack>
@@ -105,18 +100,7 @@ export const FeedbackList = () => {
 
   return (
     <div className="overflow-hidden">
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography variant="h6" fontWeight={600} color="#6F4E37">
-          Customer Feedbacks
-        </Typography>
-      </Box>
+      <CommonHeader title="Customer Feedbacks" />
 
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
         <TableComponent

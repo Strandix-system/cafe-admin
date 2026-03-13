@@ -12,6 +12,7 @@ import { useFetch } from "../../utils/hooks/api_hooks";
 import { API_ROUTES } from "../../utils/api_constants";
 import { useAuth } from "../../context/AuthContext";
 import { formatAmount } from "../../utils/utils";
+import { CommonChip } from "../../components/common/CommonChip";
 
 const ItemCard = ({ name, qty, image, revenue, type }) => {
   const isTop = type === "top";
@@ -68,17 +69,9 @@ const ItemCard = ({ name, qty, image, revenue, type }) => {
           </Typography>
         </div>
 
-        <Chip
+        <CommonChip
           label={isTop ? "Top Seller" : "Low Seller"}
-          size="small"
-          sx={{
-            mt: 0.6,
-            width: "fit-content",
-            bgcolor: isTop ? "#E8F5E9" : "#FDECEA",
-            color: isTop ? "#2E7D32" : "#C62828",
-            fontWeight: 500,
-            height: 20,
-          }}
+          variant={isTop ? "success" : "error"}
         />
       </Box>
     </Card>

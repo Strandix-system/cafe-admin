@@ -27,7 +27,7 @@ export const OrderProvider = ({ children }) => {
     };
   }, []);
   const audioRef = useRef(null);
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const [pendingOrders, setPendingOrders] = useState([]);
   const [acceptedOrders, setAcceptedOrders] = useState([]);
@@ -37,7 +37,7 @@ export const OrderProvider = ({ children }) => {
     "get-all-orders",
     API_ROUTES.getAllOrders,
     {},
-    { enabled: !!user?.id },
+    { enabled: !!user?.id && isAdmin },
   );
 
   /* ---------------- INITIAL SYNC ---------------- */

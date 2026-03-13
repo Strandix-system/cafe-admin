@@ -13,6 +13,7 @@ import { OrderBillModal } from "../components/OrderComponent/OrderBillModal";
 import { useLocation } from "react-router-dom";
 import { useOrders } from "../context/OrderContext";
 import { formatAmount } from "../utils/utils";
+import { CommonChip } from "../components/common/CommonChip";
 import { CommonHeader } from "../components/common/CommonHeader";
 
 function TabPanel({ children, value, index, ...other }) {
@@ -90,40 +91,28 @@ export const OrderManagementPage = () => {
       {
         id: "orderStatus",
         header: "Order Status",
-        Cell: ({ row }) => (
-          <Chip
-            label={row.original.orderStatus}
-            size="small"
-            sx={{
-              backgroundColor:
-                row.original.orderStatus === "pending"
-                  ? "#FFF3CD"
-                  : row.original.orderStatus === "accepted"
-                    ? "#D1E7FF"
-                    : "#D1FFBE",
-              color:
-                row.original.orderStatus === "pending"
-                  ? "#856404"
-                  : row.original.orderStatus === "accepted"
-                    ? "#004085"
-                    : "#3DB309",
-            }}
-          />
-        ),
+        Cell: ({ row }) => {
+          const orderVariant = {
+            pending: "warning",
+            accepted: "info",
+            completed: "success",
+          };
+
+          return (
+            <CommonChip
+              label={row.original.orderStatus}
+              variant={orderVariant[row.original.orderStatus]}
+            />
+          );
+        },
       },
       {
         id: "paymentStatus",
         header: "Payment Status",
         Cell: ({ row }) => (
-          <Chip
+          <CommonChip
             label={row.original.paymentStatus ? "Paid" : "Unpaid"}
-            size="small"
-            sx={{
-              backgroundColor: row.original.paymentStatus
-                ? "#D1FFBE"
-                : "#FFDADA",
-              color: row.original.paymentStatus ? "#3DB309" : "#FF0000",
-            }}
+            variant={row.original.paymentStatus ? "success" : "error"}
           />
         ),
       },
