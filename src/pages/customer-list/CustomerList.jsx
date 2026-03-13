@@ -242,6 +242,12 @@ export const CustomerList = () => {
             field={{ value: selectedStatus }}
             onOptionChange={(value) => setSelectedStatus(value?._id || "")}
             placeholder="Filter by Status"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                bgcolor: "#ffffff",
+                "&:hover": { bgcolor: "#f2f2f2" },
+              },
+            }}
           />
         </Box>
 
