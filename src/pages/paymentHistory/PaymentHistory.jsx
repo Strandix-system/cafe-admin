@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { TableComponent } from "../../components/TableComponent/TableComponent";
 import { formatToLocalDateTime } from "../../utils/utils";
+import { CommonChip } from "../../components/common/CommonChip";
 
 export const PaymentHistory = () => {
   const { userId } = useParams();
@@ -37,25 +38,29 @@ export const PaymentHistory = () => {
           formatToLocalDateTime(row.original.subscriptionEndDate),
       },
       {
+        accessorKey: "description",
+        header: "Description",
+        Cell: ({ row }) => row.original.description ?? "-",
+      },
+      {
         accessorKey: "amount",
         header: "Amount Paid",
         Cell: ({ row }) =>
           row.original.amount ? `₹ ${row.original.amount / 100}` : "₹ 0",
       },
       {
-        accessorKey: "status",
+        id: "status",
         header: "Status",
-        Cell: ({ row }) => (
-          <span
-            className={`px-2 py-1 rounded text-xs font-medium ${
-              row.original.status === "captured"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-600"
-            }`}
-          >
-            {row.original.status === "captured" ? "Paid" : row.original.status}
-          </span>
-        ),
+        Cell: ({ row }) => {
+          const status = row.original.raw?.status;
+
+          return (
+            <CommonChip
+              label={status === "captured" ? "Paid" : (status ?? "-")}
+              variant="success"
+            />
+          );
+        },
       },
     ],
     [isSuperAdmin, userId],
