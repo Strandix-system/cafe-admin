@@ -5,12 +5,12 @@ import { TableComponent } from "../../components/TableComponent/TableComponent";
 import { formatToLocalDateTime } from "../../utils/utils";
 
 export const PaymentHistory = () => {
-  const { adminId } = useParams();
+  const { userId } = useParams();
   const { isSuperAdmin } = useAuth();
 
   const columns = useMemo(
     () => [
-      ...(isSuperAdmin && !adminId
+      ...(isSuperAdmin && !userId
         ? [
             {
               id: "cafeName",
@@ -58,10 +58,10 @@ export const PaymentHistory = () => {
         ),
       },
     ],
-    [isSuperAdmin, adminId],
+    [isSuperAdmin, userId],
   );
 
-  const querykey = adminId ? `get-transactions-${adminId}` : "get-transactions";
+  const querykey = userId ? `get-transactions-${userId}` : "get-transactions";
 
   return (
     <div className="overflow-hidden">
@@ -76,7 +76,7 @@ export const PaymentHistory = () => {
           columns={columns}
           querykey={querykey}
           getApiEndPoint="getTransactions"
-          params={adminId ? { adminId } : {}}
+          params={userId ? { userId } : {}}
           manualPagination={true}
           enableExportTable={true}
         />

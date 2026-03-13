@@ -17,6 +17,7 @@ export const getSuperAdminStats = (statsData) => [
   {
     label: "Demo Requests",
     value: statsData?.totalDemoRequest ?? 0,
+    path: "/enquiries",
   },
 ];
 
