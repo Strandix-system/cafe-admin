@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { API_ROUTES } from "../../utils/api_constants";
 import { Chip, Stack } from "@mui/material";
 import { CommonHeader } from "../../components/common/CommonHeader";
+import { CommonChip } from "../../components/common/CommonChip";
 
 export const FeedbackList = () => {
   const columns = useMemo(

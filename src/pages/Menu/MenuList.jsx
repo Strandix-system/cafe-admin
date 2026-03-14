@@ -1,14 +1,18 @@
 import { TableComponent } from "../../components/TableComponent/TableComponent";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Edit, Plus } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { API_ROUTES } from "../../utils/api_constants";
-import { useState } from "react";
 import { CreateEditMenuModal } from "./CreateEditMenuModal";
 import { useFetch } from "../../utils/hooks/api_hooks";
 import { formatAmount } from "../../utils/utils";
 import { CommonHeader } from "../../components/common/CommonHeader";
+import { InputField } from "../../components/common/InputField";
+import { usePatch } from "../../utils/hooks/api_hooks";
+import toast from "react-hot-toast";
+import { queryClient } from "../../lib/queryClient";
+import { Power, PackageCheck, PackageX } from "lucide-react";
 
 export const MenuList = () => {
   const navigate = useNavigate();
@@ -16,11 +20,35 @@ export const MenuList = () => {
   const [open, setOpen] = useState(false);
   const [menuId, setMenuId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [status, setStatus] = useState("active");
+  const [stockFilter, setStockFilter] = useState("inStock");
+  const [patchEndpoint, setPatchEndpoint] = useState(null);
 
   const { data: { result: { categories: adminCategories = [] } = {} } = {} } =
     useFetch("admin-categories", API_ROUTES.getAdminCategories);
 
-  // 🔹 Table Columns
+  const { mutate: updateMenuStatus } = usePatch(patchEndpoint, {
+    onSuccess: () => {
+      toast.success("Menu status updated");
+      queryClient.invalidateQueries({
+        querykey: ["menu-list", selectedCategory, status, stockFilter],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to update menu");
+    },
+  });
+
+  const handleUpdateMenuStatus = (id, payload) => {
+    const endpoint = `${API_ROUTES.updateMenuStatus}/${id}`;
+    setPatchEndpoint(endpoint);
+
+    // wait one tick so hook receives new endpoint
+    setTimeout(() => {
+      updateMenuStatus(payload);
+    }, 0);
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -60,18 +88,93 @@ export const MenuList = () => {
     [],
   );
 
-  const actions = [
-    {
-      label: "Edit",
-      icon: Edit,
-      onClick: (row) => {
-        setMenuId(row.original._id); // edit mode
-        setOpen(true);
+  const actions = useMemo(() => {
+    const baseActions = [
+      {
+        label: "Edit",
+        icon: Edit,
+        onClick: (row) => {
+          setMenuId(row.original._id);
+          setOpen(true);
+        },
       },
-    },
+    ];
+
+    const activateAction = {
+      label: "Activate",
+      icon: Power,
+      onClick: (row) =>
+        handleUpdateMenuStatus(row.original._id, { isActive: true }),
+    };
+
+    const inactiveAction = {
+      label: "Inactivate",
+      icon: Power,
+      onClick: (row) =>
+        handleUpdateMenuStatus(row.original._id, { isActive: false }),
+    };
+
+    const outOfStockAction = {
+      label: "Out Of Stock",
+      icon: PackageX,
+      onClick: (row) =>
+        handleUpdateMenuStatus(row.original._id, { inStock: false }),
+    };
+
+    const inStockAction = {
+      label: "In Stock",
+      icon: PackageCheck,
+      onClick: (row) =>
+        handleUpdateMenuStatus(row.original._id, { inStock: true }),
+    };
+
+    // ACTIVE TAB
+    if (status === "active") {
+      if (stockFilter === "inStock") {
+        return [...baseActions, outOfStockAction, inactiveAction];
+      }
+
+      if (stockFilter === "outOfStock") {
+        return [...baseActions, inStockAction, inactiveAction];
+      }
+    }
+
+    // INACTIVE TAB
+    if (status === "inactive") {
+      return [...baseActions, activateAction];
+    }
+
+    return baseActions;
+  }, [status, stockFilter]);
+
+  const queryParams = {
+    ...(selectedCategory && { category: selectedCategory }),
+
+    isActive: status === "active",
+
+    ...(status === "active" &&
+      stockFilter && {
+        inStock: stockFilter === "inStock",
+      }),
+  };
+
+  const categoryOptions = [
+    { _id: "", name: "All Categories" },
+    ...adminCategories.map((cat) => ({
+      _id: cat.name,
+      name: cat.name,
+    })),
   ];
 
-  const queryParams = selectedCategory ? { category: selectedCategory } : {};
+  const stockOptions = [
+    { _id: "inStock", name: "In Stock" },
+    { _id: "outOfStock", name: "Out of Stock" },
+  ];
+
+  const handleStatusChange = (newStatus) => {
+    setStatus(newStatus);
+    setStockFilter("inStock");
+  };
 
   return (
     <div className="overflow-hidden">
@@ -94,35 +197,71 @@ export const MenuList = () => {
           setMenuId(null);
         }}
       />
-      {/* Table */}
+
       <Box sx={{ width: "100%", bgcolor: "#FAF7F2", minHeight: "100vh", p: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <FormControl size="small" sx={{ minWidth: 180 }}>
-            <InputLabel>Category</InputLabel>
-            <Select
-              value={selectedCategory}
-              label="Category"
+        <div className="flex items-center gap-6 border-b border-gray-200 mb-4">
+          <button
+            onClick={() => handleStatusChange("active")}
+            className={`pb-2 text-md font-semibold transition
+      ${
+        status === "active"
+          ? "text-[#6F4E37] border-b-2 border-[#6F4E37]"
+          : "text-gray-500 hover:text-[#6F4E37]"
+      }
+    `}
+          >
+            Active
+          </button>
+
+          <button
+            onClick={() => handleStatusChange("inactive")}
+            className={`pb-2 text-md font-semibold transition
+      ${
+        status === "inactive"
+          ? "text-[#6F4E37] border-b-2 border-[#6F4E37]"
+          : "text-gray-500 hover:text-[#6F4E37]"
+      }
+    `}
+          >
+            Inactive
+          </button>
+        </div>
+
+        <div className="flex items-center gap-4 mb-4">
+          {/* Category Filter */}
+          <div className="w-48">
+            <InputField
+              isSelect
+              field={{ value: selectedCategory }}
+              options={categoryOptions}
               onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              {adminCategories.map((cat) => (
-                <MenuItem key={cat._id} value={cat.name}>
-                  {cat.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
+              placeholder="Filter by Category"
+            />
+          </div>
+
+          {/* Stock Filter only for Active */}
+          {status === "active" && (
+            <div className="w-48">
+              <InputField
+                isSelect
+                field={{ value: stockFilter }}
+                options={stockOptions}
+                onChange={(e) => setStockFilter(e.target.value)}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Table */}
         <TableComponent
           slug="menu"
           columns={columns}
           actions={actions}
-          actionsType="icons"
-          querykey={`menu-list-${selectedCategory}`}
+          actionsType="menu"
+          // querykey={`menu-list-${selectedCategory}-${status}-${stockFilter}`}
+          querykey={["menu-list", selectedCategory, status, stockFilter]}
           params={queryParams}
           getApiEndPoint="menulist"
-          deleteApiEndPoint="MENU_DELETE"
-          deleteAction={true}
           enableExportTable={true}
         />
       </Box>
