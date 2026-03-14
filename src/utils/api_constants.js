@@ -85,4 +85,6 @@ export const API_ROUTES = {
   getFeedback: "admin/get-feedback",
   deleteFeedback: "admin/delete-feedback",
   selectFeedback: "admin/feedback-selection",
+
+  updateMenuStatus: "menu/status",
 };
